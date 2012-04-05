@@ -16,7 +16,7 @@ public class HelloWorld {
      */
     @Override
     public String toString() {
-        return "Hello World!";
+        return "Witaj świecie!";
     }
 
     public static void main(String[] args) {

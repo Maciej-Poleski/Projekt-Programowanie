@@ -18,6 +18,6 @@ public class HelloWorldTest {
      */
     @Test
     public void testToString() throws Exception {
-        assertEquals(new HelloWorld().toString(), "Hello World!");
+        assertEquals(new HelloWorld().toString(), "Witaj świecie!");
     }
 }
