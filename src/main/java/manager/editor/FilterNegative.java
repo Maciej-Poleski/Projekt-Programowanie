@@ -1,7 +1,7 @@
 package manager.editor;
 
 /**
- * Filtr tworz¹cy negatyw obrazu
+ * Filtr tworzacy negatyw obrazu
  * @author Patryk
  */
 public class FilterNegative implements IFilter {
