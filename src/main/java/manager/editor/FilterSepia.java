@@ -8,9 +8,9 @@ public class FilterSepia implements IFilterRange{
 	@Override
 	public void apply(PixelData original, PixelData temp)
 			throws IllegalArgumentException {
-		if(original == null || temp == null ||original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
+		if(original == null || temp == null || original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
 			throw new IllegalArgumentException();
-		float det=mRange[0].getValue(), grey;
+		float det = mRange[0].getValue(), grey;
 		original.toRGB();
 		for(int i=0;i<original.mWidth;i++)
 			for(int j=0;j<original.mHeight;j++){
@@ -24,9 +24,7 @@ public class FilterSepia implements IFilterRange{
 	@Override
 	public PixelData apply(PixelData image) {
 		if(image == null) return null;
-		PixelData ret = null;
-		try {ret = (PixelData)image.clone();}catch(CloneNotSupportedException e){e.printStackTrace();}
-		image.toRGB();
+		PixelData ret = (PixelData)image.clone();
 		apply(image, image);
 		return ret;
 	}

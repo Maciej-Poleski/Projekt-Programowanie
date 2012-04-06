@@ -126,7 +126,7 @@ public class PixelData implements Cloneable {
      * @return Dok³adna kopia danych <b>PixelData</b>
      */
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    public Object clone() {
     	PixelData ret = new PixelData();
     	ret.mWidth = mWidth;
     	ret.mHeight = mHeight;
@@ -148,19 +148,56 @@ public class PixelData implements Cloneable {
     /**
      * @param image - obraz do którego próbujemy przenieœæ dane
      * @throws IllegalArgumentException - gdy rozmiar <b>image</b>  nie zgadza siê z rozmiarem danych PixelData
-     * nale¿y wtedy u¿yc metody <b>toBufferedData()</b>
+     * lub parametr jets nullem. Nale¿y wtedy u¿yc metody <b>toBufferedData()</b>
      */
     public void toBufferedImage(BufferedImage image) throws IllegalArgumentException{
-    	if(image.getWidth() != mWidth || image.getHeight() != mHeight) throw new IllegalArgumentException();
+    	if(image == null || image.getWidth() != mWidth || image.getHeight() != mHeight) throw new IllegalArgumentException();
     	toRGB();
     	image.getRaster().setPixels(0, 0, mWidth, mHeight, mData);
     }
 
     /**
-     * @param k - numer kana³u z którego chcemy ekstrachowac <b>Histogram</b> kana³ = k modulo 3
+     * @param channel - kana³ z którego chcemy ekstrachowac <b>Histogram</b>
      * @return <b>Histogram</b> zwieraj¹cy informacje o danym kanale.
      */
-    public Histogram getHistogram(int k) {
-        return null;
+    public Histogram getHistogram(Histogram.HistogramChannel channel) {
+    	int table[] = null;
+    	if(channel == Histogram.HistogramChannel.RED){
+    		table = new int[256]; toRGB();
+    		for(int i=0;i<mWidth;i++) for(int j=0;j<mHeight;j++) table[(int)mData[3*(i*mHeight+j)]]++;
+    	}
+    	if(channel == Histogram.HistogramChannel.GREEN){
+    		table = new int[256]; toRGB();
+    		for(int i=0;i<mWidth;i++) for(int j=0;j<mHeight;j++) table[(int)mData[3*(i*mHeight+j)+1]]++;
+    	}
+    	if(channel == Histogram.HistogramChannel.BLUE){
+    		table = new int[256]; toRGB();
+    		for(int i=0;i<mWidth;i++) for(int j=0;j<mHeight;j++) table[(int)mData[3*(i*mHeight+j)+2]]++;
+    	}
+    	if(channel == Histogram.HistogramChannel.CYAN){
+    		table = new int[256]; toCMY();
+    		for(int i=0;i<mWidth;i++) for(int j=0;j<mHeight;j++) table[(int)mData[3*(i*mHeight+j)]]++;
+    	}
+    	if(channel == Histogram.HistogramChannel.MAGENTA){
+    		table = new int[256]; toCMY();
+    		for(int i=0;i<mWidth;i++) for(int j=0;j<mHeight;j++) table[(int)mData[3*(i*mHeight+j)+1]]++;
+    	}
+    	if(channel == Histogram.HistogramChannel.YELLOW){
+    		table = new int[256]; toCMY();
+    		for(int i=0;i<mWidth;i++) for(int j=0;j<mHeight;j++) table[(int)mData[3*(i*mHeight+j)+2]]++;
+    	}
+    	if(channel == Histogram.HistogramChannel.HUE){
+    		table = new int[360]; toHSV();
+    		for(int i=0;i<mWidth;i++) for(int j=0;j<mHeight;j++) table[((int)mData[3*(i*mHeight+j)])%360]++;
+    	}
+    	if(channel == Histogram.HistogramChannel.SATURATION){
+    		table = new int[100]; toHSV();
+    		for(int i=0;i<mWidth;i++) for(int j=0;j<mHeight;j++) table[(int)(mData[3*(i*mHeight+j)+1]*100.0f)]++;
+    	}
+    	if(channel == Histogram.HistogramChannel.VALUE){
+    		table = new int[100]; toHSV();
+    		for(int i=0;i<mWidth;i++) for(int j=0;j<mHeight;j++) table[(int)(mData[3*(i*mHeight+j)+2]*100.0f)]++;
+    	}
+        return new Histogram(table, channel);
     }
 }

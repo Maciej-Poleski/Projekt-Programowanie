@@ -1,7 +1,7 @@
 package manager.editor;
 
 /**
- * Filtr tworzacy negatyw obrazu
+ * Filtr tworz¹cy negatyw obrazu
  * @author Patryk
  */
 public class FilterNegative implements IFilter {
@@ -16,9 +16,7 @@ public class FilterNegative implements IFilter {
 	@Override
 	public PixelData apply(PixelData image) {
 		if(image == null) return null;
-		PixelData ret = null;
-		try {ret = (PixelData)image.clone();}catch(CloneNotSupportedException e) {e.printStackTrace();}
-		image.toRGB();
+		PixelData ret = (PixelData)image.clone();
 		apply(image, image);
 		return ret;
 	}
