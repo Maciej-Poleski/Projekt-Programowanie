@@ -2,16 +2,35 @@ package manager.files;
 
 import java.io.File;
 
-public class Backup {
-    public void uploadChanges(BackupLocation location) {
-    }
+public interface Backup {
 
-    public void retrieveFile(File file) {
-    }
+	/**
+	 * aktualizuje kopie zapasowa z wszystkimi zmianami dokonanymi od czasu
+	 * ostatniej synchronizacji
+	 * 
+	 * @ param sciezka do katalogu @ author
+	 */
+	void synchronizeBackup(File backupLocation)
+			throws OperationInterruptedException;
 
-    public void getChangesList(BackupLocation loc) {
-    }
+	/**
+	 * Pozwala odzyskać plik przypadkiem usunięty
+	 * 
+	 * @ param ID pliku @ author
+	 */
+	void retrieveFile(FileID file) throws OperationInterruptedException;
 
-    public void getLastBackupDate(BackupLocation loc) {
-    }
+	/**
+	 * 
+	 * @ return @ param @ author
+	 */
+	void getListOfChanges(File backupLocation)
+			throws OperationInterruptedException;
+
+	/**
+	 * 
+	 * @ return @ param @ author
+	 */
+	void getLastBackupDate(File backupLocation)
+			throws OperationInterruptedException;
 }
