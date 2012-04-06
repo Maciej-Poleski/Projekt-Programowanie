@@ -1,9 +1,10 @@
 package manager.tags;
 
-import manager.backup.ID;
+import manager.backup.FileID;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,7 +14,8 @@ import java.util.Map;
  * @author Maciej Poleski
  */
 public class TagFilesStore implements Serializable {
-    private Map<Tag<?>, TagFiles<?>> mainBijection;
+    private Map<? extends Tag<?>, ? extends List<FileID>> filesByTags;
+    private Map<FileID, ? extends List<? extends Tag<?>>> tagsByFiles;
 
     public TagFilesStore() {
     }
@@ -21,19 +23,19 @@ public class TagFilesStore implements Serializable {
     /**
      * Dodaje plik do bazy danych. Tag macierzysty jest obowiązkowy. Tagi użytkownika mogą być pominięte.
      *
-     * @param id       Uchwyt do reprezentanta pliku
+     * @param fileId   Uchwyt do reprezentanta pliku
      * @param mainTag  Tag macierzysty związany z plikiem
      * @param userTags Opcjonalne tagi użytkownika
      */
-    public void addFile(ID id, MainTag mainTag, Collection<UserTag> userTags) {
+    public void addFile(FileID fileId, MainTag mainTag, Collection<UserTag> userTags) {
     }
 
     /**
      * Usuwa plik z bazy danych (nie dokonuje fizycznego usunięcia pliku z nośnika).
      *
-     * @param id Uchwyt do reprezentanta pliku
+     * @param fileId Uchwyt do reprezentanta pliku
      */
-    public void removeFile(ID id) {
+    public void removeFile(FileID fileId) {
     }
 
     /**
@@ -42,7 +44,7 @@ public class TagFilesStore implements Serializable {
      * @param tags Poszukiwane tagi
      * @return Kolekcja plików takich że każdy z nich posiada przynajmniej jeden z wymienionych tagów.
      */
-    public Collection<ID> getFilesWithOneOf(Collection<Tag<?>> tags) {
+    public Collection<FileID> getFilesWithOneOf(Collection<Tag<?>> tags) {
         return null;
     }
 
@@ -52,7 +54,7 @@ public class TagFilesStore implements Serializable {
      * @param tags Poszukiwane tagi
      * @return Kolekcja plików takich że każdy z nich posiada wszystkie wymienione tagi.
      */
-    public Collection<ID> getFilesWithAllOf(Collection<Tag<?>> tags) {
+    public Collection<FileID> getFilesWithAllOf(Collection<Tag<?>> tags) {
         return null;
     }
 
@@ -63,7 +65,7 @@ public class TagFilesStore implements Serializable {
      * @param mainTag Tag macierzysty
      * @return Kolekcja plików posiadających podany tag macierzysty
      */
-    public Collection<ID> getFilesFrom(MainTag mainTag) {
+    public Collection<FileID> getFilesFrom(MainTag mainTag) {
         return null;
     }
 
@@ -73,7 +75,7 @@ public class TagFilesStore implements Serializable {
      * @param files   Zbiór importowanych plików.
      * @param mainTag Tag macierzysty który otrzymają pliki.
      */
-    public void addFilesTo(Collection<ID> files, MainTag mainTag) {
+    public void addFilesTo(Collection<FileID> files, MainTag mainTag) {
     }
 
     /**
@@ -84,7 +86,7 @@ public class TagFilesStore implements Serializable {
      * @param mainTag  Tag macierzysty który otrzymają pliki
      * @param userTags Tagi użytkownika które otrzymają pliki
      */
-    public void addFiles(Collection<ID> files, MainTag mainTag, Collection<UserTag> userTags) {
+    public void addFiles(Collection<FileID> files, MainTag mainTag, Collection<UserTag> userTags) {
     }
 
     /**
@@ -94,7 +96,7 @@ public class TagFilesStore implements Serializable {
      * @return Zbiór tagów które pojawiły się przynajmniej przy jednym z plików
      * @see #getFilesWithOneOf(java.util.Collection)
      */
-    public Collection<Tag<?>> getTagsFrom(Collection<ID> files) {
+    public Collection<Tag<?>> getTagsFrom(Collection<FileID> files) {
         return null;
     }
 }

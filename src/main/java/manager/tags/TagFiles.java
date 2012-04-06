@@ -1,6 +1,6 @@
 package manager.tags;
 
-import manager.backup.ID;
+import manager.backup.FileID;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -10,10 +10,11 @@ import java.util.Collection;
  *
  * @param <T> Typ tagu obsługiwanego przez instancję tej klasy
  * @author Maciej Poleski
+ * @deprecated Ta klasa jest już nie potrzebna.
  */
 class TagFiles<T extends Tag<T>> implements Serializable {
     private Tag<T> tag;
-    private Collection<ID> files;
+    private Collection<FileID> files;
 
     public TagFiles() {
     }
@@ -40,7 +41,7 @@ class TagFiles<T extends Tag<T>> implements Serializable {
      *
      * @param file Plik który zostanie oznaczony tym tagiem
      */
-    public void addFile(ID file) {
+    public void addFile(FileID file) {
     }
 
     /**
@@ -48,7 +49,7 @@ class TagFiles<T extends Tag<T>> implements Serializable {
      *
      * @param file Plik który zostanie usunięty
      */
-    public void removeFile(ID file) {
+    public void removeFile(FileID file) {
     }
 
     /**
@@ -56,7 +57,7 @@ class TagFiles<T extends Tag<T>> implements Serializable {
      *
      * @return Kolekcja wszystkich plików posiadających ten tag
      */
-    public Collection<ID> getFiles() {
+    public Collection<FileID> getFiles() {
         return null;
     }
 }
