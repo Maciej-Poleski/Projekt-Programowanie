@@ -1,0 +1,21 @@
+package manager.files;
+
+import java.io.File;
+import java.util.Collection;
+
+public class FileSystemAPI {
+    public void saveEditedFile() {
+    }
+
+    public void getFilesWithID(Collection<ID> collecti) {
+    }
+
+    public void addFiles(String tag, Collection<File> collection) {
+    }
+
+    public void delete(ID id) {
+    }
+
+    public void checkAll(Collection<ID> collection) {
+    }
+}
