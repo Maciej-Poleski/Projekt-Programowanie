@@ -120,8 +120,9 @@ public class Tags implements Serializable {
      * @param parents  Tagi użytkownika - rodzice
      * @param children Tagi użytkownika - dzieci
      * @return Nowy tag użytkownika będący dzieckiem wskazanych tagów użytkownika i rodzicem wskazanych tagów użytkownika.
+     * @throws CycleException Jeżeli dodanie wskazanych relacji spowoduje powstanie cyklu
      */
-    public UserTag newUserTag(Collection<UserTag> parents, Collection<UserTag> children) {
+    public UserTag newUserTag(Collection<UserTag> parents, Collection<UserTag> children) throws CycleException {
         return null;
     }
 
@@ -134,8 +135,9 @@ public class Tags implements Serializable {
      * @param name     Etykieta nowego tagu użytkownika
      * @return Nowy tag użytkownika będący dzieckiem wskazanych tagów użytkownika i rodzicem wskazanych tagów
      *         użytkownika o wskazanej etykiecie.
+     * @throws CycleException Jeżeli dodanie wskazanych relacji spowoduje powstanie cyklu
      */
-    public UserTag newUserTag(Collection<UserTag> parents, Collection<UserTag> children, String name) {
+    public UserTag newUserTag(Collection<UserTag> parents, Collection<UserTag> children, String name) throws CycleException {
         return null;
     }
 
