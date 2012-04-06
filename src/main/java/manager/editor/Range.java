@@ -17,6 +17,7 @@ public class Range {
     public Range(float a, float b) {
     	mMin = Math.min(a, b);
     	mMax = Math.max(a, b);
+    	mValue = (a+b)/2.0f;
     }
     
     /**
@@ -36,6 +37,14 @@ public class Range {
      */
     public float getValue() {
         return mValue;
+    }
+    
+    /**
+     * @return interpolowana pozycja wartoœci wyró¿nionej w przedziale -> nale¿y do [0,1]
+     */
+    public float getInterpolatedValue(){
+    	if(mMin == mMax) return 0.0f;
+    	return (mValue - mMin) / (mMax - mMin);
     }
 
     /**

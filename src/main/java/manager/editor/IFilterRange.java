@@ -9,11 +9,5 @@ public interface IFilterRange extends IFilter {
     /**
      * @return tablica dozwolonych zakresów
      */
-    Range[] getRangeTable();
-
-    /**
-     * Ustawia tablicê dozwolonych zakresów pracy filtru
-     * @param table - nowa tablica zakresów
-     */
-    void setRangeTable(Range[] table);
+    public Range[] getRangeTable();
 }

@@ -11,4 +11,10 @@ public class FilterFactory {
 	public static IFilter negative(){
 		return new FilterNegative();
 	}
+	/**
+	 * @return Filtr tworz¹cy fotograficzny efekt sepii
+	 */
+	public static IFilter sepia(){
+		return new FilterSepia();
+	}
 }
