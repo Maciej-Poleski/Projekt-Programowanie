@@ -12,11 +12,10 @@ public class Matrix {
 	private float[] mData;
 	
 	/**
-	 * @param size - rozmiar boku macierzy, dozwolone s¹ tylko liczby nieparzyste
-	 * @throws IllegalArgumentException - gdy rozmiar jets nie prawid³owy
-	 * 
 	 * Tworzy now¹ macierz rozmiaru size x size i wypelnia j¹ zerami poza œrodkowym polem,
 	 * któremu przypisuje 1.0f (identycznoœciowy filtr)
+	 * @param size - rozmiar boku macierzy, dozwolone s¹ tylko liczby nieparzyste
+	 * @throws IllegalArgumentException - gdy rozmiar jets nie prawid³owy
 	 */
 	public Matrix(int size) throws IllegalArgumentException{
 		if(size <= 0 || size%2==0) throw new IllegalArgumentException();
@@ -26,11 +25,10 @@ public class Matrix {
 	}
 	
     /**
+     * Tworzy now¹ macierz na podstawie dostarczonej tablicy wartoœci jej pól
      * @param table - tablica z wartoœciami pól macierzy
      * @throws IllegalArgumentException gdy rozmiar tablicy jest niedozwolony 
      * (nie opisuje mecierzy 3x3 5x5 itd)
-     * 
-     * Tworzy now¹ macierz na podstawie dostarczonej tablicy wartoœci jej pól
      */
     public Matrix(float[] table) throws IllegalArgumentException {
     	setFromTable(table);
@@ -51,10 +49,9 @@ public class Matrix {
     }
 
     /**
+     * Ustawia pola macierzy na wartoœci pobrane z tablicy
      * @param table - tablica z wartoœciami pól macierzy
      * @throws IllegalArgumentException gdy rozmiar macierzy jest niedozwolony
-     * 
-     * Ustawia pola macierzy na wartoœci pobrane z tablicy
      */
     public void setFromTable(float[] table) throws IllegalArgumentException {
     	int size = (int)Math.sqrt(table.length);

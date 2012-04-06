@@ -11,9 +11,8 @@ public interface IFilterMatrix extends IFilter {
     Matrix getMatrix();
 
     /**
-     * @param matrix - nowa macierz przekszta³cenia
-     * 
      * Ustawia now¹ macierz przekszta³cenia
+     * @param matrix - nowa macierz przekszta³cenia
      */
     void setMatrix(Matrix matrix);
 }

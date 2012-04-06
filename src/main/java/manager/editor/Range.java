@@ -10,10 +10,9 @@ public class Range {
 	private float mMin, mMax, mValue;
 	
     /**
+     * Zostanie utworzony obiekt  reprezentuj¹cy przedzia³ [min(a,b), max(a,b)]
      * @param a - jeden z krañców przedzia³u
      * @param b - jeden z krañców przedzia³u
-     * 
-     * Zostanie utworzony obiekt  reprezentuj¹cy przedzia³ [min(a,b), max(a,b)]
      */
     public Range(float a, float b) {
     	mMin = Math.min(a, b);
@@ -21,12 +20,11 @@ public class Range {
     }
     
     /**
+     * Zostanie utworzony obiekt  reprezentuj¹cy przedzia³ [min(a,b), max(a,b)] 
+     * oraz nadana wartoœæ wyró¿niona z tego przedzia³u
      * @param a - jeden z krañców przedzia³u
      * @param b - jeden z krañców przedzia³u
      * @param val - wartoœæ wyró¿niona
-     * 
-     * Zostanie utworzony obiekt  reprezentuj¹cy przedzia³ [min(a,b), max(a,b)] 
-     * oraz nadana wartoœæ wyró¿niona z tego przedzia³u
      */
     public Range(float a, float b, float val){
     	this(a,b);
@@ -55,11 +53,10 @@ public class Range {
     }
     
     /**
+     * Ustawia wartoœæ wyró¿nion¹
      * @param value - Wartoœæ z przedzia³u [0,1] reprezentuj¹ca wyskalowane po³o¿enie 
      * wartoœci wybranej wewn¹trz przedzia³u. Gdy <b>value</b> < 0 zostaje domyœlnie przypisane <b>value = 0</b>
      * gdy <b>value</b> > 1 zostaje domyœlnie przypisane <b>value = 1</b>
-     * 
-     * Ustwaia wartoœæ wyró¿nion¹
      */
     public void interpolate(float value){
     	if(value > 1.0f) value = 1.0f;
@@ -68,10 +65,9 @@ public class Range {
     }
 
     /**
+     * Ustawia wartoœæ wyró¿nion¹
      * @param value - wartoœæ wyró¿niona z przedzia³u, gdy value < minimum to domyœlnie value = minimum
      * gdy value > maximu  to domyœlnie value = maximum
-     * 
-     * Ustawia wartoœæ wyró¿nion¹
      */
     public void setValue(float value) {
     	if(value < mMin) mValue = mMin;
