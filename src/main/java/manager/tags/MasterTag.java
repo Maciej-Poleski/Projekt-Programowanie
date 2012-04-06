@@ -1,6 +1,5 @@
 package manager.tags;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -9,26 +8,26 @@ import java.util.List;
  *
  * @author Zygmunt Łenyk
  */
-public class MainTag extends Tag<MainTag> {
-    protected MainTag() {
+public class MasterTag extends Tag<MasterTag> {
+    protected MasterTag() {
     }
 
     @Override
-    public List<MainTag> getParents() {
+    public List<MasterTag> getParents() {
         return null;
     }
 
     @Override
-    public Collection<MainTag> getPredecessors() {
+    public Collection<MasterTag> getPredecessors() {
         return null;
     }
 
     @Override
-    void addParent(MainTag parent) {
+    void addParent(MasterTag parent) {
     }
 
     @Override
-    void removeParent(MainTag parent) {
+    void removeParent(MasterTag parent) {
     }
 
     /**
@@ -36,15 +35,15 @@ public class MainTag extends Tag<MainTag> {
      *
      * @return Rodzic tego tagu lub null
      */
-    public MainTag getParent() {
+    public MasterTag getParent() {
         return null;
     }
 
     /**
      * Ustawia rodzica tego tagu. Poprzedni rodzic jest usuwany.
      *
-     * @param mainTag Tag który zostanie rodzicem tego tagu.
+     * @param masterTag Tag który zostanie rodzicem tego tagu.
      */
-    public void setParent(MainTag mainTag) {
+    public void setParent(MasterTag masterTag) {
     }
 }

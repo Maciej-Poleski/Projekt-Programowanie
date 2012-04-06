@@ -26,7 +26,7 @@ public class Tags implements Serializable {
      *
      * @return Nowy tag macierzysty
      */
-    public MainTag newMainTag() {
+    public MasterTag newMainTag() {
         return null;
     }
 
@@ -53,7 +53,7 @@ public class Tags implements Serializable {
      *
      * @return Kolekcja tagów macierzystych które nie mają przodków
      */
-    public Collection<MainTag> getMainTagHeads() {
+    public Collection<MasterTag> getMainTagHeads() {
         return null;
     }
 
@@ -99,7 +99,7 @@ public class Tags implements Serializable {
      * @param parent Tag macierzysty
      * @return Nowy tag macierzysty będący dzieckiem wskazanego tagu macierzystego
      */
-    public MainTag newMainTag(MainTag parent) {
+    public MasterTag newMainTag(MasterTag parent) {
         return null;
     }
 
@@ -110,7 +110,7 @@ public class Tags implements Serializable {
      * @param name   Etykieta nowego tagu macierzystego
      * @return Nowy tag macierzysty o wskazanej etykiecie będący dzieckiem wskazanego tagu macierzystego
      */
-    public MainTag newMainTag(MainTag parent, String name) {
+    public MasterTag newMainTag(MasterTag parent, String name) {
         return null;
     }
 

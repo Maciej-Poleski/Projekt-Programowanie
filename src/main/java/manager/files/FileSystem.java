@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collection;
 
-import manager.tags.MainTag;
+import manager.tags.MasterTag;
 import manager.tags.Tag;
 
 public interface FileSystem {
@@ -49,7 +49,7 @@ public interface FileSystem {
 	 * 
 	 * @ param tag macierzysty @ param kolekcje plików. @ author
 	 */
-	void importFiles(MainTag tag, Collection<File> filesToAdd)
+	void importFiles(MasterTag tag, Collection<File> filesToAdd)
 			throws FileNotFoundException;
 
 	/**

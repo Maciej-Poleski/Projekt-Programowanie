@@ -24,10 +24,10 @@ public class TagFilesStore implements Serializable {
      * Dodaje plik do bazy danych. Tag macierzysty jest obowiązkowy. Tagi użytkownika mogą być pominięte.
      *
      * @param fileId   Uchwyt do reprezentanta pliku
-     * @param mainTag  Tag macierzysty związany z plikiem
+     * @param masterTag  Tag macierzysty związany z plikiem
      * @param userTags Opcjonalne tagi użytkownika
      */
-    public void addFile(FileID fileId, MainTag mainTag, Collection<UserTag> userTags) {
+    public void addFile(FileID fileId, MasterTag masterTag, Collection<UserTag> userTags) {
     }
 
     /**
@@ -62,10 +62,10 @@ public class TagFilesStore implements Serializable {
      * Zwraca wszystkie pliki o wskazanym tagu macierzystym.
      * Ta funkcja jest szczególnie przydatna dla GUI.
      *
-     * @param mainTag Tag macierzysty
+     * @param masterTag Tag macierzysty
      * @return Kolekcja plików posiadających podany tag macierzysty
      */
-    public Collection<FileID> getFilesFrom(MainTag mainTag) {
+    public Collection<FileID> getFilesFrom(MasterTag masterTag) {
         return null;
     }
 
@@ -73,9 +73,9 @@ public class TagFilesStore implements Serializable {
      * Dodaje zbiór plików do wskazanej kolekcji. Innymi słowy przypisuje tag macierzysty do zbioru plików.
      *
      * @param files   Zbiór importowanych plików.
-     * @param mainTag Tag macierzysty który otrzymają pliki.
+     * @param masterTag Tag macierzysty który otrzymają pliki.
      */
-    public void addFilesTo(Collection<FileID> files, MainTag mainTag) {
+    public void addFilesTo(Collection<FileID> files, MasterTag masterTag) {
     }
 
     /**
@@ -83,10 +83,10 @@ public class TagFilesStore implements Serializable {
      * Innymi słowy przypisuje tag macierzysty do zbioru plików. I taguje je.
      *
      * @param files    Zbiór importowanych plików
-     * @param mainTag  Tag macierzysty który otrzymają pliki
+     * @param masterTag  Tag macierzysty który otrzymają pliki
      * @param userTags Tagi użytkownika które otrzymają pliki
      */
-    public void addFiles(Collection<FileID> files, MainTag mainTag, Collection<UserTag> userTags) {
+    public void addFiles(Collection<FileID> files, MasterTag masterTag, Collection<UserTag> userTags) {
     }
 
     /**
