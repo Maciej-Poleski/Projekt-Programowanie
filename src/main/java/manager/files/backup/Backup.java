@@ -1,12 +1,23 @@
-package manager.files;
+package manager.files.backup;
 
 import java.io.File;
+import java.util.Date;
+import java.util.List;
+
+import manager.files.FileID;
+import manager.files.OperationInterruptedException;
 
 public interface Backup {
 
 	/**
+	 * Tworzy nową lokalizację dla backupu
+	 * @param backupLocation
+	 */
+	void createNewBackup(File backupLocation);
+
+	/**
 	 * aktualizuje kopie zapasowa z wszystkimi zmianami dokonanymi od czasu
-	 * ostatniej synchronizacji
+	 * ostatniej synchronizacji.
 	 * 
 	 * @ param sciezka do katalogu @ author
 	 */
@@ -24,13 +35,13 @@ public interface Backup {
 	 * 
 	 * @ return @ param @ author
 	 */
-	void getListOfChanges(File backupLocation)
+	List<Change> getListOfChanges(File backupLocation)
 			throws OperationInterruptedException;
 
 	/**
 	 * 
 	 * @ return @ param @ author
 	 */
-	void getLastBackupDate(File backupLocation)
+	Date getLastBackupDate(File backupLocation)
 			throws OperationInterruptedException;
 }
