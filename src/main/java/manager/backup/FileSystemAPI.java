@@ -10,7 +10,7 @@ public class FileSystemAPI {
     public void getFilesWithID(Collection<ID> collecti) {
     }
 
-    public void addFiles(TYPE tag, Collection<File> collection) {
+    public void addFiles(String tag, Collection<File> collection) {
     }
 
     public void delete(ID id) {
