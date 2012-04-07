@@ -13,7 +13,7 @@ public class FilterHSVCorrection implements IFilterRange{
 			if(original == null || temp == null) throw new NullPointerException();
 			if(original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
 				throw new IllegalArgumentException();
-			original.toHSV();
+			original.toHSV(); temp.toHSV();
 			float H,S,V;
 			float Hd = mRange[0].getValue(), Sd = mRange[1].getValue(), Vd = mRange[2].getValue();
 			for(int i=0;i<original.mWidth;i++)

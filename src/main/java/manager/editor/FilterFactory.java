@@ -58,4 +58,16 @@ public class FilterFactory {
 	public static IFilterRange HSVCorrection(){
 		return new FilterHSVCorrection();
 	}
+	/**
+	 * @return Filtr odpowiedzialny za korekcję kontrastu obrazu
+	 */
+	public static IFilterRange contrast(){
+		return new FilterContrast();
+	}
+	/**
+	 * @return Filtr odpowiedzialny za korekcję jasności obrazu
+	 */
+	public static IFilterRange brightness(){
+		return new FilterBrightness();
+	}
 }

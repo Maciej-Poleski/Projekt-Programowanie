@@ -13,7 +13,7 @@ public class FilterRGBCorrection implements IFilterRange{
 		if(original == null || temp == null) throw new NullPointerException();
 		if(original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
 			throw new IllegalArgumentException();
-		original.toRGB();
+		original.toRGB(); temp.toRGB();
 		float R,G,B;
 		float Rd = mRange[0].getValue(), Gd = mRange[1].getValue(), Bd = mRange[2].getValue();
 		for(int i=0;i<original.mWidth;i++)

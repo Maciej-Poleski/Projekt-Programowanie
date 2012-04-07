@@ -1,8 +1,8 @@
 package manager.editor;
 
-public class FilterSepia implements IFilterRange{
+public class FilterContrast implements IFilterRange {
 	private final Range[] mRange = new Range[]{
-		new Range(20.0f, 50.0f, 30.0f)
+			new Range(0.1f, 10.0f, 1.0f)
 	};
 
 	@Override
@@ -11,15 +11,11 @@ public class FilterSepia implements IFilterRange{
 		if(original == null || temp == null) throw new NullPointerException();
 		if(original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
 			throw new IllegalArgumentException();
-		float det = mRange[0].getValue(), grey;
+		float mLUT[] = new float[256];
+		for(int i=0;i<256;i++) mLUT[i] = Math.max(0.0f, Math.min(255.0f, mRange[0].getValue()*((float)i-127.5f)+127.5f));
 		original.toRGB(); temp.toRGB();
-		for(int i=0;i<original.mWidth;i++)
-			for(int j=0;j<original.mHeight;j++){
-				grey = 0.21f*temp.mData[3*(i*original.mHeight+j)] + 0.71f*temp.mData[3*(i*original.mHeight+j)+1] + 0.07f*temp.mData[3*(i*original.mHeight+j)+2];
-				temp.mData[3*(i*original.mHeight+j)] = Math.min(255.0f, grey+2*det);
-				temp.mData[3*(i*original.mHeight+j)+1] = Math.min(255.0f, grey+det);
-				temp.mData[3*(i*original.mHeight+j)+2] = Math.min(255.0f, grey);
-			}
+		for(int i=0;i<original.mData.length;i++)
+			temp.mData[i] = mLUT[(int)original.mData[i]];
 	}
 
 	@Override
@@ -34,4 +30,5 @@ public class FilterSepia implements IFilterRange{
 	public Range[] getRangeTable() {
 		return mRange;
 	}
+
 }

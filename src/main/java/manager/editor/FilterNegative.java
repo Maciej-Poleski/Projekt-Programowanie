@@ -1,7 +1,7 @@
 package manager.editor;
 
 /**
- * Filtr tworz�cy negatyw obrazu
+ * Filtr tworzący negatyw obrazu
  * @author Patryk
  */
 public class FilterNegative implements IFilter {
@@ -11,7 +11,7 @@ public class FilterNegative implements IFilter {
 		if(original == null || temp == null) throw new NullPointerException();
 		if(original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
 			throw new IllegalArgumentException();
-		original.toRGB();
+		original.toRGB(); temp.toRGB();
 		for(int i=0;i<original.mData.length;i++) temp.mData[i] = 255.0f - original.mData[i];
 	}
 	

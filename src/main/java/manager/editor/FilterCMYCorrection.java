@@ -13,7 +13,7 @@ public class FilterCMYCorrection implements IFilterRange{
 			if(original == null || temp == null) throw new NullPointerException();
 			if(original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
 				throw new IllegalArgumentException();
-			original.toCMY();
+			original.toCMY(); temp.toCMY();
 			float C,M,Y;
 			float Cd = mRange[0].getValue(), Md = mRange[1].getValue(), Yd = mRange[2].getValue();
 			for(int i=0;i<original.mWidth;i++)

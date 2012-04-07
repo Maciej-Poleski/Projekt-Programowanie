@@ -14,7 +14,7 @@ public class FilterGrayScale implements IFilter{
 		if(original == null || temp == null) throw new NullPointerException();
 		if(original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
 			throw new IllegalArgumentException();
-		original.toRGB();
+		original.toRGB(); temp.toRGB();
 		float gray=0.0f,R,G,B;
 		for(int i=0;i<original.mWidth;i++)
 			for(int j=0;j<original.mHeight;j++){
