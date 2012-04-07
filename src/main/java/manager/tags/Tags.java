@@ -1,9 +1,7 @@
 package manager.tags;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Klasa zarządzająca całym zbiorem tagów wykorzystywanym w aplikacji. Pozwala na dostęp do "głów".
@@ -13,12 +11,15 @@ import java.util.Map;
  * @author Maciej Poleski
  */
 public class Tags implements Serializable {
-    private List<? extends Tag<?>> tags;
+    private List<Tag<?>> tags = new ArrayList<Tag<?>>();
     private TagFilesStore store;
-    private Map<? extends Tag<?>, String> tagNames;
-    private Map<? extends Tag<?>, ? extends Collection<?>> tagMatadata;
+    private Map<Tag<?>, String> tagNames = new HashMap<Tag<?>, String>();
+    private Map<Tag<?>, Collection<?>> tagMetadata = new HashMap<Tag<?>, Collection<?>>();
 
-    Tags() {
+    /**
+     * Konstruuje nowy obiekt z pustą rodziną tagów.
+     */
+    public Tags() {
     }
 
     /**
