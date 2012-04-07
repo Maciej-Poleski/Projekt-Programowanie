@@ -12,8 +12,8 @@ import java.util.*;
  * @author Maciej Poleski
  */
 public class TagFilesStore implements Serializable {
-    private final Map<Tag<?>, Set<FileID>> filesByTags = new HashMap<Tag<?>, Set<FileID>>();
-    private final Map<FileID, Set<Tag<?>>> tagsByFiles = new HashMap<FileID, Set<Tag<?>>>();
+    private final Map<Tag<?>, Set<FileID>> filesByTags = new HashMap<>();
+    private final Map<FileID, Set<Tag<?>>> tagsByFiles = new HashMap<>();
 
     /**
      * Konstruuje nowy magazyn plików otagowanych.
@@ -30,7 +30,7 @@ public class TagFilesStore implements Serializable {
      */
     public void addFile(FileID fileId, MasterTag masterTag, Set<UserTag> userTags) {
         if (userTags == null)
-            userTags = new HashSet<UserTag>();
+            userTags = new HashSet<>();
         addTagInformation(fileId, masterTag);
         for (UserTag tag : userTags)
             addTagInformation(fileId, tag);
@@ -50,16 +50,21 @@ public class TagFilesStore implements Serializable {
     }
 
     /**
-     * Zwraca kolekcję plików posiadających jakikolwiek z wymienionych tagów.
+     * Zwraca zbiór plików posiadających jakikolwiek z wymienionych tagów.
      *
      * @param tags Poszukiwane tagi
-     * @return Kolekcja plików takich że każdy z nich posiada przynajmniej jeden z wymienionych tagów.
+     * @return Zbiór plików takich że każdy z nich posiada przynajmniej jeden z wymienionych tagów.
      */
     public Set<FileID> getFilesWithOneOf(Set<Tag<?>> tags) {
-        Set<FileID> result = new HashSet<FileID>();
+        Set<FileID> result = new HashSet<>();
         if (tags == null)
             return result;
+        Set<Tag<?>> computedTags = new HashSet<>();
         for (Tag<?> tag : tags) {
+            computedTags.addAll(tag.getDescendants());
+            computedTags.add(tag);
+        }
+        for (Tag<?> tag : computedTags) {
             if (filesByTags.containsKey(tag))
                 result.addAll(filesByTags.get(tag));
         }
@@ -67,26 +72,46 @@ public class TagFilesStore implements Serializable {
     }
 
     /**
-     * Zwraca kolekcję plików posiadających wszystkie wymienione tagi.
+     * Zwraca zbiór plików posiadających wszystkie wymienione tagi.
      *
      * @param tags Poszukiwane tagi
-     * @return Kolekcja plików takich że każdy z nich posiada wszystkie wymienione tagi.
+     * @return Zbiór plików takich że każdy z nich posiada wszystkie wymienione tagi.
      */
     public Set<FileID> getFilesWithAllOf(Set<Tag<?>> tags) {
-        Set<FileID> result = new HashSet<FileID>();
+        Set<FileID> result = new HashSet<>();
         for (Set<FileID> set : filesByTags.values())
             result.addAll(set);
         if (tags == null)
             return result;
         for (Tag<?> tag : tags) {
-            List<FileID> filesToRemoveFromResult = new ArrayList<FileID>();
+            if (tag == null)
+                return new HashSet<>();
+            List<FileID> filesToRemoveFromResult = new ArrayList<>();
             for (FileID file : result) {
-                if (!tagsByFiles.containsKey(file) || !tagsByFiles.get(file).contains(tag))
+                if (!tagsByFiles.containsKey(file))
+                    filesToRemoveFromResult.add(file);
+                Set<Tag<?>> computedTagSet = new HashSet<>();
+                computedTagSet.addAll(tag.getDescendants());
+                computedTagSet.add(tag);
+                computedTagSet.retainAll(tagsByFiles.get(file));
+                if (computedTagSet.isEmpty())
                     filesToRemoveFromResult.add(file);
             }
             result.removeAll(filesToRemoveFromResult);
         }
         return result;
+    }
+
+    /**
+     * Zwraca zbiór plików posiadających wskazany tag.
+     *
+     * @param tag Poszukiwany tag
+     * @return Zbiór plików otagowanych wskazanym tagiem
+     */
+    public Set<FileID> getFilesWith(Tag<?> tag) {
+        if (tag == null)
+            return new HashSet<>();
+        return getFilesWithOneOf(new HashSet<Tag<?>>(Arrays.asList(tag)));
     }
 
     /**
@@ -97,11 +122,10 @@ public class TagFilesStore implements Serializable {
      * @return Kolekcja plików posiadających podany tag macierzysty
      */
     public Set<FileID> getFilesFrom(MasterTag masterTag) {
-        Set<FileID> result = new HashSet<FileID>();
-        if (masterTag == null || !filesByTags.containsKey(masterTag))
+        Set<FileID> result = new HashSet<>();
+        if (masterTag == null)
             return result;
-        result.addAll(filesByTags.get(masterTag));
-        return result;
+        return getFilesWith(masterTag);
     }
 
     /**
@@ -135,7 +159,7 @@ public class TagFilesStore implements Serializable {
         if (masterTag == null)
             throw new NullPointerException();
         if (userTags == null)
-            userTags = new HashSet<UserTag>();
+            userTags = new HashSet<>();
         for (FileID file : files) {
             addTagInformation(file, masterTag);
             for (UserTag tag : userTags)
@@ -144,19 +168,90 @@ public class TagFilesStore implements Serializable {
     }
 
     /**
-     * Wyciąga wszystkie tagi z podanego zbioru plików. Operacja symetryczna do getFilesWithOneOf.
+     * Wyciąga wszystkie tagi z podanego zbioru plików.
      *
      * @param files Kolekcja plików
      * @return Zbiór tagów które pojawiły się przynajmniej przy jednym z plików
      * @see #getFilesWithOneOf(java.util.Set)
      */
     public Set<Tag<?>> getTagsFrom(Set<FileID> files) {
-        Set<Tag<?>> result = new HashSet<Tag<?>>();
+        Set<Tag<?>> result = new HashSet<>();
         if (files == null)
             return result;
         for (FileID file : files)
             if (tagsByFiles.containsKey(file))
                 result.addAll(tagsByFiles.get(file));
+        return result;
+    }
+
+    /**
+     * Usuwa wskazany tag ze wskazanego pliku.
+     *
+     * @param file Plik z którego zostanie usunięty tag
+     * @param tag  Tag który zostanie usunięty z pliku
+     * @throws NullPointerException Jeżeli file==null
+     */
+    public void removeFileTag(FileID file, UserTag tag) {
+        if (tag == null)
+            return;
+        removeTagInformation(file, tag);
+    }
+
+    /**
+     * Usuwa wskazany zbiór tagów ze wskazanego pliku.
+     *
+     * @param file Plik z którego zostaną usunięte tagi.
+     * @param tags Tagi które będą usunięte ze wskazanego pliku
+     * @throws NullPointerException Jeżeli file==null
+     */
+    public void removeFileTags(FileID file, Set<UserTag> tags) {
+        if (tags == null)
+            return;
+        for (UserTag tag : tags) {
+            removeTagInformation(file, tag);
+        }
+    }
+
+    /**
+     * Usuwa kolekcję plików wskazaną tagiem macierzystym. TA FUNKCJA JEST BARDZO NIEBEZPIECZNA. Upewnij się że jej
+     * użycie jest dokładnie tym co chcesz zrobić, ponieważ jej uruchomienie spowoduje usunięcie z bazy ogromnej
+     * ilości plików.
+     *
+     * @param tag Wszystkie pliki oznaczone tym tagiem macierzystym (lub pochodnym) zostaną usunięte z bazy
+     * @return Zbiór plików usuniętych z bazy
+     * @throws NullPointerException Jeżeli tag==null
+     */
+    public Set<FileID> removeFamily(MasterTag tag) {
+        if (tag == null)
+            throw new NullPointerException();
+        Set<FileID> filesToRemove = pretendRemoveFamily(tag);
+        for (FileID file : filesToRemove)
+            removeFile(file);
+        return filesToRemove;
+    }
+
+    /**
+     * Symuluje operację usunięcia plików oznaczonych wskazanym tagiem macierzystym z bazy
+     *
+     * @param tag Wybrany tag macierzysty
+     * @return Zbiór plików które zostałyby usunięte z bazy, gdyby został usunięty wskazany tag
+     */
+    public Set<FileID> pretendRemoveFamily(MasterTag tag) {
+        return getFilesFrom(tag);
+    }
+
+    /**
+     * Zwraca zbiór plików otagowanych wskazanym tagiem. Plik uznajemy za otagowany danym tagiem jeżeli użytkownik
+     * oznaczył ten plik danym tagiem osobiście (nie działają reguły dziedziczenia tagów).
+     *
+     * @param tag Wskazany tag
+     * @return Zbiór plików posiadających przypisany wskazany tag bezpośrednio (nie dziedzicząc)
+     */
+    public Set<FileID> getFilesWithRealTag(Tag<?> tag) {
+        Set<FileID> result = new HashSet<>();
+        if (tag == null || !filesByTags.containsKey(tag))
+            return result;
+        result.addAll(filesByTags.get(tag));
         return result;
     }
 
@@ -168,6 +263,20 @@ public class TagFilesStore implements Serializable {
         if (!tagsByFiles.containsKey(file))
             tagsByFiles.put(file, new HashSet<Tag<?>>());
         tagsByFiles.get(file).add(tag);
+    }
+
+    private void removeTagInformation(FileID file, UserTag tag) {
+        if (file == null || tag == null)
+            throw new NullPointerException();
+        if (!tagsByFiles.containsKey(file) || !tagsByFiles.get(file).contains(tag))
+            return;
+        tagsByFiles.get(file).remove(tag);
+        if (tagsByFiles.get(file).isEmpty())
+            tagsByFiles.remove(file);
+
+        filesByTags.get(tag).remove(file);
+        if (filesByTags.get(tag).isEmpty())
+            filesByTags.remove(tag);
     }
 
     private void cleanupTagsByFiles() {
