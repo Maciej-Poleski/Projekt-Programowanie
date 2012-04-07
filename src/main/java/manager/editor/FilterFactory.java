@@ -70,4 +70,16 @@ public class FilterFactory {
 	public static IFilterRange brightness(){
 		return new FilterBrightness();
 	}
+	/**
+	 * @return Filtr odpowiedzialny za korekcję gamma obrazu
+	 */
+	public static IFilterRange gamma(){
+		return new FilterGamma();
+	}
+	/**
+	 * @return Filtr odpowiedzialny za korekcję ekspozucji obrazu (EV)
+	 */
+	public static IFilterRange exposure(){
+		return new FilterExposure();
+	}
 }
