@@ -1,5 +1,7 @@
 package manager.tags;
 
+import manager.files.FileID;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -11,10 +13,10 @@ import java.util.*;
  * @author Maciej Poleski
  */
 public class Tags implements Serializable {
-    private List<Tag<?>> tags = new ArrayList<Tag<?>>();
+    private final List<Tag<?>> tags = new ArrayList<>();
     private TagFilesStore store;
-    private Map<Tag<?>, String> tagNames = new HashMap<Tag<?>, String>();
-    private Map<Tag<?>, Collection<?>> tagMetadata = new HashMap<Tag<?>, Collection<?>>();
+    private final Map<Tag<?>, String> tagNames = new HashMap<>();
+    private final Map<Tag<?>, Set<Object>> tagMetadata = new HashMap<>();
 
     /**
      * Konstruuje nowy obiekt z pustą rodziną tagów.
@@ -27,8 +29,10 @@ public class Tags implements Serializable {
      *
      * @return Nowy tag macierzysty
      */
-    public MasterTag newMainTag() {
-        return null;
+    public MasterTag newMasterTag() {
+        MasterTag tag = new MasterTag();
+        tags.add(tag);
+        return tag;
     }
 
     /**
@@ -37,43 +41,70 @@ public class Tags implements Serializable {
      * @return Nowy tag użytkownika
      */
     public UserTag newUserTag() {
-        return null;
+        UserTag tag = new UserTag();
+        tags.add(tag);
+        return tag;
     }
 
     /**
      * Zwraca wszystkie tagi które nie mają przodków.
      *
-     * @return Kolekcja tagów które nie mają przodków
+     * @return Zbiór tagów które nie mają przodków
      */
-    public Collection<Tag<?>> getHeads() {
-        return null;
+    public Set<Tag<?>> getHeads() {
+        Set<Tag<?>> result = new HashSet<>();
+        for (Tag<?> tag : tags)
+            if (tag.getParents().isEmpty())
+                result.add(tag);
+        return result;
     }
 
     /**
      * Zwraca wszystkie tagi macierzyste które nie mają przodków.
      *
-     * @return Kolekcja tagów macierzystych które nie mają przodków
+     * @return Zbiór tagów macierzystych które nie mają przodków
      */
-    public Collection<MasterTag> getMainTagHeads() {
-        return null;
+    public Set<MasterTag> getMainTagHeads() {
+        Set<MasterTag> result = new HashSet<>();
+        for (Tag<?> tag : getHeads()) {
+            if (tag instanceof MasterTag)
+                result.add((MasterTag) tag);
+        }
+        return result;
     }
 
     /**
      * Zwraca wszystkie tagi użytkownika które nie mają przodków.
      *
-     * @return Kolekcja tagów użytkownika które nie mają przodków
+     * @return Zbiór tagów użytkownika które nie mają przodków
      */
-    public Collection<UserTag> getUserTagHeads() {
-        return null;
+    public Set<UserTag> getUserTagHeads() {
+        Set<UserTag> result = new HashSet<>();
+        for (Tag<?> tag : getHeads()) {
+            if (tag instanceof UserTag)
+                result.add((UserTag) tag);
+        }
+        return result;
     }
 
     /**
-     * Usuwa wskazany tag. Wszystkie pliki oznaczone nim tracą to oznaczenie. Tag jest również usuwany z struktury co
-     * może oznaczać rozspójnienie i powstanie nowych "głów". Korzystaj mądrze.
+     * Usuwa wskazany tag. Wszystkie pliki oznaczone nim tracą to oznaczenie. Jeżeli tag jest macierzysty, pliki są
+     * usuwane z bazy danych. Tag jest również usuwany ze struktury co może oznaczać rozspójnienie i powstanie nowych
+     * "głów". Korzystaj mądrze. Przed użyciem tej metody należy ustawić bazę plików.
      *
      * @param tag Tag który ma zostać usunięty.
+     * @throws StoreNotAvailableException Jeżeli nie ustawiono bazy plików
+     * @see #setStore(TagFilesStore)
      */
-    public void removeTag(Tag tag) {
+    public void removeTag(Tag<?> tag) {
+        checkStore();
+        if (tag instanceof MasterTag)
+            store.removeFamily((MasterTag) tag);
+        else {
+            Set<FileID> filesToRemove = store.getFilesWithRealTag(tag);
+            for (FileID file : filesToRemove)
+                store.removeFileTag(file, (UserTag) tag);
+        }
     }
 
     /**
@@ -83,6 +114,7 @@ public class Tags implements Serializable {
      * @param store Główny magazyn danych
      */
     public void setStore(TagFilesStore store) {
+        this.store = store;
     }
 
     /**
@@ -91,7 +123,7 @@ public class Tags implements Serializable {
      * @return Główny magazyn danych
      */
     public TagFilesStore getStore() {
-        return null;
+        return store;
     }
 
     /**
@@ -100,8 +132,10 @@ public class Tags implements Serializable {
      * @param parent Tag macierzysty
      * @return Nowy tag macierzysty będący dzieckiem wskazanego tagu macierzystego
      */
-    public MasterTag newMainTag(MasterTag parent) {
-        return null;
+    public MasterTag newMasterTag(MasterTag parent) {
+        MasterTag tag = newMasterTag();
+        tag.setParent(parent);
+        return tag;
     }
 
     /**
@@ -111,8 +145,10 @@ public class Tags implements Serializable {
      * @param name   Etykieta nowego tagu macierzystego
      * @return Nowy tag macierzysty o wskazanej etykiecie będący dzieckiem wskazanego tagu macierzystego
      */
-    public MasterTag newMainTag(MasterTag parent, String name) {
-        return null;
+    public MasterTag newMasterTag(MasterTag parent, String name) {
+        MasterTag tag = newMasterTag(parent);
+        setNameOfTag(tag, name);
+        return tag;
     }
 
     /**
@@ -123,8 +159,26 @@ public class Tags implements Serializable {
      * @return Nowy tag użytkownika będący dzieckiem wskazanych tagów użytkownika i rodzicem wskazanych tagów użytkownika.
      * @throws CycleException Jeżeli dodanie wskazanych relacji spowoduje powstanie cyklu
      */
-    public UserTag newUserTag(Collection<UserTag> parents, Collection<UserTag> children) throws CycleException {
-        return null;
+    public UserTag newUserTag(Set<UserTag> parents, Set<UserTag> children) throws CycleException {
+        UserTag result = new UserTag();
+        if (parents == null)
+            parents = new HashSet<>();
+        if (children == null)
+            children = new HashSet<>();
+        for (UserTag parent : parents)
+            result.addParent(parent);
+        for (UserTag child : children)
+            result.addChild(child);
+        try {
+            checkCycle();
+        } catch (CycleException e) {
+            for (UserTag parent : parents)
+                result.removeParent(parent);
+            for (UserTag child : children)
+                result.removeChild(child);
+            throw new CycleException(e);
+        }
+        return result;
     }
 
     /**
@@ -138,8 +192,10 @@ public class Tags implements Serializable {
      *         użytkownika o wskazanej etykiecie.
      * @throws CycleException Jeżeli dodanie wskazanych relacji spowoduje powstanie cyklu
      */
-    public UserTag newUserTag(Collection<UserTag> parents, Collection<UserTag> children, String name) throws CycleException {
-        return null;
+    public UserTag newUserTag(Set<UserTag> parents, Set<UserTag> children, String name) throws CycleException {
+        UserTag result = newUserTag(parents, children);
+        setNameOfTag(result, name);
+        return result;
     }
 
     /**
@@ -149,7 +205,7 @@ public class Tags implements Serializable {
      * @return Etykieta wskazanego tagu
      */
     public String getNameOfTag(Tag<?> tag) {
-        return null;
+        return tagNames.get(tag);
     }
 
     /**
@@ -159,6 +215,7 @@ public class Tags implements Serializable {
      * @param newName Etykieta
      */
     public void setNameOfTag(Tag<?> tag, String newName) {
+        tagNames.put(tag, newName);
     }
 
     /**
@@ -167,8 +224,8 @@ public class Tags implements Serializable {
      * @param tag Tag którego metadane zostaną zwrócone
      * @return Wszystkie metadane związane z danym tagiem
      */
-    public Collection<?> getAllMetadataOfTag(Tag<?> tag) {
-        return null;
+    public Set<?> getAllMetadataOfTag(Tag<?> tag) {
+        return tagMetadata.get(tag);
     }
 
     /**
@@ -179,6 +236,9 @@ public class Tags implements Serializable {
      * @param metadata Metadane które zostaną powiązane z wskazanym tagiem.
      */
     public void addTagMetadata(Tag<?> tag, Object metadata) {
+        if (!tagMetadata.containsKey(tag))
+            tagMetadata.put(tag, new HashSet<>());
+        tagMetadata.get(tag).add(metadata);
     }
 
     /**
@@ -188,5 +248,69 @@ public class Tags implements Serializable {
      * @param metadata Metadane które zostaną usunięte z tagu.
      */
     public void removeTagMetadata(Tag<?> tag, Object metadata) {
+        if (!tagMetadata.containsKey(tag))
+            return;
+        tagMetadata.get(tag).remove(metadata);
+        if (tagMetadata.get(tag).isEmpty())
+            tagMetadata.remove(tag);
     }
+
+    private void checkStore() {
+        if (store == null)
+            throw new StoreNotAvailableException();
+    }
+
+    private void checkCycle() throws CycleException {
+        lookForCycleParent();
+        lookForCycleChildren();
+    }
+
+    private void lookForCycleParent() throws CycleException {
+        new Object() {
+            final Map<Tag<?>, Boolean> state = new HashMap<>();
+
+            {
+                for (Tag<?> tag : tags)
+                    tryTravel(tag);
+            }
+
+            private void tryTravel(Tag<?> tag) throws CycleException {
+                if (state.containsKey(tag)) {
+                    if (!state.get(tag))
+                        throw new CycleException();
+                    else
+                        return;
+                }
+                state.put(tag, false);
+                for (Tag<?> parent : tag.getParents())
+                    tryTravel(parent);
+                state.put(tag, true);
+            }
+        };
+    }
+
+    private void lookForCycleChildren() throws CycleException {
+        new Object() {
+            final Map<Tag<?>, Boolean> state = new HashMap<>();
+
+            {
+                for (Tag<?> tag : tags)
+                    tryTravel(tag);
+            }
+
+            private void tryTravel(Tag<?> tag) throws CycleException {
+                if (state.containsKey(tag)) {
+                    if (!state.get(tag))
+                        throw new CycleException();
+                    else
+                        return;
+                }
+                state.put(tag, false);
+                for (Tag<?> parent : tag.getChildren())
+                    tryTravel(parent);
+                state.put(tag, true);
+            }
+        };
+    }
+
 }
