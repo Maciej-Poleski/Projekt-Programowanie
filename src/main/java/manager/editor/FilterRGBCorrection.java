@@ -10,7 +10,8 @@ public class FilterRGBCorrection implements IFilterRange{
 	@Override
 	public void apply(PixelData original, PixelData temp)
 			throws IllegalArgumentException {
-		if(original == null || temp == null || original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
+		if(original == null || temp == null) throw new NullPointerException();
+		if(original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
 			throw new IllegalArgumentException();
 		original.toRGB();
 		float R,G,B;

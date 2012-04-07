@@ -1,8 +1,8 @@
 package manager.editor;
 
 /**
- * Tablica opisuj¹ca funkcjê konwersji obrazu
- * funkcja [0,1] -> [0,1] przez co jest mo¿liwoœæ elastycznego skalowania dziedziny i przeciwdziedziny
+ * Tablica opisujÄ…ca funkcjÄ™ konwersji obrazu
+ * funkcja [0,1] -> [0,1] przez co jest moÅ¼liwoÅ›Ä‡ elastycznego skalowania dziedziny i przeciwdziedziny
  * @author Patryk
  */
 public class LUTTable {
@@ -10,10 +10,10 @@ public class LUTTable {
 	
 	/**
 	 * Tworzy nowa tablice fukncji na podstawie tablicy jej wartosci, gdy tablica wejsciowa ma mniej
-	 * ni¿ 2 elementy lub jest <b>null</b> zostanie utworzona funkcja identycznosciowa
+	 * niÅ¼ 2 elementy lub jest <b>null</b> zostanie utworzona funkcja identycznosciowa
 	 * 
-	 * @param vals - tablica wartoœci funkcji
-	 * @throws IllegalArgumentException - gdy w podanej tablicy znajd¹ sie wartosci z poza [0,1]
+	 * @param vals - tablica wartoÅ›ci funkcji
+	 * @throws IllegalArgumentException - gdy w podanej tablicy znajdzÄ… sie wartosci z poza [0,1]
 	 */
 	LUTTable(float[] vals) throws IllegalArgumentException{
 		setConversionTable(vals);
@@ -32,11 +32,11 @@ public class LUTTable {
 	}
 
     /**
-     * Ustala now¹ tablicê konwersji obrazu, gdy tablica wejsciowa ma mniej
+     * Ustala nowÄ… tablicÄ™ konwersji obrazu, gdy tablica wejsciowa ma mniej
 	 * niz 2 elementy lub jest <b>null</b> zostanie utworzona funkcja identycznosciowa
      * 
      * @param table - nowa tablica konwersji
-     * @throws IllegalArgumentException - gdy w podanej tablicy znajd¹ sie wartosci z poza [0,1]
+     * @throws IllegalArgumentException - gdy w podanej tablicy znajdÄ… sie wartosci z poza [0,1]
      */
     public void setConversionTable(float[] table) throws IllegalArgumentException{
     	if(table != null) for(int i=0;i<table.length;i++) if(table[i] < 0.0f || table[i] > 1.0f) throw new IllegalArgumentException();

@@ -3,48 +3,59 @@ package manager.editor;
 import manager.editor.FilterGrayScale.FilterGrayScaleTypes;
 
 /**
- * Fabryka Filtrów - generuje filtry gotowe do aplikowania na obrazie
+ * Fabryka FiltrÃ³w - generuje filtry gotowe do aplikowania na obrazie
  * @author Patryk
  */
 public class FilterFactory {
 	/**
-	 * @return Filtr tworz¹cy negatyw obrazu
+	 * @return Filtr tworzÄ…cy negatyw obrazu
 	 */
 	public static IFilter negative(){
 		return new FilterNegative();
 	}
 	/**
-	 * @return Filtr tworz¹cy fotograficzny efekt sepii
+	 * @return Filtr tworzÄ…cy fotograficzny efekt sepii
 	 */
 	public static IFilterRange sepia(){
 		return new FilterSepia();
 	}
 	/**
-	 * @return Filtr tworz¹cy obraz w skali szaroœci. Obraz generowany na podstawie œredniej jasnoœci
+	 * @return Filtr tworzÄ…cy obraz w skali szaroÅ›ci. Obraz generowany na podstawie Å›redniej jasnoÅ›ci
 	 * danego pixela.
 	 */
 	public static IFilter grayScaleLightness(){
 		return new FilterGrayScale(FilterGrayScaleTypes.LIGHTNESS);
 	}
 	/**
-	 * @return Filtr tworz¹cy obraz w skali szaroœci. Obraz generowany na podstawie œredniej wartoœci
-	 * sk³adowych RGB danego pixela.
+	 * @return Filtr tworzÄ…cy obraz w skali szaroÅ›ci. Obraz generowany na podstawie Å›redniej wartoÅ›ci
+	 * skÅ‚adowych RGB danego pixela.
 	 */
 	public static IFilter grayScaleAverage(){
 		return new FilterGrayScale(FilterGrayScaleTypes.AVERAGE);
 	}
 	/**
-	 * @return Filtr tworz¹cy obraz w skali szaroœci. Obraz generowany na podstawie nasycenia sk³adowych RGB
-	 * danego pixela, wykorzystuje wiêksze wyczulenie ludzkiego oka na barwê zielon¹.
+	 * @return Filtr tworzÄ…cy obraz w skali szaroÅ›ci. Obraz generowany na podstawie nasycenia skÅ‚adowych RGB
+	 * danego pixela, wykorzystuje wiÄ™ksze wyczulenie ludzkiego oka na barwÄ™ zielona.
 	 */
 	public static IFilter grayScaleLuminosity(){
 		return new FilterGrayScale(FilterGrayScaleTypes.LUMINOSITY);
 	}
-	
 	/**
-	 * @return Filtr odpowiedzialny za korekcjê kana³ów RGB
+	 * @return Filtr odpowiedzialny za korekcjÄ™ kanaÅ‚Ã³w RGB
 	 */
 	public static IFilterRange RGBCorrection(){
 		return new FilterRGBCorrection();
+	}
+	/**
+	 * @return Filtr odpowiedzialny za korekcjÄ™ kanaÅ‚Ã³w CMY
+	 */
+	public static IFilterRange CMYCorrection(){
+		return new FilterCMYCorrection();
+	}
+	/**
+	 * @return Filtr odpowiedzialny za korekcjÄ™ kanaÅ‚Ã³w HSV
+	 */
+	public static IFilterRange HSVCorrection(){
+		return new FilterHSVCorrection();
 	}
 }

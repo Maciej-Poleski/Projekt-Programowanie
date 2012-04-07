@@ -1,18 +1,18 @@
 package manager.editor;
 
 /**
- * SzczegÛlny rodzaj filtrÛw uøywajπcych jako parametr macierzy
+ * Szczeg√≥lny rodzaj filtr√≥w u≈ºywajƒÖcych jako parametr macierzy
  * @author Patryk
  */
 public interface IFilterMatrix extends IFilter {
     /**
-     * @return macierz przekszta≥cenia
+     * @return macierz przekszta≈Çcenia
      */
     public Matrix getMatrix();
 
     /**
-     * Ustawia nowπ macierz przekszta≥cenia
-     * @param matrix - nowa macierz przekszta≥cenia
+     * Ustawia nowƒÖ macierz przekszta≈Çcenia
+     * @param matrix - nowa macierz przekszta≈Çcenia
      */
     public void setMatrix(Matrix matrix);
 }

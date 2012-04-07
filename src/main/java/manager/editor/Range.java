@@ -1,8 +1,8 @@
 package manager.editor;
 
 /**
- * Klasa opisuj¹ca przedzia³ dozwolonych wartoœci oraz wybran¹ wartoœæ z tego przedzia³u
- * Uzywana jako parametr w filtrach typu IFilterRange
+ * Klasa opisujÄ…ca przedziaÅ‚ dozwolonych wartoÅ›ci oraz wybranÄ… wartoÅ›Ä‡ z tego przedziaÅ‚u
+ * UÅ¼ywana jako parametr w filtrach typu IFilterRange
  * @author Patryk
  * 
  */
@@ -10,9 +10,9 @@ public class Range {
 	private float mMin, mMax, mValue;
 	
     /**
-     * Zostanie utworzony obiekt  reprezentuj¹cy przedzia³ [min(a,b), max(a,b)]
-     * @param a - jeden z krañców przedzia³u
-     * @param b - jeden z krañców przedzia³u
+     * Zostanie utworzony obiekt  reprezentujÄ…cy przedziaÅ‚ [min(a,b), max(a,b)]
+     * @param a - jeden z kraÅ„cÃ³w przedziaÅ‚u
+     * @param b - jeden z kraÅ„cÃ³w przedziaÅ‚u
      */
     public Range(float a, float b) {
     	mMin = Math.min(a, b);
@@ -21,11 +21,11 @@ public class Range {
     }
     
     /**
-     * Zostanie utworzony obiekt  reprezentuj¹cy przedzia³ [min(a,b), max(a,b)] 
-     * oraz nadana wartoœæ wyró¿niona z tego przedzia³u
-     * @param a - jeden z krañców przedzia³u
-     * @param b - jeden z krañców przedzia³u
-     * @param val - wartoœæ wyró¿niona
+     * Zostanie utworzony obiekt  reprezentujÄ…cy przedziaÅ‚ [min(a,b), max(a,b)] 
+     * oraz nadana wartoÅ›Ä‡ wyrÃ³niona z tego przedziaÅ‚u
+     * @param a - jeden z kraÅ„cÃ³w przedziaÅ‚u
+     * @param b - jeden z kraÅ„cÃ³w przedziaÅ‚u
+     * @param val - wartoÅ›Ä‡ wyrÃ³Å¼niona
      */
     public Range(float a, float b, float val){
     	this(a,b);
@@ -33,14 +33,14 @@ public class Range {
     }
 
     /**
-     * @return wyró¿niona wartoœæ wewn¹trz przedzia³u
+     * @return wyrÃ³Å¼niona wartoÅ›Ä‡ wewnÄ…trz przedziaÅ‚u
      */
     public float getValue() {
         return mValue;
     }
     
     /**
-     * @return interpolowana pozycja wartoœci wyró¿nionej w przedziale -> nale¿y do [0,1]
+     * @return interpolowana pozycja wartoÅ›ci wyrÃ³Å¼nionej w przedziale -> naleÅ¼y do [0,1]
      */
     public float getInterpolatedValue(){
     	if(mMin == mMax) return 0.0f;
@@ -48,24 +48,24 @@ public class Range {
     }
 
     /**
-     * @return pocz¹tek przedzia³u
+     * @return poczÄ…tek przedziaÅ‚u
      */
     public float getMin() {
         return mMin;
     }
 
     /**
-     * @return koniec przedzia³u
+     * @return koniec przedziaÅ‚u
      */
     public float getMax() {
         return mMax;
     }
     
     /**
-     * Ustawia wartoœæ wyró¿nion¹
-     * @param value - Wartoœæ z przedzia³u [0,1] reprezentuj¹ca wyskalowane po³o¿enie 
-     * wartoœci wybranej wewn¹trz przedzia³u. Gdy <b>value</b> < 0 zostaje domyœlnie przypisane <b>value = 0</b>
-     * gdy <b>value</b> > 1 zostaje domyœlnie przypisane <b>value = 1</b>
+     * Ustawia wartoÅ›Ä‡ wyrÃ³Å¼nionÄ…
+     * @param value - WartoÅ›Ä‡ z przedziaÅ‚u [0,1] reprezentujÄ…ca wyskalowane poÅ‚oÅ¼enie 
+     * wartoÅ›ci wybranej wewnÄ…trz przedziaÅ‚u. Gdy <b>value</b> < 0 zostaje domyÅ›lnie przypisane <b>value = 0</b>
+     * gdy <b>value</b> > 1 zostaje domyÅ›lnie przypisane <b>value = 1</b>
      */
     public void interpolate(float value){
     	if(value > 1.0f) value = 1.0f;
@@ -74,9 +74,9 @@ public class Range {
     }
 
     /**
-     * Ustawia wartoœæ wyró¿nion¹
-     * @param value - wartoœæ wyró¿niona z przedzia³u, gdy value < minimum to domyœlnie value = minimum
-     * gdy value > maximu  to domyœlnie value = maximum
+     * Ustawia wartoÅ›Ä‡ wyrÃ³Å¼nionÄ…
+     * @param value - wartoÅ›Ä‡ wyrÃ³Å¼niona z przedziaÅ‚u, gdy value < minimum to domyÅ›lnie value = minimum
+     * gdy value > maximum  to domyÅ›lnie value = maximum
      */
     public void setValue(float value) {
     	if(value < mMin) mValue = mMin;

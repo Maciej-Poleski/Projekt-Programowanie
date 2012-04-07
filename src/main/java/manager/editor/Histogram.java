@@ -1,7 +1,7 @@
 package manager.editor;
 
 /**
- * Przechowuje informacje o rozkladzie danych w kanale obrazu w formie tablicy czestosci wystapien
+ * Przechowuje informacje o rozkładzie danych w kanale obrazu w formie tablicy częstości wystąpień
  * @author Patryk
  */
 public class Histogram {
@@ -14,27 +14,27 @@ public class Histogram {
 	private final HistogramChannel channel;
 	/**
 	 * @param table - tablica wystapien zarejestrowanych
-	 * @param channel - kanal dla kt�rego ten histogram trzyma informacje
+	 * @param channel - kanal dla którego ten histogram trzyma informacje
 	 */
 	Histogram(int[] table, HistogramChannel channel){
 		mData = table.clone();
 		this.channel = channel;
 	}
     /**
-     * @return czestotliwosc wystapien danego argumentu
+     * @return częstotliwość wystąpień danego argumentu
      */
     public int getValue(int argument) {
     	if(argument < 0 || argument >= mData.length) return 0;
         return mData[argument];
     }
     /**
-     * @return dlugosc tablicy z wartosciami wyst�pie�
+     * @return długość tablicy z wartościami wystąpień
      */
     public int getValueTableLenght(){
     	return mData.length;
     }
     /**
-     * @return typ kana�u dla kt�rego s� przechowywane informacje
+     * @return typ kanału dla którego są przechowywane informacje
      */
     public HistogramChannel getChannel(){
     	return channel;

@@ -1,13 +1,13 @@
 package manager.editor;
 
 /**
- * Szczeg髄ny rodzaj filtr體 zakresowych, jako parametr pracy u縴wa tablicy dozwolonych zakres體
- * pracy na warto渃iach
+ * Szczeg贸lny rodzaj filtr贸w zakresowych, jako parametr pracy u偶ywa tablicy dozwolonych zakres贸w
+ * pracy na warto艣ciach
  * @author Patryk
  */
 public interface IFilterRange extends IFilter {
     /**
-     * @return tablica dozwolonych zakres體
+     * @return tablica dozwolonych zakres贸w
      */
     public Range[] getRangeTable();
 }

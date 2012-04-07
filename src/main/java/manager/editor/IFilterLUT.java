@@ -1,7 +1,7 @@
 package manager.editor;
 
 /**
- * Szczególny rodzaj filtrów, które jako parametr pracy wykorzystuj¹ tablice funkcji LUT
+ * SzczegÃ³lny rodzaj filtrÃ³w, ktÃ³re jako parametr pracy wykorzystujÄ… tablice funkcji LUT
  * @author Patryk
  */
 public interface IFilterLUT extends IFilter {
@@ -11,7 +11,7 @@ public interface IFilterLUT extends IFilter {
     public LUTTable getConversionTable();
 
     /**
-     * Ustawia funkcjê LUT która bêdzie parametrem pracy filtru
+     * Ustawia funkcjÄ™ LUT ktÃ³ra bÄ™dzie parametrem pracy filtru
      * @param table - nowa tablica
      */
     public void setConversionTable(LUTTable table);

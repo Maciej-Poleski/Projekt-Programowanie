@@ -3,10 +3,10 @@ package manager.editor;
 import java.awt.image.BufferedImage;
 
 /**
- * Reprezentuje tablice pixeli obrazu. Mo¿e przechowywaæ dane w 3 przestrzeniach kolorów
- * RGB, CMY, HSV, daje mo¿liwoœæ exportu i importu ze struktur¹ <b>BufferedImage</b> 
+ * Reprezentuje tablice pixeli obrazu. MoÅ¼e przechowywaÄ‡ dane w 3 przestrzeniach kolorÃ³w
+ * RGB, CMY, HSV, daje moÅ¼liwoÅ›Ä‡ exportu i importu ze struktury <b>BufferedImage</b> 
  * oraz wykonania swojej kopii zapasowej.
- * Jest to podstawowa struktura na której bêd¹ pracowaæ filtry.
+ * Jest to podstawowa struktura na ktÃ³rej bÄ™dÄ… pracowaÄ‡ filtry.
  * @author Patryk
  *
  */
@@ -21,7 +21,7 @@ public class PixelData implements Cloneable {
 	private PixelData(){}
 	
     /**
-     * @param image - referencja do obrazu z którego pobieramy dane o pixelach
+     * @param image - referencja do obrazu z ktÃ³rego pobieramy dane o pixelach
      */
     public PixelData(BufferedImage image) {
     	mWidth = image.getWidth();
@@ -123,16 +123,15 @@ public class PixelData implements Cloneable {
     }
 
     /**
-     * @return Dok³adna kopia danych <b>PixelData</b>
+     * @return DokÅ‚adna kopia danych <b>PixelData</b>
      */
     @Override
     public Object clone() {
-    	PixelData ret = new PixelData();
-    	ret.mWidth = mWidth;
-    	ret.mHeight = mHeight;
-    	ret.mData = mData.clone();
-    	ret.mDataType = mDataType;
-        return ret;
+        PixelData ret = null; 
+        try{ret = (PixelData) super.clone(); 
+        } catch (CloneNotSupportedException e) {} 
+        ret.mData = mData.clone(); 
+        return ret; 
     }
     
     /**
@@ -146,19 +145,20 @@ public class PixelData implements Cloneable {
     }
     
     /**
-     * @param image - obraz do którego próbujemy przenieœæ dane
-     * @throws IllegalArgumentException - gdy rozmiar <b>image</b>  nie zgadza siê z rozmiarem danych PixelData
-     * lub parametr jets nullem. Nale¿y wtedy u¿yc metody <b>toBufferedData()</b>
+     * @param image - obraz do ktÃ³rego prÃ³bujemy przenieÅ›Ä‡ dane
+     * @throws IllegalArgumentException - gdy rozmiar <b>image</b>  nie zgadza siÄ™ z rozmiarem danych PixelData
+     * NaleÅ¼y wtedy uÅ¼yc metody <b>toBufferedData()</b>
      */
     public void toBufferedImage(BufferedImage image) throws IllegalArgumentException{
-    	if(image == null || image.getWidth() != mWidth || image.getHeight() != mHeight) throw new IllegalArgumentException();
+    	if(image == null) throw new NullPointerException();
+    	if(image.getWidth() != mWidth || image.getHeight() != mHeight) throw new IllegalArgumentException();
     	toRGB();
     	image.getRaster().setPixels(0, 0, mWidth, mHeight, mData);
     }
 
     /**
-     * @param channel - kana³ z którego chcemy ekstrachowac <b>Histogram</b>
-     * @return <b>Histogram</b> zwieraj¹cy informacje o danym kanale.
+     * @param channel - kanaÅ‚ z ktÃ³rego chcemy ekstrachowac <b>Histogram</b>
+     * @return <b>Histogram</b> zwierajÄ…cy informacje o danym kanale.
      */
     public Histogram getHistogram(Histogram.HistogramChannel channel) {
     	int table[] = null;

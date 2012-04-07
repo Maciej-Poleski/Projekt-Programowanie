@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 public class EditWindow extends JDialog {
     /**
-     * @param image - referencja do objektu klasy BufferedImage przechowuj¹ca obraz do edycji
+     * @param image - referencja do objektu klasy BufferedImage przechowujÄ…ca obraz do edycji
      */
     public EditWindow(BufferedImage image) {
     }

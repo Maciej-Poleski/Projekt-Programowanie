@@ -1,9 +1,9 @@
 package manager.editor;
 
 /**
- * Opisuje kwadratow¹ macierz filtru, u¿ywana jako parametr dla interfejsu IFilterMatrix
- * Macierz mo¿e byæ tylko i wy³¹cznie kwadratowa o boku nieparzystym >= 3
- * Dozwolone s¹ macierze 3x3 5x5 itd 
+ * Opisuje kwadratowÄ… macierz filtru, uÅ¼ywanÄ… jako parametr dla interfejsu IFilterMatrix
+ * Macierz moÅ¼e byÄ‡ tylko i wyÅ‚Ä…cznie kwadratowa o boku nieparzystym >= 3
+ * Dozwolone sÄ… macierze 3x3 5x5 itd 
  * @author Patryk
  *
  */
@@ -12,10 +12,10 @@ public class Matrix {
 	private float[] mData;
 	
 	/**
-	 * Tworzy now¹ macierz rozmiaru size x size i wypelnia j¹ zerami poza œrodkowym polem,
-	 * któremu przypisuje 1.0f (identycznoœciowy filtr)
-	 * @param size - rozmiar boku macierzy, dozwolone s¹ tylko liczby nieparzyste
-	 * @throws IllegalArgumentException - gdy rozmiar jets nie prawid³owy
+	 * Tworzy nowÄ… macierz rozmiaru size x size i wypelnia jÄ… zerami poza Å›rodkowym polem,
+	 * ktÃ³remu przypisuje 1.0f (identycznoÅ›ciowy filtr)
+	 * @param size - rozmiar boku macierzy, dozwolone sÄ… tylko liczby nieparzyste
+	 * @throws IllegalArgumentException - gdy rozmiar jets nie prawidÅ‚owy
 	 */
 	public Matrix(int size) throws IllegalArgumentException{
 		if(size <= 0 || size%2==0) throw new IllegalArgumentException();
@@ -25,17 +25,18 @@ public class Matrix {
 	}
 	
     /**
-     * Tworzy now¹ macierz na podstawie dostarczonej tablicy wartoœci jej pól
-     * @param table - tablica z wartoœciami pól macierzy
+     * Tworzy nowÄ… macierz na podstawie dostarczonej tablicy wartoÅ›ci jej pÃ³l
+     * @param table - tablica z wartoÅ›ciami pÃ³l macierzy
      * @throws IllegalArgumentException gdy rozmiar tablicy jest niedozwolony 
      * (nie opisuje mecierzy 3x3 5x5 itd)
      */
     public Matrix(float[] table) throws IllegalArgumentException {
+    	if(table == null) throw new NullPointerException();
     	setFromTable(table);
     }
 
     /**
-     * @return wartoœci pól macierzy
+     * @return wartoÅ›ci pÃ³l macierzy
      */
     public float[] getTable() {
         return mData;
@@ -49,11 +50,12 @@ public class Matrix {
     }
 
     /**
-     * Ustawia pola macierzy na wartoœci pobrane z tablicy
-     * @param table - tablica z wartoœciami pól macierzy
+     * Ustawia pola macierzy na wartoÅ›ci pobrane z tablicy
+     * @param table - tablica z wartoÅ›ciami pÃ³l macierzy
      * @throws IllegalArgumentException gdy rozmiar macierzy jest niedozwolony
      */
     public void setFromTable(float[] table) throws IllegalArgumentException {
+    	if(table == null) throw new NullPointerException();
     	int size = (int)Math.sqrt(table.length);
     	if(size*size != table.length || size < 3 || size%2==0) throw new IllegalArgumentException();
     	mSize = size;
