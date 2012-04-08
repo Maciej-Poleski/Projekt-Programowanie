@@ -93,30 +93,6 @@ public class Tags implements Serializable {
     }
 
     /**
-     * Usuwa wskazany tag. Wszystkie pliki oznaczone nim tracą to oznaczenie. Jeżeli tag jest macierzysty, pliki są
-     * usuwane z bazy danych. Tag jest również usuwany ze struktury co może oznaczać rozspójnienie i powstanie nowych
-     * "głów". Korzystaj mądrze. Przed użyciem tej metody należy ustawić bazę plików.
-     *
-     * @param tag Tag który ma zostać usunięty.
-     * @throws StoreNotAvailableException Jeżeli nie ustawiono bazy plików
-     * @see #setStore(TagFilesStore)
-     * @deprecated Używaj silnie typowanych funkcji
-     */
-    public void removeTag(Tag<?> tag) {
-        checkStore();
-        if (tag instanceof MasterTag) {
-            store.removeFamily((MasterTag) tag);
-            removeMasterTagFromStructure((MasterTag) tag);
-        } else {
-            Set<FileID> filesToRemove = store.getFilesWithRealTag(tag);
-            for (FileID file : filesToRemove) {
-                store.removeFileTag(file, (UserTag) tag);
-            }
-            removeUserTagFromStructure((UserTag) tag);
-        }
-    }
-
-    /**
      * Usuwa wskazany tag macierzysty usuwając jednocześnie z bazy danych wszystkie pliki otagowane nim, lub jego
      * pochodną. Tag jest również usuwany ze struktury co może oznaczać rozspójnienie i powstanie nowych "głów".
      * Nie nadużywaj tej funkcji. Przed użyciem tej metody należy ustawić bazę plików.
