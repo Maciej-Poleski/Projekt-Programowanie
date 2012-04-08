@@ -14,6 +14,7 @@ import java.util.*;
 public class TagFilesStore implements Serializable {
     private final Map<Tag<?>, Set<FileID>> filesByTags = new HashMap<>();
     private final Map<FileID, Set<Tag<?>>> tagsByFiles = new HashMap<>();
+    private static final long serialVersionUID = 1;
 
     /**
      * Konstruuje nowy magazyn plików otagowanych.

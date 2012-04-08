@@ -14,9 +14,10 @@ import java.util.*;
  */
 public class Tags implements Serializable {
     private final List<Tag<?>> tags = new ArrayList<>();
-    private TagFilesStore store;
+    private TagFilesStore store = null;
     private final Map<Tag<?>, String> tagNames = new HashMap<>();
     private final Map<Tag<?>, Set<Object>> tagMetadata = new HashMap<>();
+    private static final long serialVersionUID = 1;
 
     /**
      * Konstruuje nowy obiekt z pustą rodziną tagów.
@@ -53,9 +54,11 @@ public class Tags implements Serializable {
      */
     public Set<Tag<?>> getHeads() {
         Set<Tag<?>> result = new HashSet<>();
-        for (Tag<?> tag : tags)
-            if (tag.getParents().isEmpty())
+        for (Tag<?> tag : tags) {
+            if (tag.getParents().isEmpty()) {
                 result.add(tag);
+            }
+        }
         return result;
     }
 
@@ -67,8 +70,9 @@ public class Tags implements Serializable {
     public Set<MasterTag> getMainTagHeads() {
         Set<MasterTag> result = new HashSet<>();
         for (Tag<?> tag : getHeads()) {
-            if (tag instanceof MasterTag)
+            if (tag instanceof MasterTag) {
                 result.add((MasterTag) tag);
+            }
         }
         return result;
     }
@@ -81,8 +85,9 @@ public class Tags implements Serializable {
     public Set<UserTag> getUserTagHeads() {
         Set<UserTag> result = new HashSet<>();
         for (Tag<?> tag : getHeads()) {
-            if (tag instanceof UserTag)
+            if (tag instanceof UserTag) {
                 result.add((UserTag) tag);
+            }
         }
         return result;
     }
@@ -197,21 +202,27 @@ public class Tags implements Serializable {
      */
     public UserTag newUserTag(Set<UserTag> parents, Set<UserTag> children) throws CycleException {
         UserTag result = new UserTag();
-        if (parents == null)
+        if (parents == null) {
             parents = new HashSet<>();
-        if (children == null)
+        }
+        if (children == null) {
             children = new HashSet<>();
-        for (UserTag parent : parents)
+        }
+        for (UserTag parent : parents) {
             result.addParent(parent);
-        for (UserTag child : children)
+        }
+        for (UserTag child : children) {
             result.addChild(child);
+        }
         try {
             checkCycle();
         } catch (CycleException e) {
-            for (UserTag parent : parents)
+            for (UserTag parent : parents) {
                 result.removeParent(parent);
-            for (UserTag child : children)
+            }
+            for (UserTag child : children) {
                 result.removeChild(child);
+            }
             throw new CycleException(e);
         }
         return result;
@@ -272,8 +283,9 @@ public class Tags implements Serializable {
      * @param metadata Metadane które zostaną powiązane z wskazanym tagiem.
      */
     public void addTagMetadata(Tag<?> tag, Object metadata) {
-        if (!tagMetadata.containsKey(tag))
+        if (!tagMetadata.containsKey(tag)) {
             tagMetadata.put(tag, new HashSet<>());
+        }
         tagMetadata.get(tag).add(metadata);
     }
 
@@ -284,16 +296,19 @@ public class Tags implements Serializable {
      * @param metadata Metadane które zostaną usunięte z tagu.
      */
     public void removeTagMetadata(Tag<?> tag, Object metadata) {
-        if (!tagMetadata.containsKey(tag))
+        if (!tagMetadata.containsKey(tag)) {
             return;
+        }
         tagMetadata.get(tag).remove(metadata);
-        if (tagMetadata.get(tag).isEmpty())
+        if (tagMetadata.get(tag).isEmpty()) {
             tagMetadata.remove(tag);
+        }
     }
 
     private void checkStore() {
-        if (store == null)
+        if (store == null) {
             throw new StoreNotAvailableException();
+        }
     }
 
     private void checkCycle() throws CycleException {
@@ -302,11 +317,11 @@ public class Tags implements Serializable {
     }
 
     private void lookForCycleParent() throws CycleException {
-        new CycleParentFinder();
+        new CycleParentFinder(tags);
     }
 
     private void lookForCycleChildren() throws CycleException {
-        new CycleChildrenFinder();
+        new CycleChildrenFinder(tags);
     }
 
     private void removeMasterTagFromStructure(MasterTag tag) {
@@ -327,10 +342,10 @@ public class Tags implements Serializable {
         }
     }
 
-    private class CycleParentFinder {
+    private static class CycleParentFinder {
         private final Map<Tag<?>, Boolean> state = new HashMap<>();
 
-        CycleParentFinder() throws CycleException {
+        CycleParentFinder(List<Tag<?>> tags) throws CycleException {
             for (Tag<?> tag : tags)
                 tryTravel(tag);
         }
@@ -351,10 +366,10 @@ public class Tags implements Serializable {
         }
     }
 
-    private class CycleChildrenFinder {
+    private static class CycleChildrenFinder {
         private final Map<Tag<?>, Boolean> state = new HashMap<>();
 
-        CycleChildrenFinder() throws CycleException {
+        CycleChildrenFinder(List<Tag<?>> tags) throws CycleException {
             for (Tag<?> tag : tags)
                 tryTravel(tag);
         }
