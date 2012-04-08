@@ -28,11 +28,14 @@ public class TagFilesStore implements Serializable {
      * @param fileId    Uchwyt do reprezentanta pliku
      * @param masterTag Tag macierzysty związany z plikiem
      * @param userTags  Opcjonalne tagi użytkownika
+     * @throws IllegalStateException Jeżeli podany plik jest już w bazie
      */
     public void addFile(FileID fileId, MasterTag masterTag, Set<UserTag> userTags) {
         if (userTags == null) {
             userTags = new HashSet<>();
         }
+        if (tagsByFiles.containsKey(fileId))
+            throw new IllegalStateException("Plik " + fileId + " jest już w bazie");
         addTagInformation(fileId, masterTag);
         for (UserTag tag : userTags) {
             addTagInformation(fileId, tag);
@@ -204,6 +207,16 @@ public class TagFilesStore implements Serializable {
             }
         }
         return result;
+    }
+
+    /**
+     * Wyciąga wszystkie tagi z podanego pliku.
+     *
+     * @param file Plik z którego zostaną wyciągnięte tagi.
+     * @return Zbiór tagów przypisanych do danego pliku
+     */
+    public Set<Tag<?>> getTagsFrom(FileID file) {
+        return getTagsFrom(new HashSet<>(Arrays.asList(file)));
     }
 
     /**

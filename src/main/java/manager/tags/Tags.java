@@ -322,8 +322,9 @@ public class Tags implements Serializable {
         private final Map<Tag<?>, Boolean> state = new HashMap<>();
 
         CycleParentFinder(List<Tag<?>> tags) throws CycleException {
-            for (Tag<?> tag : tags)
+            for (Tag<?> tag : tags) {
                 tryTravel(tag);
+            }
         }
 
         private void tryTravel(Tag<?> tag) throws CycleException {
@@ -346,8 +347,9 @@ public class Tags implements Serializable {
         private final Map<Tag<?>, Boolean> state = new HashMap<>();
 
         CycleChildrenFinder(List<Tag<?>> tags) throws CycleException {
-            for (Tag<?> tag : tags)
+            for (Tag<?> tag : tags) {
                 tryTravel(tag);
+            }
         }
 
         private void tryTravel(Tag<?> tag) throws CycleException {
