@@ -1,4 +1,4 @@
-﻿package manager.tags;
+package manager.tags;
 
 import java.util.List;
 

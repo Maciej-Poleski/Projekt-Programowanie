@@ -1,4 +1,4 @@
-﻿package manager.tags;
+package manager.tags;
 
 import manager.files.FileID;
 
