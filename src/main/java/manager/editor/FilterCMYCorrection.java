@@ -1,5 +1,9 @@
 package manager.editor;
 
+/**
+ * Filtr umożliwiający kanałową korektę CMY - filtr liniowy
+ * @author Patryk
+ */
 public class FilterCMYCorrection implements IFilterRange{
 	private final Range[] mRange = new Range[]{
 			new Range(-128.0f, 128.0f, 0.0f),

@@ -1,5 +1,9 @@
 package manager.editor;
 
+/**
+ * Filtr umożliwiający zmianę jasności obrazu - filtr liniowy
+ * @author Patryk
+ */
 public class FilterBrightness implements IFilterRange{
 	private final Range[] mRange = new Range[]{
 		new Range(-128.0f, 128.0f, 0.0f)	

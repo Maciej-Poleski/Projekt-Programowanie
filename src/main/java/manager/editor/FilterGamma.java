@@ -1,5 +1,9 @@
 package manager.editor;
 
+/**
+ * Filtr umożliwiający dokonanie korekcji Gamma na obrazie
+ * @author Patryk
+ */
 public class FilterGamma implements IFilterRange{
 	private final Range[] mRange = new Range[]{
 		new Range(0.2f, 5.0f, 1.0f)	

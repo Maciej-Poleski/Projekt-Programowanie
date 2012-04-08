@@ -1,5 +1,11 @@
 package manager.editor;
 
+/**
+ * Filtr umożliwiający dokonanie korekty ekspozycji
+ * przyjmuje parametr w jednostkach EV (Exposure Value)
+ * jest to współczynnik kierunkowy prostej konwersji (a = 2^EV)
+ * @author Patryk
+ */
 public class FilterExposure implements IFilterRange{
 	private final Range[] mRange = new Range[]{
 		new Range(-3.0f, 3.0f, 0.0f)

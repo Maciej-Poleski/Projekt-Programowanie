@@ -1,5 +1,12 @@
 package manager.editor;
 
+/**
+ * Filtr tworzący zdjęcia w skali szarości w 3 wariantach:
+ * - średniej absolutnej
+ * - średniej jasności
+ * - luminestencji barwy
+ * @author Patryk
+ */
 public class FilterGrayScale implements IFilter{
 	public enum FilterGrayScaleTypes{
 		LIGHTNESS, AVERAGE, LUMINOSITY

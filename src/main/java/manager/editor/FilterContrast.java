@@ -1,5 +1,9 @@
 package manager.editor;
 
+/**
+ * Filtr umożliwiający zmianę kontrastu obrazu - filtr liniowy
+ * @author Patryk
+ */
 public class FilterContrast implements IFilterRange {
 	private final Range[] mRange = new Range[]{
 			new Range(0.1f, 10.0f, 1.0f)

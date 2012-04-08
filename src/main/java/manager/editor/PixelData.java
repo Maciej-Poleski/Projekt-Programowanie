@@ -18,7 +18,18 @@ public class PixelData implements Cloneable {
 	int mWidth, mHeight;
 	float[] mData;
 	
-	private PixelData(){}
+	/**
+	 * Tworzy nowy obraz o podanych wymiarach
+	 * @param width - długość obrazu
+	 * @param height - wysokość obrazu
+	 * @throws IllegalArgumentException - gdy width lub height sa < 1
+	 */
+	public PixelData(int width, int height) throws IllegalArgumentException{
+		if(width <= 0 || height <= 0) throw new IllegalArgumentException();
+		mWidth = width;
+		mHeight = height;
+		mData = new float[width*height*3];
+	}
 	
     /**
      * @param image - referencja do obrazu z którego pobieramy dane o pixelach

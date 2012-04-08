@@ -1,5 +1,9 @@
 package manager.editor;
 
+/**
+ * Filtr umożliwiający kanałową korekcję kanałów RGB - zmiana liniowa
+ * @author Patryk
+ */
 public class FilterRGBCorrection implements IFilterRange{
 	private final Range[] mRange = new Range[]{
 		new Range(-128.0f, 128.0f, 0.0f),

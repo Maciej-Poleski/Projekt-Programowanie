@@ -1,5 +1,9 @@
 package manager.editor;
 
+/**
+ * Filtr tworzący fotograficzny efekt sepii.
+ * @author Patryk
+ */
 public class FilterSepia implements IFilterRange{
 	private final Range[] mRange = new Range[]{
 		new Range(20.0f, 50.0f, 30.0f)

@@ -1,5 +1,9 @@
 package manager.editor;
 
+/**
+ * Filtr umożliwiający kanałową korekcję HSV - zmiana liniowa
+ * @author Patryk
+ */
 public class FilterHSVCorrection implements IFilterRange{
 	private final Range[] mRange = new Range[]{
 			new Range(-180.0f, 180.0f, 0.0f),
