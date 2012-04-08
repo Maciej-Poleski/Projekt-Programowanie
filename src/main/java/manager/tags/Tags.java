@@ -95,16 +95,52 @@ public class Tags implements Serializable {
      * @param tag Tag który ma zostać usunięty.
      * @throws StoreNotAvailableException Jeżeli nie ustawiono bazy plików
      * @see #setStore(TagFilesStore)
+     * @deprecated Używaj silnie typowanych funkcji
      */
     public void removeTag(Tag<?> tag) {
         checkStore();
-        if (tag instanceof MasterTag)
+        if (tag instanceof MasterTag) {
             store.removeFamily((MasterTag) tag);
-        else {
+            removeMasterTagFromStructure((MasterTag) tag);
+        } else {
             Set<FileID> filesToRemove = store.getFilesWithRealTag(tag);
-            for (FileID file : filesToRemove)
+            for (FileID file : filesToRemove) {
                 store.removeFileTag(file, (UserTag) tag);
+            }
+            removeUserTagFromStructure((UserTag) tag);
         }
+    }
+
+    /**
+     * Usuwa wskazany tag macierzysty usuwając jednocześnie z bazy danych wszystkie pliki otagowane nim, lub jego
+     * pochodną. Tag jest również usuwany ze struktury co może oznaczać rozspójnienie i powstanie nowych "głów".
+     * Nie nadużywaj tej funkcji. Przed użyciem tej metody należy ustawić bazę plików.
+     *
+     * @param tag Tag który ma zostać usunięty.
+     * @throws StoreNotAvailableException Jeżeli nie ustawiono bazy plików
+     * @see #setStore(TagFilesStore)
+     */
+    public void removeTag(MasterTag tag) {
+        checkStore();
+        store.removeFamily(tag);
+        removeMasterTagFromStructure(tag);
+    }
+
+    /**
+     * Usuwa wskazany tag użytkownika odznaczając jednocześnie wszystkie oznaczone nim pliki w bazie. Tag jest
+     * również usuwany ze struktury co może oznaczać rozspójnienie i powstanie nowych "głów". Przed użyciem tej
+     * metody należy ustawić bazę plików.
+     *
+     * @param tag Tag który ma zostać usunięty.
+     * @throws StoreNotAvailableException Jeżeli nie ustawiono bazy plików
+     * @see #setStore(TagFilesStore)
+     */
+    public void removeTag(UserTag tag) {
+        Set<FileID> filesToRemoveTagFrom = store.getFilesWithRealTag(tag);
+        for (FileID file : filesToRemoveTagFrom) {
+            store.removeFileTag(file, tag);
+        }
+        removeUserTagFromStructure(tag);
     }
 
     /**
@@ -271,6 +307,24 @@ public class Tags implements Serializable {
 
     private void lookForCycleChildren() throws CycleException {
         new CycleChildrenFinder();
+    }
+
+    private void removeMasterTagFromStructure(MasterTag tag) {
+        if (tag.getParent() != null) {
+            tag.removeParent(tag.getParent());
+        }
+        for (MasterTag child : tag.getChildren()) {
+            tag.removeChild(child);
+        }
+    }
+
+    private void removeUserTagFromStructure(UserTag tag) {
+        for (UserTag parent : tag.getParents()) {
+            tag.removeParent(parent);
+        }
+        for (UserTag child : tag.getChildren()) {
+            tag.removeChild(child);
+        }
     }
 
     private class CycleParentFinder {
