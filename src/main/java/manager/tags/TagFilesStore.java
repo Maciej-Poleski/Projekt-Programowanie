@@ -29,11 +29,13 @@ public class TagFilesStore implements Serializable {
      * @param userTags  Opcjonalne tagi użytkownika
      */
     public void addFile(FileID fileId, MasterTag masterTag, Set<UserTag> userTags) {
-        if (userTags == null)
+        if (userTags == null) {
             userTags = new HashSet<>();
+        }
         addTagInformation(fileId, masterTag);
-        for (UserTag tag : userTags)
+        for (UserTag tag : userTags) {
             addTagInformation(fileId, tag);
+        }
     }
 
     /**
@@ -57,16 +59,18 @@ public class TagFilesStore implements Serializable {
      */
     public Set<FileID> getFilesWithOneOf(Set<Tag<?>> tags) {
         Set<FileID> result = new HashSet<>();
-        if (tags == null)
+        if (tags == null) {
             return result;
+        }
         Set<Tag<?>> computedTags = new HashSet<>();
         for (Tag<?> tag : tags) {
             computedTags.addAll(tag.getDescendants());
             computedTags.add(tag);
         }
         for (Tag<?> tag : computedTags) {
-            if (filesByTags.containsKey(tag))
+            if (filesByTags.containsKey(tag)) {
                 result.addAll(filesByTags.get(tag));
+            }
         }
         return result;
     }
@@ -79,23 +83,28 @@ public class TagFilesStore implements Serializable {
      */
     public Set<FileID> getFilesWithAllOf(Set<Tag<?>> tags) {
         Set<FileID> result = new HashSet<>();
-        for (Set<FileID> set : filesByTags.values())
+        for (Set<FileID> set : filesByTags.values()) {
             result.addAll(set);
-        if (tags == null)
+        }
+        if (tags == null) {
             return result;
+        }
         for (Tag<?> tag : tags) {
-            if (tag == null)
+            if (tag == null) {
                 return new HashSet<>();
+            }
             List<FileID> filesToRemoveFromResult = new ArrayList<>();
             for (FileID file : result) {
-                if (!tagsByFiles.containsKey(file))
+                if (!tagsByFiles.containsKey(file)) {
                     filesToRemoveFromResult.add(file);
+                }
                 Set<Tag<?>> computedTagSet = new HashSet<>();
                 computedTagSet.addAll(tag.getDescendants());
                 computedTagSet.add(tag);
                 computedTagSet.retainAll(tagsByFiles.get(file));
-                if (computedTagSet.isEmpty())
+                if (computedTagSet.isEmpty()) {
                     filesToRemoveFromResult.add(file);
+                }
             }
             result.removeAll(filesToRemoveFromResult);
         }
@@ -109,8 +118,9 @@ public class TagFilesStore implements Serializable {
      * @return Zbiór plików otagowanych wskazanym tagiem
      */
     public Set<FileID> getFilesWith(Tag<?> tag) {
-        if (tag == null)
+        if (tag == null) {
             return new HashSet<>();
+        }
         return getFilesWithOneOf(new HashSet<Tag<?>>(Arrays.asList(tag)));
     }
 
@@ -123,8 +133,9 @@ public class TagFilesStore implements Serializable {
      */
     public Set<FileID> getFilesFrom(MasterTag masterTag) {
         Set<FileID> result = new HashSet<>();
-        if (masterTag == null)
+        if (masterTag == null) {
             return result;
+        }
         return getFilesWith(masterTag);
     }
 
@@ -133,15 +144,18 @@ public class TagFilesStore implements Serializable {
      *
      * @param files     Zbiór importowanych plików.
      * @param masterTag Tag macierzysty który otrzymają pliki.
-     * @throws NullPointerException Jeżeli masterTag==null
+     * @throws IllegalArgumentException Jeżeli masterTag==null
      */
     public void addFilesTo(Set<FileID> files, MasterTag masterTag) {
-        if (files == null)
+        if (files == null) {
             return;
-        if (masterTag == null)
-            throw new NullPointerException();
-        for (FileID file : files)
+        }
+        if (masterTag == null) {
+            throw new IllegalArgumentException();
+        }
+        for (FileID file : files) {
             addTagInformation(file, masterTag);
+        }
     }
 
     /**
@@ -151,19 +165,23 @@ public class TagFilesStore implements Serializable {
      * @param files     Zbiór importowanych plików
      * @param masterTag Tag macierzysty który otrzymają pliki
      * @param userTags  Tagi użytkownika które otrzymają pliki
-     * @throws NullPointerException Jeżeli masterTag==null
+     * @throws IllegalArgumentException Jeżeli masterTag==null
      */
     public void addFiles(Set<FileID> files, MasterTag masterTag, Set<UserTag> userTags) {
-        if (files == null)
+        if (files == null) {
             return;
-        if (masterTag == null)
-            throw new NullPointerException();
-        if (userTags == null)
+        }
+        if (masterTag == null) {
+            throw new IllegalArgumentException();
+        }
+        if (userTags == null) {
             userTags = new HashSet<>();
+        }
         for (FileID file : files) {
             addTagInformation(file, masterTag);
-            for (UserTag tag : userTags)
+            for (UserTag tag : userTags) {
                 addTagInformation(file, tag);
+            }
         }
     }
 
@@ -176,11 +194,14 @@ public class TagFilesStore implements Serializable {
      */
     public Set<Tag<?>> getTagsFrom(Set<FileID> files) {
         Set<Tag<?>> result = new HashSet<>();
-        if (files == null)
+        if (files == null) {
             return result;
-        for (FileID file : files)
-            if (tagsByFiles.containsKey(file))
+        }
+        for (FileID file : files) {
+            if (tagsByFiles.containsKey(file)) {
                 result.addAll(tagsByFiles.get(file));
+            }
+        }
         return result;
     }
 
@@ -189,11 +210,12 @@ public class TagFilesStore implements Serializable {
      *
      * @param file Plik z którego zostanie usunięty tag
      * @param tag  Tag który zostanie usunięty z pliku
-     * @throws NullPointerException Jeżeli file==null
+     * @throws IllegalArgumentException Jeżeli file==null
      */
     public void removeFileTag(FileID file, UserTag tag) {
-        if (tag == null)
+        if (tag == null) {
             return;
+        }
         removeTagInformation(file, tag);
     }
 
@@ -202,11 +224,12 @@ public class TagFilesStore implements Serializable {
      *
      * @param file Plik z którego zostaną usunięte tagi.
      * @param tags Tagi które będą usunięte ze wskazanego pliku
-     * @throws NullPointerException Jeżeli file==null
+     * @throws IllegalArgumentException Jeżeli file==null
      */
     public void removeFileTags(FileID file, Set<UserTag> tags) {
-        if (tags == null)
+        if (tags == null) {
             return;
+        }
         for (UserTag tag : tags) {
             removeTagInformation(file, tag);
         }
@@ -219,14 +242,16 @@ public class TagFilesStore implements Serializable {
      *
      * @param tag Wszystkie pliki oznaczone tym tagiem macierzystym (lub pochodnym) zostaną usunięte z bazy
      * @return Zbiór plików usuniętych z bazy
-     * @throws NullPointerException Jeżeli tag==null
+     * @throws IllegalArgumentException Jeżeli tag==null
      */
     public Set<FileID> removeFamily(MasterTag tag) {
-        if (tag == null)
-            throw new NullPointerException();
+        if (tag == null) {
+            throw new IllegalArgumentException();
+        }
         Set<FileID> filesToRemove = pretendRemoveFamily(tag);
-        for (FileID file : filesToRemove)
+        for (FileID file : filesToRemove) {
             removeFile(file);
+        }
         return filesToRemove;
     }
 
@@ -249,40 +274,47 @@ public class TagFilesStore implements Serializable {
      */
     public Set<FileID> getFilesWithRealTag(Tag<?> tag) {
         Set<FileID> result = new HashSet<>();
-        if (tag == null || !filesByTags.containsKey(tag))
+        if (tag == null || !filesByTags.containsKey(tag)) {
             return result;
+        }
         result.addAll(filesByTags.get(tag));
         return result;
     }
 
     private void addTagInformation(FileID file, Tag<?> tag) {
-        if (!filesByTags.containsKey(tag))
+        if (!filesByTags.containsKey(tag)) {
             filesByTags.put(tag, new HashSet<FileID>());
+        }
         filesByTags.get(tag).add(file);
 
-        if (!tagsByFiles.containsKey(file))
+        if (!tagsByFiles.containsKey(file)) {
             tagsByFiles.put(file, new HashSet<Tag<?>>());
+        }
         tagsByFiles.get(file).add(tag);
     }
 
     private void removeTagInformation(FileID file, UserTag tag) {
-        if (file == null || tag == null)
-            throw new NullPointerException();
-        if (!tagsByFiles.containsKey(file) || !tagsByFiles.get(file).contains(tag))
+        if (file == null || tag == null) {
+            throw new IllegalArgumentException();
+        }
+        if (!tagsByFiles.containsKey(file) || !tagsByFiles.get(file).contains(tag)) {
             return;
+        }
         tagsByFiles.get(file).remove(tag);
-        if (tagsByFiles.get(file).isEmpty())
+        if (tagsByFiles.get(file).isEmpty()) {
             tagsByFiles.remove(file);
-
+        }
         filesByTags.get(tag).remove(file);
-        if (filesByTags.get(tag).isEmpty())
+        if (filesByTags.get(tag).isEmpty()) {
             filesByTags.remove(tag);
+        }
     }
 
     private void cleanupTagsByFiles() {
         for (Iterator<Set<Tag<?>>> i = tagsByFiles.values().iterator(); i.hasNext(); ) {
-            if (i.next().isEmpty())
+            if (i.next().isEmpty()) {
                 i.remove();
+            }
         }
     }
 }

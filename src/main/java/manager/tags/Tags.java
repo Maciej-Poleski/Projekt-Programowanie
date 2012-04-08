@@ -266,51 +266,58 @@ public class Tags implements Serializable {
     }
 
     private void lookForCycleParent() throws CycleException {
-        new Object() {
-            final Map<Tag<?>, Boolean> state = new HashMap<>();
-
-            {
-                for (Tag<?> tag : tags)
-                    tryTravel(tag);
-            }
-
-            private void tryTravel(Tag<?> tag) throws CycleException {
-                if (state.containsKey(tag)) {
-                    if (!state.get(tag))
-                        throw new CycleException();
-                    else
-                        return;
-                }
-                state.put(tag, false);
-                for (Tag<?> parent : tag.getParents())
-                    tryTravel(parent);
-                state.put(tag, true);
-            }
-        };
+        new CycleParentFinder();
     }
 
     private void lookForCycleChildren() throws CycleException {
-        new Object() {
-            final Map<Tag<?>, Boolean> state = new HashMap<>();
-
-            {
-                for (Tag<?> tag : tags)
-                    tryTravel(tag);
-            }
-
-            private void tryTravel(Tag<?> tag) throws CycleException {
-                if (state.containsKey(tag)) {
-                    if (!state.get(tag))
-                        throw new CycleException();
-                    else
-                        return;
-                }
-                state.put(tag, false);
-                for (Tag<?> parent : tag.getChildren())
-                    tryTravel(parent);
-                state.put(tag, true);
-            }
-        };
+        new CycleChildrenFinder();
     }
 
+    private class CycleParentFinder {
+        private final Map<Tag<?>, Boolean> state = new HashMap<>();
+
+        CycleParentFinder() throws CycleException {
+            for (Tag<?> tag : tags)
+                tryTravel(tag);
+        }
+
+        private void tryTravel(Tag<?> tag) throws CycleException {
+            if (state.containsKey(tag)) {
+                if (!state.get(tag)) {
+                    throw new CycleException();
+                } else {
+                    return;
+                }
+            }
+            state.put(tag, false);
+            for (Tag<?> parent : tag.getParents()) {
+                tryTravel(parent);
+            }
+            state.put(tag, true);
+        }
+    }
+
+    private class CycleChildrenFinder {
+        private final Map<Tag<?>, Boolean> state = new HashMap<>();
+
+        CycleChildrenFinder() throws CycleException {
+            for (Tag<?> tag : tags)
+                tryTravel(tag);
+        }
+
+        private void tryTravel(Tag<?> tag) throws CycleException {
+            if (state.containsKey(tag)) {
+                if (!state.get(tag)) {
+                    throw new CycleException();
+                } else {
+                    return;
+                }
+            }
+            state.put(tag, false);
+            for (Tag<?> parent : tag.getChildren()) {
+                tryTravel(parent);
+            }
+            state.put(tag, true);
+        }
+    }
 }
