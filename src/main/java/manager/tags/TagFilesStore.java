@@ -34,8 +34,9 @@ public class TagFilesStore implements Serializable {
         if (userTags == null) {
             userTags = new HashSet<>();
         }
-        if (tagsByFiles.containsKey(fileId))
+        if (tagsByFiles.containsKey(fileId)) {
             throw new IllegalStateException("Plik " + fileId + " jest już w bazie");
+        }
         addTagInformation(fileId, masterTag);
         for (UserTag tag : userTags) {
             addTagInformation(fileId, tag);
@@ -213,8 +214,9 @@ public class TagFilesStore implements Serializable {
             return result;
         }
         for (FileID file : files) {
-            if (file == null)
+            if (file == null) {
                 throw new IllegalArgumentException("Sprawdzanie jak jest otagowany null nie ma sensu");
+            }
             if (tagsByFiles.containsKey(file)) {
                 result.addAll(tagsByFiles.get(file));
             }
