@@ -3,6 +3,8 @@ package manager.tags;
 import manager.files.FileID;
 
 import java.io.Serializable;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -415,6 +417,28 @@ public class Tags implements Serializable {
         } catch (Exception e) {
             throw new IllegalStateException("Wystąpił nieoczekiwany wyjątek: " + e);
         }
+    }
+
+    /**
+     * Zwraca fragment ścieżki reprezentowany przez wskazany tag macierzysty.
+     *
+     * @param tag Wybrany tag
+     * @return Fragment ścieżki odpowiadający wskazanemu tagowi
+     * @throws IllegalArgumentException Jeżeli tag==null
+     */
+    public Path getPathFromMasterTag(MasterTag tag) {
+        if (tag == null) {
+            throw new IllegalArgumentException("null nie ma ścieżki");
+        }
+        List<String> path = new ArrayList<>();
+        for (MasterTag i = tag; i != null; i = i.getParent()) {
+            path.add(getNameOfTag(i));
+        }
+        String[] preparedPath = new String[path.size() - 1];
+        for (int i = path.size() - 2; i >= 0; --i) {
+            preparedPath[path.size() - 2 - i] = path.get(i);
+        }
+        return Paths.get(path.get(path.size() - 1), preparedPath);
     }
 
     private void checkStore() {
