@@ -67,7 +67,7 @@ public class Tags implements Serializable {
      *
      * @return Zbiór tagów macierzystych które nie mają przodków
      */
-    public Set<MasterTag> getMainTagHeads() {
+    public Set<MasterTag> getMasterTagHeads() {
         Set<MasterTag> result = new HashSet<>();
         for (Tag<?> tag : getHeads()) {
             if (tag instanceof MasterTag) {
@@ -99,9 +99,13 @@ public class Tags implements Serializable {
      *
      * @param tag Tag który ma zostać usunięty.
      * @throws StoreNotAvailableException Jeżeli nie ustawiono bazy plików
+     * @throws IllegalArgumentException   Jeżeli tag==null
      * @see #setStore(TagFilesStore)
      */
     public void removeTag(MasterTag tag) {
+        if (tag == null) {
+            throw new IllegalArgumentException("Tagowanie null-ami nie ma sensu");
+        }
         checkStore();
         store.removeFamily(tag);
         removeMasterTagFromStructure(tag);
@@ -281,6 +285,138 @@ public class Tags implements Serializable {
         }
     }
 
+    /**
+     * Dodaje dziecko do tagu (ustawia relację między tagami). Jeżeli zostanie rzucony wyjątek, operacja nie spowoduje
+     * modyfikacji struktury.
+     *
+     * @param child Tag który zostanie dzieckiem
+     * @param tag   Tag który zostanie rodzicem
+     * @param <T>   Typ tagów
+     * @throws IllegalArgumentException Jeżeli child==null lub tag==null
+     * @throws IllegalStateException    Jeżeli wskazana relacja już istnieje
+     * @throws CycleException           Jeżeli wykonanie tej operacji spowodowałoby powstanie cyklu
+     * @see #removeChildFromTag(Tag, Tag)
+     */
+    public <T extends Tag<T>> void addChildToTag(T child, T tag) throws CycleException {
+        if (child == null || tag == null) {
+            throw new IllegalArgumentException("Tworzenie relacji między null-ami nie ma sensu");
+        }
+        if (tag.getChildren().contains(child)) {
+            throw new IllegalStateException("Tag " + tag + " ma już dziecko " + child);
+        }
+        try {
+            tag.addChild(child);
+            checkCycle();
+        } catch (CycleException e) {
+            tag.removeChild(child);
+            throw new CycleException(e);
+        } catch (Exception e) {
+            throw new IllegalStateException("Wystąpił nieoczekiwany wyjątek: " + e);
+        }
+    }
+
+    /**
+     * Usuwa dziecko z tagu (usuwa relację między tagami). Jeżeli zostanie rzucony wyjątek, operacja nie spowoduje
+     * modyfikacji struktury.
+     *
+     * @param child Tag który zostanie dzieckiem
+     * @param tag   Tag który zostanie rodzicem
+     * @param <T>   Typ tagów
+     * @throws IllegalArgumentException Jeżeli child==null lub tag==null
+     * @throws IllegalStateException    Jeżeli wskazana relacja nie istnieje
+     * @see #addChildToTag(Tag, Tag)
+     */
+    public <T extends Tag<T>> void removeChildFromTag(T child, T tag) {
+        if (child == null || tag == null) {
+            throw new IllegalArgumentException("Tworzenie relacji między null-ami nie ma sensu");
+        }
+        if (!tag.getChildren().contains(child)) {
+            throw new IllegalStateException("Tag " + tag + " nie ma dziecka " + child);
+        }
+        tag.removeChild(child);
+    }
+
+    /**
+     * Ustawia rodzica wskazanego tagu macierzystego (tworzy relacje). Jeżeli zostanie rzucony wyjątek, operacja nie
+     * spowoduje modyfikacji struktury.
+     *
+     * @param parent Tag który zostanie (jedynym) rodzicem.
+     * @param tag    Tag który zostanie dzieckiem.
+     * @throws IllegalArgumentException Jeżeli parent==null lub tag==null
+     * @throws IllegalStateException    Jeżeli wskazana relacja już istnieje
+     * @throws CycleException           Jeżeli dodanie tej relacji spowoduje powstanie cyklu
+     * @see #removeParentOfTag(Tag, Tag)
+     */
+    public void setParentOfTag(MasterTag parent, MasterTag tag) throws CycleException {
+        if (parent == null || tag == null) {
+            throw new IllegalArgumentException("Tworzenie relacji między null-ami nie ma sensu");
+        }
+        if (tag.getParent() == parent) {
+            throw new IllegalStateException("Tag " + tag + " ma już rodzica " + parent);
+        }
+        MasterTag oldParent = null;
+        try {
+            oldParent = tag.getParent();
+            tag.setParent(parent);
+            checkCycle();
+        } catch (CycleException e) {
+            tag.setParent(oldParent);
+            throw new CycleException(e);
+        } catch (Exception e) {
+            throw new IllegalStateException("Wystąpił nieoczekiwany wyjątek: " + e);
+        }
+    }
+
+    /**
+     * Usuwa wskazanego rodzica wskazanego tagu (usuwa relacje). Jeżeli zostanie rzucony wyjątek,
+     * operacja nie spowoduje modyfikacji struktury.
+     *
+     * @param parent Tag który obecnie jest rodzicem
+     * @param tag    Tag który obecnie jest dzieckiem
+     * @param <T>    Type tagu
+     * @throws IllegalArgumentException Jeżeli parent==null lub tag==null
+     * @throws IllegalStateException    Jeżeli wskazana relacja nie istnieje
+     * @see #setParentOfTag(MasterTag, MasterTag)
+     */
+    public <T extends Tag<T>> void removeParentOfTag(T parent, T tag) {
+        if (parent == null || tag == null) {
+            throw new IllegalArgumentException("Tworzenie relacji między null-ami nie ma sensu");
+        }
+        if (!tag.getParents().contains(parent)) {
+            throw new IllegalStateException("Tag " + tag + " nie ma rodzica " + parent);
+        }
+        tag.removeParent(parent);
+    }
+
+    /**
+     * Dodaje wskazanego rodzica wskazanego tagu użytkownika (tworzy relacje). Jeżeli zostanie rzucony wyjątek,
+     * operacja nie spowoduje modyfikacji struktury.
+     *
+     * @param parent Tag który zostanie rodzicem.
+     * @param tag    Tag który zostanie dzieckiem.
+     * @throws IllegalArgumentException Jeżeli parent==null lub tag==null
+     * @throws IllegalStateException    Jeżeli wskazana relacja już istnieje
+     * @throws CycleException           Jeżeli dodanie tej relacji spowoduje powstanie cyklu
+     * @see #removeParentOfTag(Tag, Tag)
+     */
+    public void addParentOfTag(UserTag parent, UserTag tag) throws CycleException {
+        if (parent == null || tag == null) {
+            throw new IllegalArgumentException("Tworzenie relacji między null-ami nie ma sensu");
+        }
+        if (tag.getParents().contains(parent)) {
+            throw new IllegalStateException("Tag " + tag + " ma już rodzica " + parent);
+        }
+        try {
+            tag.addParent(parent);
+            checkCycle();
+        } catch (CycleException e) {
+            tag.removeParent(parent);
+            throw new CycleException(e);
+        } catch (Exception e) {
+            throw new IllegalStateException("Wystąpił nieoczekiwany wyjątek: " + e);
+        }
+    }
+
     private void checkStore() {
         if (store == null) {
             throw new StoreNotAvailableException();
@@ -307,6 +443,7 @@ public class Tags implements Serializable {
         for (MasterTag child : tag.getChildren()) {
             tag.removeChild(child);
         }
+        tags.remove(tag);
     }
 
     private void removeUserTagFromStructure(UserTag tag) {
@@ -316,6 +453,7 @@ public class Tags implements Serializable {
         for (UserTag child : tag.getChildren()) {
             tag.removeChild(child);
         }
+        tags.remove(tag);
     }
 
     private static class CycleParentFinder {
