@@ -24,6 +24,8 @@ public class LUTTable {
 	 * @return interpolowana wartosc funkcji LUT na argumencie <b>arg</b>
 	 */
 	public float getValue(float arg){
+		if(arg <= 0.0f) return mData[0];
+		if(arg >= 1.0f) return mData[mData.length-1];
 		float delta = 1.0f/(mData.length-1);
 		int beg = (int)(arg/delta);
 		if(delta*beg == arg) return mData[beg];
