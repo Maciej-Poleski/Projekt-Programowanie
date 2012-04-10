@@ -25,7 +25,9 @@ public class FilterHSVCorrection implements IFilterRange{
 					H = original.mData[3*(i*original.mHeight+j)];
 					S = original.mData[3*(i*original.mHeight+j)+1];
 					V = original.mData[3*(i*original.mHeight+j)+2];
-					temp.mData[3*(i*original.mHeight+j)] = Math.max(0.0f, Math.min(359.9f, H+Hd));
+					H+=Hd; if(H >= 360.0f) H -= 360.0f;
+					if(H < 0.0f) H += 360.0f;
+					temp.mData[3*(i*original.mHeight+j)] = H;
 					temp.mData[3*(i*original.mHeight+j)+1] = Math.max(0.0f, Math.min(1.0f, S+Sd));
 					temp.mData[3*(i*original.mHeight+j)+2] = Math.max(0.0f, Math.min(1.0f, V+Vd));
 				}	

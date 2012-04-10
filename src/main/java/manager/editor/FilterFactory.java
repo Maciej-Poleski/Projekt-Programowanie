@@ -82,6 +82,24 @@ public class FilterFactory {
 	public static IFilterRange exposure(){
 		return new FilterExposure();
 	}
+	/**
+	 * @return Filtr odpowiedzialny za solaryzację obrazu
+	 */
+	public static IFilterRange solarize(){
+		return new FilterSolarize();
+	}
+	/**
+	 * @return Filtr odpowiedzialny za binaryzaję obrazu - filtr jedno-progowy
+	 */
+	public static IFilterRange binaryzation(){
+		return new FilterBinaryzation();
+	}
+	/**
+	 * @return Filtr odpowiedzialny za tworzenie akcentu kolorystycznego
+	 */
+	public static IFilterRange colorAccent(){
+		return new FilterColorAccent();
+	}
 	
 	//EDGE DETECTING
 	
