@@ -2,6 +2,9 @@ package manager.tags;
 
 import manager.files.FileID;
 
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -439,6 +442,84 @@ public class Tags implements Serializable {
             preparedPath[path.size() - 2 - i] = path.get(i);
         }
         return Paths.get(path.get(path.size() - 1), preparedPath);
+    }
+
+    /**
+     * Zwraca model drzewa na potrzeby widoku drzewa tagów macierzystych
+     *
+     * @return Model drzewa tagów macierzystych
+     */
+    public TreeModel getModelOfMasterTags() {
+        return new TreeModel() {
+            Object root = new Object();
+
+            @Override
+            public Object getRoot() {
+                return root;
+            }
+
+            @Override
+            public Object getChild(Object parent, int index) {
+                if (parent == root) {
+                    return getMasterTagHeads().toArray()[index];
+                } else {
+                    return ((MasterTag) parent).getChildren().get(index);
+                }
+            }
+
+            @Override
+            public int getChildCount(Object parent) {
+                if (parent == root) {
+                    return getMasterTagHeads().size();
+                } else {
+                    return ((MasterTag) parent).getChildren().size();
+                }
+            }
+
+            @Override
+            public boolean isLeaf(Object node) {
+                return false; // We mean it
+            }
+
+            @Override
+            public void valueForPathChanged(TreePath path, Object newValue) {
+                // DO NOTHING - UNSUPPORTED (YET)
+            }
+
+            @Override
+            public int getIndexOfChild(Object parent, Object child) {
+                if (parent == null || child == null) {
+                    return -1;
+                } else {
+                    if (parent == root) {
+                        int i = 0;
+                        for (MasterTag tag : getMasterTagHeads()) {
+                            if (tag == child) {
+                                return i;
+                            }
+                            ++i;
+                        }
+                        return -1;
+                    } else {
+                        if (!((MasterTag) parent).getChildren().contains(child)) {
+                            return -1;
+                        } else {
+                            return ((MasterTag) parent).getChildren().indexOf(child);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void addTreeModelListener(TreeModelListener l) {
+                // DO NOTHING - UNSUPPORTED (YET)
+            }
+
+            @Override
+            public void removeTreeModelListener(TreeModelListener l) {
+                // DO NOTHING - UNSUPPORTED (YET)
+            }
+        };
     }
 
     private void checkStore() {
