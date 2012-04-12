@@ -11,7 +11,7 @@ package manager.editor;
  * @author Patryk
  */
 public class ImageMaker {
-	private ImageMaker(){}
+	private ImageMaker(){throw new RuntimeException();}
 	/**
 	 * @param width - długość obrazu wynikowego
 	 * @param height - wysokość obrazu wynikowego

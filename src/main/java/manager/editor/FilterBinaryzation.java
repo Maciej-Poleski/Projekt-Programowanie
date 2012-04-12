@@ -24,8 +24,11 @@ public class FilterBinaryzation implements IFilterRange{
 		for(int j=0;j<mHeight;j++){
 			for(int i=0;i<mWidth;i++){
 				gray = (origData[3*(j*mWidth+i)]+origData[3*(j*mWidth+i)+1]+origData[3*(j*mWidth+i)+2])/3.0f;
-				if(gray < prog) tempData[3*(j*mWidth+i)] = tempData[3*(j*mWidth+i)+1] = tempData[3*(j*mWidth+i)+2] = 0.0f;
-				else tempData[3*(j*mWidth+i)] = tempData[3*(j*mWidth+i)+1] = tempData[3*(j*mWidth+i)+2] = 255.0f;
+				if(gray < prog) {
+					tempData[3*(j*mWidth+i)] = tempData[3*(j*mWidth+i)+1] = tempData[3*(j*mWidth+i)+2] = 0.0f;
+				} else {
+					tempData[3*(j*mWidth+i)] = tempData[3*(j*mWidth+i)+1] = tempData[3*(j*mWidth+i)+2] = 255.0f;
+				}
 			}
 		}
 	}

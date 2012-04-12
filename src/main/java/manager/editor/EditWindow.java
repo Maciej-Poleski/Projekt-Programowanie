@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 /**
  * Klasa reprezentuje okno dialogowe w którym dokonywana jest edycja obrazu
- * @author Patryk
+ * @author Marcin Regdos
  */
 public class EditWindow extends JDialog {
     /**
