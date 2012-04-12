@@ -87,9 +87,6 @@ public class FileInfo {
 	/**
 	 * Funkcja uaktualnia plik z informacjami na temat calej struktury
 	 */
-    public static void all() {
-        System.out.println(data.infos.values());
-    }
 	public static void saveChanges() throws IOException {
 		ObjectOutputStream wData = new ObjectOutputStream(new FileOutputStream(input));
         data.created = new Date();
