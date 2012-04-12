@@ -11,5 +11,5 @@ public interface ITextureGenerator {
 	 * @param fy - współrzędna pionowa w teksturze z przedziału [0,1]
 	 * @return Kolor pixela tekstury w przestrzeni barw RGB
 	 */
-	public void getValue(float fx, float fy, ColorRGB temp);
+	void getValue(float fx, float fy, ColorRGB temp);
 }

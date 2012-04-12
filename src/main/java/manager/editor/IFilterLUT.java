@@ -8,11 +8,11 @@ public interface IFilterLUT extends IFilter {
     /**
      * @return tablica funkcji LUT
      */
-    public LUTTable getConversionTable();
+    LUTTable getConversionTable();
 
     /**
      * Ustawia funkcję LUT która będzie parametrem pracy filtru
      * @param table - nowa tablica
      */
-    public void setConversionTable(LUTTable table);
+    void setConversionTable(LUTTable table);
 }

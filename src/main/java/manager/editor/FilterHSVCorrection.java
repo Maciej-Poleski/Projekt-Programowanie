@@ -6,36 +6,39 @@ package manager.editor;
  */
 public class FilterHSVCorrection implements IFilterRange{
 	private final Range[] mRange = new Range[]{
-			new Range(-180.0f, 180.0f, 0.0f),
-			new Range(-0.5f, 0.5f, 0.0f),
-			new Range(-0.5f, 0.5f, 0.0f)
+			new Range(-180.0f, 180.0f, 0.0f, "Barwa"),
+			new Range(-0.5f, 0.5f, 0.0f, "Nasycenie"),
+			new Range(-0.5f, 0.5f, 0.0f, "Jasność")
 		};
 
 		@Override
-		public void apply(PixelData original, PixelData temp)
-				throws IllegalArgumentException {
-			if(original == null || temp == null) throw new NullPointerException();
-			if(original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
+		public void apply(PixelData original, PixelData temp){
+			int mWidth = original.getWidth(), mHeight = original.getHeight();
+			if(mWidth != temp.getWidth() || mHeight != temp.getHeight()){
 				throw new IllegalArgumentException();
+			}
+			float[] origData = original.getData();
+			float[] tempData = temp.getData();
 			original.toHSV(); temp.toHSV();
-			float H,S,V;
-			float Hd = mRange[0].getValue(), Sd = mRange[1].getValue(), Vd = mRange[2].getValue();
-			for(int i=0;i<original.mWidth;i++)
-				for(int j=0;j<original.mHeight;j++){
-					H = original.mData[3*(i*original.mHeight+j)];
-					S = original.mData[3*(i*original.mHeight+j)+1];
-					V = original.mData[3*(i*original.mHeight+j)+2];
-					H+=Hd; if(H >= 360.0f) H -= 360.0f;
-					if(H < 0.0f) H += 360.0f;
-					temp.mData[3*(i*original.mHeight+j)] = H;
-					temp.mData[3*(i*original.mHeight+j)+1] = Math.max(0.0f, Math.min(1.0f, S+Sd));
-					temp.mData[3*(i*original.mHeight+j)+2] = Math.max(0.0f, Math.min(1.0f, V+Vd));
+			float mH,mS,mV;
+			float dH = mRange[0].getValue(), dS = mRange[1].getValue(), dV = mRange[2].getValue();
+			for(int i=0;i<mWidth;i++){
+				for(int j=0;j<mHeight;j++){
+					mH = origData[3*(i*mHeight+j)];
+					mS = origData[3*(i*mHeight+j)+1];
+					mV = origData[3*(i*mHeight+j)+2];
+					mH+=dH; if(mH >= 360.0f) {mH -= 360.0f;}
+					if(mH < 0.0f) {mH += 360.0f;}
+					tempData[3*(i*mHeight+j)] = mH;
+					tempData[3*(i*mHeight+j)+1] = Math.max(0.0f, Math.min(1.0f, mS+dS));
+					tempData[3*(i*mHeight+j)+2] = Math.max(0.0f, Math.min(1.0f, mV+dV));
 				}	
+			}
 		}
 
 		@Override
 		public PixelData apply(PixelData image) {
-			if(image == null) return null;
+			if(image == null) {return null;}
 			PixelData ret = (PixelData)image.clone();
 			apply(image, image);
 			return ret;

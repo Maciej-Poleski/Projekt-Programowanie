@@ -6,18 +6,21 @@ package manager.editor;
  */
 public class FilterNegative implements IFilter {
 	@Override
-	public void apply(PixelData original, PixelData temp) 
-			throws IllegalArgumentException {
-		if(original == null || temp == null) throw new NullPointerException();
-		if(original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
+	public void apply(PixelData original, PixelData temp){
+		if(original.getWidth() != temp.getWidth() || original.getHeight() != temp.getHeight()){
 			throw new IllegalArgumentException();
+		}
+		float[] origData = original.getData();
+		float[] tempData = temp.getData();
 		original.toRGB(); temp.toRGB();
-		for(int i=0;i<original.mData.length;i++) temp.mData[i] = 255.0f - original.mData[i];
+		for(int i=0;i<origData.length;i++) {
+			tempData[i] = 255.0f - origData[i];
+		}
 	}
 	
 	@Override
 	public PixelData apply(PixelData image) {
-		if(image == null) return null;
+		if(image == null) {return null;}
 		PixelData ret = (PixelData)image.clone();
 		apply(image, image);
 		return ret;

@@ -9,5 +9,5 @@ public interface IFilterRange extends IFilter {
     /**
      * @return tablica dozwolonych zakresów
      */
-    public Range[] getRangeTable();
+    Range[] getRangeTable();
 }

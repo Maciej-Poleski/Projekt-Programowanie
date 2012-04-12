@@ -10,6 +10,10 @@ import java.util.List;
  * @author Patryk
  */
 public class Gradient {
+	/**
+	 * Klasa opisująca kolor wraz z jego relatywnym położeniem w gradiencie
+	 * @author Patryk
+	 */
 	public static class ColorPos implements Comparable<ColorPos>{
 		private ColorRGB mColor = new ColorRGB(0,0,0);
 		private float mPos;
@@ -36,26 +40,28 @@ public class Gradient {
 		 * gdy pos > 1 przypisane zostanie 1
 		 * @param pos - pozycja w gradiencie [0,1]
 		 */
-		public void setPos(float pos){
+		public final void setPos(float pos){
 			mPos = Math.max(0.0f, Math.min(1.0f, pos));
 		}
 		/**
 		 * Ustawia kolor, jesli argument jest <b>null</b> kolor nie zostanie zmieniony
 		 * @param rgb - kolor z przestrzeni barw RGB
 		 */
-		public void setColor(ColorRGB rgb){
+		public final void setColor(ColorRGB rgb){
 			if(rgb != null) mColor = rgb;
 		}
 		@Override
 		public int compareTo(ColorPos arg0) {
-			if(mPos < arg0.mPos) return -1;
-			if(mPos > arg0.mPos) return 1;
-			return 0;
+			return new Float(mPos).compareTo(arg0.mPos);
 		}
 		@Override
 		public boolean equals(Object obj){
 			if(obj == null || !(obj instanceof ColorPos)) return false;
-			return ((ColorPos)obj).mPos == mPos;
+			return new Float(((ColorPos)obj).mPos).equals(mPos);
+		}
+		@Override
+		public int hashCode(){
+			return new Float(mPos).hashCode();
 		}
 	}
 	

@@ -8,11 +8,11 @@ public interface IFilterMatrix extends IFilter {
     /**
      * @return macierz przekształcenia
      */
-    public Matrix getMatrix();
+    Matrix getMatrix();
 
     /**
      * Ustawia nową macierz przekształcenia
      * @param matrix - nowa macierz przekształcenia
      */
-    public void setMatrix(Matrix matrix);
+    void setMatrix(Matrix matrix);
 }

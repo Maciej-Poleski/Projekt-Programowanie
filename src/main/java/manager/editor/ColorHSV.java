@@ -8,48 +8,48 @@ public class ColorHSV {
 	private float mHue, mSaturation, mValue;
 	
 	/**
-	 * @param H - Barwa [0,359]
-	 * @param S - Nasycenie [0,1]
-	 * @param V - Jasność [0,1]
+	 * @param mH - Barwa [0,359]
+	 * @param mS - Nasycenie [0,1]
+	 * @param mV - Jasność [0,1]
 	 */
-	public ColorHSV(float H, float S, float V){
-		setH(H);
-		setS(S);
-		setV(V);
+	public ColorHSV(float mH, float mS, float mV){
+		setH(mH);
+		setS(mS);
+		setV(mV);
 	}
 	
 	/**
 	 * @return wartość kanału barwy [0,359]
 	 */
-	public float getH(){return mHue;}
+	public final float getH(){return mHue;}
 	/**
 	 * @return wartość kanału nasycenia [0,1]
 	 */
-	public float getS(){return mSaturation;}
+	public final float getS(){return mSaturation;}
 	/**
 	 * @return wartość kanału jasności [0,1]
 	 */
-	public float getV(){return mValue;}
+	public final float getV(){return mValue;}
 	
 	/**
 	 * Ustawia wartość kanału barwy dla koloru
-	 * @param H - kanał barwy
+	 * @param mH - kanał barwy
 	 */
-	public void setH(float H){
-		mHue = Math.max(0.0f, Math.min(359.9f, H));
+	public final void setH(float mH){
+		mHue = Math.max(0.0f, Math.min(359.9f, mH));
 	}
 	/**
 	 * Ustawia wartość kanału nasycenia dla koloru
-	 * @param S - kanał nasycenia
+	 * @param mS - kanał nasycenia
 	 */
-	public void setS(float S){
-		mSaturation = Math.max(0.0f, Math.min(1.0f, S));
+	public final void setS(float mS){
+		mSaturation = Math.max(0.0f, Math.min(1.0f, mS));
 	}
 	/**
 	 * Ustawia wartość kanału jasności dla koloru
-	 * @param V - kanał jasności
+	 * @param mV - kanał jasności
 	 */
-	public void setV(float V){
-		mValue = Math.max(0.0f, Math.min(1.0f, V));
+	public final void setV(float mV){
+		mValue = Math.max(0.0f, Math.min(1.0f, mV));
 	}
 }

@@ -15,7 +15,7 @@ public class LUTTable {
 	 * @param vals - tablica wartości funkcji
 	 * @throws IllegalArgumentException - gdy w podanej tablicy znajdzą sie wartosci z poza [0,1]
 	 */
-	LUTTable(float[] vals) throws IllegalArgumentException{
+	LUTTable(float[] vals){
 		setConversionTable(vals);
 	}
 	
@@ -23,12 +23,12 @@ public class LUTTable {
 	 * @param arg - argumnet z dziedziny [0,1]
 	 * @return interpolowana wartosc funkcji LUT na argumencie <b>arg</b>
 	 */
-	public float getValue(float arg){
-		if(arg <= 0.0f) return mData[0];
-		if(arg >= 1.0f) return mData[mData.length-1];
+	public final float getValue(float arg){
+		if(arg <= 0.0f) {return mData[0];}
+		if(arg >= 1.0f) {return mData[mData.length-1];}
 		float delta = 1.0f/(mData.length-1);
 		int beg = (int)(arg/delta);
-		if(delta*beg == arg) return mData[beg];
+		if(Math.abs(delta*beg - arg) < .00001f) return mData[beg];
 		float hdet = (mData[beg+1] - mData[beg])/delta;
 		return mData[beg] + hdet * (arg-beg*delta);
 	}
@@ -40,12 +40,18 @@ public class LUTTable {
      * @param table - nowa tablica konwersji
      * @throws IllegalArgumentException - gdy w podanej tablicy znajdą sie wartosci z poza [0,1]
      */
-    public void setConversionTable(float[] table) throws IllegalArgumentException{
-    	if(table != null) for(int i=0;i<table.length;i++) if(table[i] < 0.0f || table[i] > 1.0f) throw new IllegalArgumentException();
+    public final void setConversionTable(float[] table){
+    	if(table != null) {
+    		for(int i=0;i<table.length;i++){
+    			if(table[i] < 0.0f || table[i] > 1.0f) {
+    				throw new IllegalArgumentException();
+    			}
+    		}
+    	}
     	if(table == null || table.length < 2){
 			mData = new float[2];
 			mData[0] = 0.0f;
 			mData[1] = 1.0f;
-		} else mData = table.clone();
+		} else {mData = table.clone();}
     }
 }
