@@ -19,26 +19,23 @@ import javax.swing.event.ChangeListener;
 /**
  * Kontrolka do wyswietlania obrazu (scroll)
  * @author Marcin Regdos
- * TODO obsluga myszy
  */
 public class ImageViewer extends JPanel implements ChangeListener{
-	private Image image;
 	private ImagePanel iPanel;
 	private JPanel topPanel;
 	private JScrollPane scrollPane;
 	private JSpinner zoomSpinner;
-	private int zoom, height, width;
+	private int height, width;
 	/**
      * Zostanie utworzona nowa kontrolka
      * @param image - wyswietlany obraz
-     * @param width @param height - rozmiary kontrolki
+     * @param width szerokosc kontrolki
+     * @param height wysokosc kontrolki
      */
 	public ImageViewer (Image image, int width, int height){
-		this.image=image;
 		this.height=height;
 		this.width=width;
-		zoom=100;
-		iPanel=new ImagePanel(this.image);
+		iPanel=new ImagePanel(image);
 		zoomSpinner =new JSpinner (new SpinnerNumberModel(100, 10,1000,10)); 
 		zoomSpinner.addChangeListener(this);
 		
@@ -56,10 +53,16 @@ public class ImageViewer extends JPanel implements ChangeListener{
 		this.add(scrollPane);
 		this.repaint();
 	}
+	/**
+     * Zmiana wyswietlanego obrazu
+     * @param image - nowy obraz
+     */
+	public void setImage (Image image){
+		iPanel.changeImage(image);
+	}
 	@Override
 	public void stateChanged(ChangeEvent arg0) {
-		zoom=(int) zoomSpinner.getValue();
-		iPanel.changeZoom(zoom);	
+		iPanel.changeZoom((int) zoomSpinner.getValue());	
 		this.revalidate();
 		this.repaint();
 	}
