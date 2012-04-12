@@ -11,36 +11,41 @@ package manager.editor;
  */
 public class FilterColorAccent implements IFilterRange{
 	private final Range[] mRange = new Range[]{
-		new Range(0.0f, 359.9f, 0.0f),
-		new Range(0.0f, 180.0f, 10.0f)
+		new Range(0.0f, 359.9f, 0.0f, "Barwa"),
+		new Range(0.0f, 180.0f, 10.0f, "Tolerancja")
 	};
 	
 	@Override
-	public void apply(PixelData original, PixelData temp)
-			throws IllegalArgumentException {
-		if(original == null || temp == null) throw new NullPointerException();
-		if(original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
+	public void apply(PixelData original, PixelData temp){
+		int mWidth = original.getWidth(), mHeight = original.getHeight();
+		if(mWidth != temp.getWidth() || mHeight != temp.getHeight()){
 			throw new IllegalArgumentException();
+		}
+		float[] origData = original.getData();
+		float[] tempData = temp.getData();
 		original.toHSV(); temp.toHSV();
-		float Hue = mRange[0].getValue(), Tol = mRange[1].getValue();
-		float Hmax = Hue+Tol, Hmin = Hue-Tol;
-		float H=0,S=0,V=0;
-		for(int i=0;i<original.mWidth;i++)
-			for(int j=0;j<original.mHeight;j++){
-				H = original.mData[3*(j*original.mWidth+i)];
-				S = original.mData[3*(j*original.mWidth+i)+1];
-				V = original.mData[3*(j*original.mWidth+i)+2];
-				if((Hmin <= H && H <= Hmax) || (Hmin <= H-360.0f && H-360.0f <= Hmax) || (Hmin <= H+360.0f && H+360.0f <= Hmax))
-					temp.mData[3*(j*original.mWidth+i)+1] = S;
-				else temp.mData[3*(j*original.mWidth+i)+1] = 0.0f;
-				temp.mData[3*(j*original.mWidth+i)] = H;
-				temp.mData[3*(j*original.mWidth+i)+2] = V;
+		float mHue = mRange[0].getValue(), mTol = mRange[1].getValue();
+		float mHmax = mHue+mTol, mHmin = mHue-mTol;
+		float mH=0,mS=0,mV=0;
+		for(int i=0;i<mWidth;i++){
+			for(int j=0;j<mHeight;j++){
+				mH = origData[3*(j*mWidth+i)];
+				mS = origData[3*(j*mWidth+i)+1];
+				mV = origData[3*(j*mWidth+i)+2];
+				if((mHmin <= mH && mH <= mHmax) || (mHmin <= mH-360.0f && mH-360.0f <= mHmax) || (mHmin <= mH+360.0f && mH+360.0f <= mHmax)){
+					tempData[3*(j*mWidth+i)+1] = mS;
+				} else {
+					tempData[3*(j*mWidth+i)+1] = 0.0f;
+				}
+				tempData[3*(j*mWidth+i)] = mH;
+				tempData[3*(j*mWidth+i)+2] = mV;
 			}
+		}
 	}
 
 	@Override
 	public PixelData apply(PixelData image) {
-		if(image == null) return null;
+		if(image == null) {return null;}
 		PixelData ret = (PixelData)image.clone();
 		apply(image, image);
 		return ret;

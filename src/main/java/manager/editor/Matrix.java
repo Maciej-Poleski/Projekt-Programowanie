@@ -17,8 +17,10 @@ public class Matrix {
 	 * @param size - rozmiar boku macierzy, dozwolone są tylko liczby nieparzyste
 	 * @throws IllegalArgumentException - gdy rozmiar jets nie prawidłowy
 	 */
-	public Matrix(int size) throws IllegalArgumentException{
-		if(size <= 0 || size%2==0) throw new IllegalArgumentException();
+	public Matrix(int size){
+		if(size <= 0 || size%2==0){
+			throw new IllegalArgumentException();
+		}
 		mSize = size;
 		mData = new float[size*size];
 		mData[size*size/2] = 1.0f;
@@ -30,8 +32,10 @@ public class Matrix {
      * @throws IllegalArgumentException gdy rozmiar tablicy jest niedozwolony 
      * (nie opisuje mecierzy 3x3 5x5 itd)
      */
-    public Matrix(float[] table) throws IllegalArgumentException {
-    	if(table == null) throw new NullPointerException();
+    public Matrix(float[] table){
+    	if(table == null) {
+    		throw new IllegalArgumentException();
+    	}
     	setFromTable(table);
     }
 
@@ -54,10 +58,14 @@ public class Matrix {
      * @param table - tablica z wartościami pól macierzy
      * @throws IllegalArgumentException gdy rozmiar macierzy jest niedozwolony
      */
-    public void setFromTable(float[] table) throws IllegalArgumentException {
-    	if(table == null) throw new NullPointerException();
+    public void setFromTable(float[] table){
+    	if(table == null) {
+    		throw new IllegalArgumentException();
+    	}
     	int size = (int)Math.sqrt(table.length);
-    	if(size*size != table.length || size < 3 || size%2==0) throw new IllegalArgumentException();
+    	if(size*size != table.length || size < 3 || size%2==0){
+    		throw new IllegalArgumentException();
+    	}
     	mSize = size;
     	mData = table.clone();
     }

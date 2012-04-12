@@ -11,6 +11,7 @@ package manager.editor;
  * @author Patryk
  */
 public class ImageMaker {
+	private ImageMaker(){}
 	/**
 	 * @param width - długość obrazu wynikowego
 	 * @param height - wysokość obrazu wynikowego
