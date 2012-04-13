@@ -2,16 +2,45 @@ package manager.editor;
 
 /**
  * Klasa konwertująca pomiędzy przestrzeniami barw
+ * Próba stworzenia obiektu tej klasy nawet przy pomocy refleksji
+ * skończy się wyrzuceniem wyjątku <b>UnsupportedOperationException</b>
  * @author Patryk
  */
-public class ColorConverter {
-	private ColorConverter(){throw new RuntimeException();};
+public final class ColorConverter {
+	/**
+	 * Stała opisuje precyzje porównywania floatów
+	 */
+	public final static float mFloatPrecision = 0.00001f;
+	/**
+	 * Kąt pełny palety barw (Hue) służy do zapętlenia wartości (modulo)
+	 */
+	public final static int mHueChannelPrecision = 360;
+	/**
+	 * Kąt wyznaczający podział koła barw na podzbiory do konwersji RGB -> HSV i odwrotnie
+	 */
+	public final static float mHueCircleSplitter = 60.0f;
+	/**
+	 * Maksymalna dopuszczalna wartość kanału barwy (Hue) zarówno w 
+	 * modelu barw jak i w bitmapie
+	 */
+	public final static float mHueMaxValue = 359.999f;
+	
+	/**
+	 * Maksymalna wartość kanałów RGB, CMY oraz SV (z modelu HSV) w modelach barw
+	 */
+	public final static float mRGBCMYSVFloatMax = 1.0f;
+	/**
+	 * Maksymalna wartość kanałów RGB i CMY w bitmapie
+	 */
+	public final static float mRGBCMYByteMax = 255.0f;
+	
+	private ColorConverter(){throw new UnsupportedOperationException();};
 	/**
 	 * @param color - kolor z przestrzeni CMY
 	 * @return odpowiadający kolor z przestrzeni RGB
 	 */
 	public static ColorRGB cmyTOrgb(ColorCMY color){
-		return new ColorRGB(1.0f-color.getC(), 1.0f-color.getM(), 1.0f-color.getY());
+		return new ColorRGB(mRGBCMYSVFloatMax-color.getC(), mRGBCMYSVFloatMax-color.getM(), mRGBCMYSVFloatMax-color.getY());
 	}
 	/**
 	 * @param color - kolor z przestrzeni HSV
@@ -22,14 +51,14 @@ public class ColorConverter {
 		float mH = color.getH();
 		float mS = color.getS();
 		float mV = color.getV();
-		if(Math.abs(mV) < .00001f) {mR=0.0f; mG=0.0f; mB=0.0f;}
+		if(Math.abs(mV) < mFloatPrecision) {mR=0.0f; mG=0.0f; mB=0.0f;}
 		else{
-		 mH /= 60.0f;
+		 mH /= mHueCircleSplitter;
 		 mI = (int)Math.floor(mH);
 		 f = mH-mI;
-		 p = mV*(1.0f-mS);
-		 q = mV*(1.0f-(mS*f));
-		 t = mV*(1.0f-(mS*(1.0f-f)));
+		 p = mV*(mRGBCMYSVFloatMax-mS);
+		 q = mV*(mRGBCMYSVFloatMax-(mS*f));
+		 t = mV*(mRGBCMYSVFloatMax-(mS*(mRGBCMYSVFloatMax-f)));
 		 if (mI==0) {mR=mV; mG=t; mB=p;}
 		 else if (mI==1) {mR=q; mG=mV; mB=p;}
 		 else if (mI==2) {mR=p; mG=mV; mB=t;}
@@ -45,7 +74,7 @@ public class ColorConverter {
 	 * @return odpowiadający kolor z przestrzeni CMY
 	 */
 	public static ColorCMY rgbTOcmy(ColorRGB color){
-		return new ColorCMY(1.0f-color.getR(), 1.0f-color.getG(), 1.0f-color.getB());
+		return new ColorCMY(mRGBCMYSVFloatMax-color.getR(), mRGBCMYSVFloatMax-color.getG(), mRGBCMYSVFloatMax-color.getB());
 	}
 	/**
 	 * @param color - kolor z przestrzeni HSV
@@ -66,16 +95,16 @@ public class ColorConverter {
 		mB = color.getB();
 		x = Math.min(Math.min(mR, mG), mB);
 		mV = Math.max(Math.max(mR, mG), mB);
-		if (Math.abs(x - mV) < .0001f) {mH=0.0f; mS=0.0f;}
+		if (Math.abs(x - mV) < mFloatPrecision) {mH=0.0f; mS=0.0f;}
 		else {
-			if(Math.abs(mR - x) < .0001f) {f = mG-mB;}
-			else if(Math.abs(mG - x) < .0001f) {f = mB-mR;}
+			if(Math.abs(mR - x) < mFloatPrecision) {f = mG-mB;}
+			else if(Math.abs(mG - x) < mFloatPrecision) {f = mB-mR;}
 			else {f = mR-mG;}
 			
-			if(Math.abs(mR - x) < .0001f) {mI=3.0f;}
-			else if(Math.abs(mG - x) < .0001f) {mI=5.0f;}
+			if(Math.abs(mR - x) < mFloatPrecision) {mI=3.0f;}
+			else if(Math.abs(mG - x) < mFloatPrecision) {mI=5.0f;}
 			else {mI=1.0f;}
-			mH = (float)( (int)((mI-f/(mV-x))*60.0f) )%360;
+			mH = (float)( (int)((mI-f/(mV-x))*mHueCircleSplitter) ) % mHueChannelPrecision;
 			mS = ((mV-x)/mV);
 		}		
 		return new ColorHSV(mH,mS,mV);

@@ -8,7 +8,7 @@ package manager.editor;
  */
 public class FilterBinaryzation implements IFilterRange{
 	private final Range[] mRange = new Range[]{
-		new Range(0.0f, 255.0f, 127.5f, "Próg")	
+		new Range(0.0f, ColorConverter.mRGBCMYByteMax, ColorConverter.mRGBCMYByteMax / 2.0f, "Próg")	
 	};
 
 	@Override
@@ -23,11 +23,17 @@ public class FilterBinaryzation implements IFilterRange{
 		original.toRGB(); temp.toRGB();
 		for(int j=0;j<mHeight;j++){
 			for(int i=0;i<mWidth;i++){
-				gray = (origData[3*(j*mWidth+i)]+origData[3*(j*mWidth+i)+1]+origData[3*(j*mWidth+i)+2])/3.0f;
+				gray = (origData[PixelData.mPixelSize*(j*mWidth+i)]+
+						origData[PixelData.mPixelSize*(j*mWidth+i)+1]+
+						origData[PixelData.mPixelSize*(j*mWidth+i)+2]) / ((float)PixelData.mPixelSize);
 				if(gray < prog) {
-					tempData[3*(j*mWidth+i)] = tempData[3*(j*mWidth+i)+1] = tempData[3*(j*mWidth+i)+2] = 0.0f;
+					tempData[PixelData.mPixelSize*(j*mWidth+i)] = 0.0f;
+					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = 0.0f;
+					tempData[PixelData.mPixelSize*(j*mWidth+i)+2] = 0.0f;
 				} else {
-					tempData[3*(j*mWidth+i)] = tempData[3*(j*mWidth+i)+1] = tempData[3*(j*mWidth+i)+2] = 255.0f;
+					tempData[PixelData.mPixelSize*(j*mWidth+i)] = ColorConverter.mRGBCMYByteMax;
+					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = ColorConverter.mRGBCMYByteMax;
+					tempData[PixelData.mPixelSize*(j*mWidth+i)+2] = ColorConverter.mRGBCMYByteMax;
 				}
 			}
 		}

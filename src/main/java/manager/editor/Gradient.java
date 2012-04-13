@@ -48,20 +48,22 @@ public class Gradient {
 		 * @param rgb - kolor z przestrzeni barw RGB
 		 */
 		public final void setColor(ColorRGB rgb){
-			if(rgb != null) mColor = rgb;
+			if(rgb != null) {
+				mColor = rgb;
+			}
 		}
 		@Override
 		public int compareTo(ColorPos arg0) {
-			return new Float(mPos).compareTo(arg0.mPos);
+			return Float.valueOf(mPos).compareTo(arg0.mPos);
 		}
 		@Override
 		public boolean equals(Object obj){
-			if(obj == null || !(obj instanceof ColorPos)) return false;
-			return new Float(((ColorPos)obj).mPos).equals(mPos);
+			if(!(obj instanceof ColorPos)) {return false;}
+			return Float.valueOf((((ColorPos)obj).mPos)).equals(mPos);
 		}
 		@Override
 		public int hashCode(){
-			return new Float(mPos).hashCode();
+			return Float.valueOf(mPos).hashCode();
 		}
 	}
 	
@@ -89,7 +91,6 @@ public class Gradient {
 	 * @param ref - referencja do wyniku
 	 */
 	public void interpolate(float pos, ColorRGB ref){
-		if(ref == null) throw new NullPointerException();
 		if(lista.size() == 0){
 			ref.setR(0);
 			ref.setG(0);
@@ -102,7 +103,8 @@ public class Gradient {
 		} else {
 			ColorPos prev, last;
 			Iterator<ColorPos> iter = lista.iterator();
-			prev = last = iter.next();
+			prev = iter.next(); 
+			last = prev;
 			while(iter.hasNext() && last.getPos() <= pos){
 				prev = last;
 				last = iter.next();

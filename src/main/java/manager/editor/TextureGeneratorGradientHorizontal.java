@@ -28,7 +28,7 @@ public class TextureGeneratorGradientHorizontal implements ITextureGenerator{
 	 * @param grad - Gradient który posłuży do generacji tekstury
 	 */
 	public final void setGradient(Gradient grad){
-		if(grad == null) throw new NullPointerException();
+		if(grad == null) {throw new NullPointerException();}
 		mGrad = grad;
 	}
 	

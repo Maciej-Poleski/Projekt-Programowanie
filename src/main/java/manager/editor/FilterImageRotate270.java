@@ -20,9 +20,9 @@ public class FilterImageRotate270 implements IFilter{
 		original.toRGB(); temp.toRGB();
 		for(int i=0;i<mOrigWidth;i++){
 			for(int j=0;j<mOrigHeight;j++){
-				tempData[3*((mTempHeight-1-i)*mTempWidth+j)] = origData[3*(j*mOrigWidth+i)];
-				tempData[3*((mTempHeight-1-i)*mTempWidth+j)+1] = origData[3*(j*mOrigWidth+i)+1];
-				tempData[3*((mTempHeight-1-i)*mTempWidth+j)+2] = origData[3*(j*mOrigWidth+i)+2];
+				tempData[PixelData.mPixelSize*((mTempHeight-1-i)*mTempWidth+j)] = origData[PixelData.mPixelSize*(j*mOrigWidth+i)];
+				tempData[PixelData.mPixelSize*((mTempHeight-1-i)*mTempWidth+j)+1] = origData[PixelData.mPixelSize*(j*mOrigWidth+i)+1];
+				tempData[PixelData.mPixelSize*((mTempHeight-1-i)*mTempWidth+j)+2] = origData[PixelData.mPixelSize*(j*mOrigWidth+i)+2];
 			}
 		}
 	}

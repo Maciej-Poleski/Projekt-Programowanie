@@ -16,9 +16,9 @@ public class FilterContrast implements IFilterRange {
 		}
 		float[] origData = original.getData();
 		float[] tempData = temp.getData();
-		float mLUT[] = new float[256];
-		for(int i=0;i<256;i++){
-			mLUT[i] = Math.max(0.0f, Math.min(255.0f, mRange[0].getValue()*((float)i-127.5f)+127.5f));
+		float mLUT[] = new float[PixelData.mRGBCMYChannelPrecision];
+		for(int i=0;i<PixelData.mRGBCMYChannelPrecision;i++){
+			mLUT[i] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, mRange[0].getValue()*((float)i-PixelData.mRGBCMYChannelPrecision/2.0f) + PixelData.mRGBCMYChannelPrecision/2.0f));
 		}
 		original.toRGB(); temp.toRGB();
 		for(int i=0;i<origData.length;i++){

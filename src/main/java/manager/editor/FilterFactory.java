@@ -4,10 +4,12 @@ import manager.editor.FilterGrayScale.FilterGrayScaleTypes;
 
 /**
  * Fabryka Filtrów - generuje filtry gotowe do aplikowania na obrazie
+ * próba stworzenia obiektu tej klasy nawet przy użyciu refleksji skończy się
+ * wyrzuceniem wyjątku <b>UnsupportedOperationException</b>
  * @author Patryk
  */
-public class FilterFactory {
-	private FilterFactory(){}
+public final class FilterFactory {
+	private FilterFactory(){throw new UnsupportedOperationException();}
 	/**
 	 * @return Filtr tworzący negatyw obrazu
 	 */

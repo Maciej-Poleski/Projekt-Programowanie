@@ -1,5 +1,7 @@
 package manager.editor;
 
+import java.awt.Color;
+
 /**
  * Filtr odpowiedzialny za tworzenie akcentu kolorystycznego
  * filtr dwu-argumentowy:
@@ -11,8 +13,8 @@ package manager.editor;
  */
 public class FilterColorAccent implements IFilterRange{
 	private final Range[] mRange = new Range[]{
-		new Range(0.0f, 359.9f, 0.0f, "Barwa"),
-		new Range(0.0f, 180.0f, 10.0f, "Tolerancja")
+		new Range(0.0f, ColorConverter.mHueMaxValue, 0.0f, "Barwa"),
+		new Range(0.0f, ColorConverter.mHueMaxValue / 2.0f, 10.0f, "Tolerancja")
 	};
 	
 	@Override
@@ -29,16 +31,18 @@ public class FilterColorAccent implements IFilterRange{
 		float mH=0,mS=0,mV=0;
 		for(int i=0;i<mWidth;i++){
 			for(int j=0;j<mHeight;j++){
-				mH = origData[3*(j*mWidth+i)];
-				mS = origData[3*(j*mWidth+i)+1];
-				mV = origData[3*(j*mWidth+i)+2];
-				if((mHmin <= mH && mH <= mHmax) || (mHmin <= mH-360.0f && mH-360.0f <= mHmax) || (mHmin <= mH+360.0f && mH+360.0f <= mHmax)){
-					tempData[3*(j*mWidth+i)+1] = mS;
+				mH = origData[PixelData.mPixelSize*(j*mWidth+i)];
+				mS = origData[PixelData.mPixelSize*(j*mWidth+i)+1];
+				mV = origData[PixelData.mPixelSize*(j*mWidth+i)+2];
+				if((mHmin <= mH && mH <= mHmax) || 
+						(mHmin <= mH - ColorConverter.mHueMaxValue && mH - ColorConverter.mHueMaxValue <= mHmax) || 
+						(mHmin <= mH + ColorConverter.mHueMaxValue && mH + ColorConverter.mHueMaxValue <= mHmax)){
+					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = mS;
 				} else {
-					tempData[3*(j*mWidth+i)+1] = 0.0f;
+					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = 0.0f;
 				}
-				tempData[3*(j*mWidth+i)] = mH;
-				tempData[3*(j*mWidth+i)+2] = mV;
+				tempData[PixelData.mPixelSize*(j*mWidth+i)] = mH;
+				tempData[PixelData.mPixelSize*(j*mWidth+i)+2] = mV;
 			}
 		}
 	}

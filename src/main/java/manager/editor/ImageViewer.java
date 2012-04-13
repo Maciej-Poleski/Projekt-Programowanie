@@ -62,7 +62,7 @@ public class ImageViewer extends JPanel implements ChangeListener{
 	}
 	@Override
 	public void stateChanged(ChangeEvent arg0) {
-		iPanel.changeZoom((int) zoomSpinner.getValue());	
+		iPanel.changeZoom((Integer)zoomSpinner.getValue());	
 		this.revalidate();
 		this.repaint();
 	}

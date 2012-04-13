@@ -58,7 +58,7 @@ public class Matrix {
      * @param table - tablica z wartościami pól macierzy
      * @throws IllegalArgumentException gdy rozmiar macierzy jest niedozwolony
      */
-    public void setFromTable(float[] table){
+    public final void setFromTable(float[] table){
     	if(table == null) {
     		throw new IllegalArgumentException();
     	}

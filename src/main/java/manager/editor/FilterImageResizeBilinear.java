@@ -42,17 +42,17 @@ public class FilterImageResizeBilinear implements IFilter{
 				jp = Math.min(mOrigHeight, jp); ip = Math.min(mOrigWidth, ip);
 				//probkowanie poziome
 				coef = ip-(float)indIbeg;
-				mRbeg = origData[3*(indJbeg*mOrigWidth+indIbeg)] * coef + origData[3*(indJbeg*mOrigWidth+indIend)] * (1.0f-coef);
-				mGbeg = origData[3*(indJbeg*mOrigWidth+indIbeg)+1] * coef + origData[3*(indJbeg*mOrigWidth+indIend)+1] * (1.0f-coef);
-				mBbeg = origData[3*(indJbeg*mOrigWidth+indIbeg)+2] * coef + origData[3*(indJbeg*mOrigWidth+indIend)+2] * (1.0f-coef);
-				mRend = origData[3*(indJend*mOrigWidth+indIbeg)] * coef + origData[3*(indJend*mOrigWidth+indIend)] * (1.0f-coef);
-				mGend = origData[3*(indJend*mOrigWidth+indIbeg)+1] * coef + origData[3*(indJend*mOrigWidth+indIend)+1] * (1.0f-coef);
-				mBend = origData[3*(indJend*mOrigWidth+indIbeg)+2] * coef + origData[3*(indJend*mOrigWidth+indIend)+2] * (1.0f-coef);
+				mRbeg = origData[PixelData.mPixelSize*(indJbeg*mOrigWidth+indIbeg)] * coef + origData[PixelData.mPixelSize*(indJbeg*mOrigWidth+indIend)] * (1.0f-coef);
+				mGbeg = origData[PixelData.mPixelSize*(indJbeg*mOrigWidth+indIbeg)+1] * coef + origData[PixelData.mPixelSize*(indJbeg*mOrigWidth+indIend)+1] * (1.0f-coef);
+				mBbeg = origData[PixelData.mPixelSize*(indJbeg*mOrigWidth+indIbeg)+2] * coef + origData[PixelData.mPixelSize*(indJbeg*mOrigWidth+indIend)+2] * (1.0f-coef);
+				mRend = origData[PixelData.mPixelSize*(indJend*mOrigWidth+indIbeg)] * coef + origData[PixelData.mPixelSize*(indJend*mOrigWidth+indIend)] * (1.0f-coef);
+				mGend = origData[PixelData.mPixelSize*(indJend*mOrigWidth+indIbeg)+1] * coef + origData[PixelData.mPixelSize*(indJend*mOrigWidth+indIend)+1] * (1.0f-coef);
+				mBend = origData[PixelData.mPixelSize*(indJend*mOrigWidth+indIbeg)+2] * coef + origData[PixelData.mPixelSize*(indJend*mOrigWidth+indIend)+2] * (1.0f-coef);
 				//probkowanie pionowe
 				coef = jp-(float)indJbeg;
-				tempData[3*(j*mTempWidth+i)] = mRbeg * coef + mRend * (1.0f-coef);
-				tempData[3*(j*mTempWidth+i)+1] = mGbeg * coef + mGend * (1.0f-coef);
-				tempData[3*(j*mTempWidth+i)+2] = mBbeg * coef + mBend * (1.0f-coef);
+				tempData[PixelData.mPixelSize*(j*mTempWidth+i)] = mRbeg * coef + mRend * (1.0f-coef);
+				tempData[PixelData.mPixelSize*(j*mTempWidth+i)+1] = mGbeg * coef + mGend * (1.0f-coef);
+				tempData[PixelData.mPixelSize*(j*mTempWidth+i)+2] = mBbeg * coef + mBend * (1.0f-coef);
 			}
 		}
 	}

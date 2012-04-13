@@ -31,9 +31,9 @@ public class FilterImageResizeNearestNeighbour implements IFilter{
 				if((float)((int)jp+1)-jp < jp-(float)((int)jp)) {indJ = (int)jp+1;} else {indJ = (int)jp;}
 				indI = Math.max(0, Math.min(indI, mOrigWidth-1));
 				indJ = Math.max(0, Math.min(indJ, mOrigHeight-1));
-				tempData[3*(j*mTempWidth+i)] = origData[3*(indJ*mOrigWidth+indI)];
-				tempData[3*(j*mTempWidth+i)+1] = origData[3*(indJ*mOrigWidth+indI)+1];
-				tempData[3*(j*mTempWidth+i)+2] = origData[3*(indJ*mOrigWidth+indI)+2];
+				tempData[PixelData.mPixelSize*(j*mTempWidth+i)] = origData[PixelData.mPixelSize*(indJ*mOrigWidth+indI)];
+				tempData[PixelData.mPixelSize*(j*mTempWidth+i)+1] = origData[PixelData.mPixelSize*(indJ*mOrigWidth+indI)+1];
+				tempData[PixelData.mPixelSize*(j*mTempWidth+i)+2] = origData[PixelData.mPixelSize*(indJ*mOrigWidth+indI)+2];
 			}
 		}
 	}

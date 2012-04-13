@@ -21,7 +21,7 @@ public class FilterExposure implements IFilterRange{
 		float coef = (float)Math.pow(2.0f, mRange[0].getValue());
 		original.toRGB(); temp.toRGB();
 		for(int i=0;i<origData.length;i++){
-			tempData[i] = Math.max(0.0f, Math.min(255.0f, coef*origData[i]));
+			tempData[i] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, coef*origData[i]));
 		}
 	}
 
