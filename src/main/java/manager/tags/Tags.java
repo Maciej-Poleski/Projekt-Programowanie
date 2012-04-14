@@ -621,7 +621,7 @@ public class Tags implements Serializable {
     private class UserTagsTreeModel implements TreeModel {
         private final List<UserTag> heads = new ArrayList<>(getUserTagHeads());
 
-        class Node {
+        private class Node {
             private final UserTag tag;
 
             Node(UserTag tag) {
@@ -632,11 +632,11 @@ public class Tags implements Serializable {
                 tag = null;
             }
 
-            public final UserTag getTag() {
+            final UserTag getTag() {
                 return tag;
             }
 
-            public Node getChild(int index) {
+            Node getChild(int index) {
                 if (tag == null) {
                     if (index == 0) {
                         return new Children();
@@ -654,7 +654,7 @@ public class Tags implements Serializable {
                 }
             }
 
-            public int getChildCount() {
+            int getChildCount() {
                 if (tag == null) {
                     return 1;
                 } else {
@@ -662,7 +662,7 @@ public class Tags implements Serializable {
                 }
             }
 
-            public int getIndexOfChild(Object child) {
+            int getIndexOfChild(Object child) {
                 if (tag == null) {
                     if (child instanceof Children) {
                         return 0;
@@ -685,12 +685,12 @@ public class Tags implements Serializable {
             }
         }
 
-        class Children extends Node {
-            public Children(UserTag tag) {
+        private class Children extends Node {
+            Children(UserTag tag) {
                 super(tag);
             }
 
-            public Children() {
+            Children() {
             }
 
             @Override
@@ -699,7 +699,7 @@ public class Tags implements Serializable {
             }
 
             @Override
-            public Node getChild(int index) {
+            Node getChild(int index) {
                 if (getTag() == null) {
                     return new Node(heads.get(index));
                 } else {
@@ -708,19 +708,19 @@ public class Tags implements Serializable {
             }
 
             @Override
-            public int getIndexOfChild(Object child) {
+            int getIndexOfChild(Object child) {
                 //noinspection SuspiciousMethodCalls
                 return getTag().getChildren().indexOf(child);
             }
 
             @Override
-            public int getChildCount() {
+            int getChildCount() {
                 return getTag().getChildren().size();
             }
         }
 
-        class Parents extends Node {
-            public Parents(UserTag tag) {
+        private class Parents extends Node {
+            Parents(UserTag tag) {
                 super(tag);
                 assert tag != null;
             }
@@ -731,18 +731,18 @@ public class Tags implements Serializable {
             }
 
             @Override
-            public Node getChild(int index) {
+            Node getChild(int index) {
                 return new Node(getTag().getParents().get(index));
             }
 
             @Override
-            public int getIndexOfChild(Object child) {
+            int getIndexOfChild(Object child) {
                 //noinspection SuspiciousMethodCalls
                 return getTag().getParents().indexOf(child);
             }
 
             @Override
-            public int getChildCount() {
+            int getChildCount() {
                 return getTag().getParents().size();
             }
         }
