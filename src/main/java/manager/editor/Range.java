@@ -78,7 +78,7 @@ public class Range {
      * wartości wybranej wewnątrz przedziału. Gdy <b>value</b> < 0 zostaje domyślnie przypisane <b>value = 0</b>
      * gdy <b>value</b> > 1 zostaje domyślnie przypisane <b>value = 1</b>
      */
-    public void interpolate(float value){
+    public final void interpolate(float value){
     	if(value > 1.0f) {value = 1.0f;}
     	if(value < 0.0f) {value = 0.0f;}
     	mValue = mMin + (mMax-mMin)*value;
@@ -89,7 +89,7 @@ public class Range {
      * @param value - wartość wyróżniona z przedziału, gdy value < minimum to domyślnie value = minimum
      * gdy value > maximum  to domyślnie value = maximum
      */
-    public void setValue(float value) {
+    public final void setValue(float value) {
     	if(value < mMin) {mValue = mMin;}
     	else if(value > mMax) {mValue = mMax;}
     	else {mValue = value;}

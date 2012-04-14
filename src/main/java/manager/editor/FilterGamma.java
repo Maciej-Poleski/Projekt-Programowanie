@@ -16,10 +16,10 @@ public class FilterGamma implements IFilterRange{
 		}
 		float[] origData = original.getData();
 		float[] tempData = temp.getData();
-		float mLUT[] = new float[256];
-		float gamma = 1 / mRange[0].getValue();
-		for(int i=0;i<256;i++) {
-			mLUT[i] = 255.0f * (float)Math.pow((float)i/255.0f, gamma);
+		float mLUT[] = new float[PixelData.mRGBCMYChannelPrecision];
+		float gamma = 1.0f / mRange[0].getValue();
+		for(int i=0;i<PixelData.mRGBCMYChannelPrecision;i++) {
+			mLUT[i] = ColorConverter.mRGBCMYByteMax * (float)Math.pow((float)i/ColorConverter.mRGBCMYByteMax, gamma);
 		}
 		original.toRGB(); temp.toRGB();
 		for(int i=0;i<origData.length;i++){

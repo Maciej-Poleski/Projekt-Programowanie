@@ -9,7 +9,7 @@ public interface ITextureGenerator {
 	 * Zwraca wynik pracy generatora na podanych współrzędnych pod referencje <b>temp</b>
 	 * @param fx - współrzędna pozioma w teksturze z przedziału [0,1]
 	 * @param fy - współrzędna pionowa w teksturze z przedziału [0,1]
-	 * @return Kolor pixela tekstury w przestrzeni barw RGB
+	 * @param temp - referencja na obiekt w którym ma być zapisany wynik
 	 */
 	void getValue(float fx, float fy, ColorRGB temp);
 }

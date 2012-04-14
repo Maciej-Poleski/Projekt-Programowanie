@@ -8,10 +8,12 @@ package manager.editor;
  * Klasa ta jest wyróżniona, gdyż z uwagi na fakt, że większość jej filtrów tworzy obraz fizycznie innych 
  * rozmiarów, posiadają one odwróconą metodę <b>PixelData apply(PixelData)</b> (zwracany jest obraz PO
  * obróbce a nie jak w wszystkich innych filtrach PRZED, zaś parametr jest nie zmieniany)
+ * Próba utworzenia obiektu tej kalsy nawet przy użyciu refleksji 
+ * skończy się wyjątkiem <b>UnsupportedOperationException</B>
  * @author Patryk
  */
-public class ImageMaker {
-	private ImageMaker(){throw new RuntimeException();}
+public final class ImageMaker {
+	private ImageMaker(){throw new UnsupportedOperationException();}
 	/**
 	 * @param width - długość obrazu wynikowego
 	 * @param height - wysokość obrazu wynikowego

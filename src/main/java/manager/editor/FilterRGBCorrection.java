@@ -6,9 +6,9 @@ package manager.editor;
  */
 public class FilterRGBCorrection implements IFilterRange{
 	private final Range[] mRange = new Range[]{
-		new Range(-128.0f, 128.0f, 0.0f, "Czerwony"),
-		new Range(-128.0f, 128.0f, 0.0f, "Zielony"),
-		new Range(-128.0f, 128.0f, 0.0f, "Niebieski")
+		new Range(-ColorConverter.mRGBCMYByteMax/2.0f, ColorConverter.mRGBCMYByteMax/2.0f, 0.0f, "Czerwony"),
+		new Range(-ColorConverter.mRGBCMYByteMax/2.0f, ColorConverter.mRGBCMYByteMax/2.0f, 0.0f, "Zielony"),
+		new Range(-ColorConverter.mRGBCMYByteMax/2.0f, ColorConverter.mRGBCMYByteMax/2.0f, 0.0f, "Niebieski")
 	};
 
 	@Override
@@ -24,12 +24,12 @@ public class FilterRGBCorrection implements IFilterRange{
 		float dR = mRange[0].getValue(), dG = mRange[1].getValue(), dB = mRange[2].getValue();
 		for(int i=0;i<mWidth;i++){
 			for(int j=0;j<mHeight;j++){
-				mR = origData[3*(i*mHeight+j)];
-				mG = origData[3*(i*mHeight+j)+1];
-				mB = origData[3*(i*mHeight+j)+2];
-				tempData[3*(i*mHeight+j)] = Math.max(0.0f, Math.min(255.0f, mR+dR));
-				tempData[3*(i*mHeight+j)+1] = Math.max(0.0f, Math.min(255.0f, mG+dG));
-				tempData[3*(i*mHeight+j)+2] = Math.max(0.0f, Math.min(255.0f, mB+dB));
+				mR = origData[PixelData.mPixelSize*(i*mHeight+j)];
+				mG = origData[PixelData.mPixelSize*(i*mHeight+j)+1];
+				mB = origData[PixelData.mPixelSize*(i*mHeight+j)+2];
+				tempData[PixelData.mPixelSize*(i*mHeight+j)] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, mR+dR));
+				tempData[PixelData.mPixelSize*(i*mHeight+j)+1] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, mG+dG));
+				tempData[PixelData.mPixelSize*(i*mHeight+j)+2] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, mB+dB));
 			}	
 		}
 	}

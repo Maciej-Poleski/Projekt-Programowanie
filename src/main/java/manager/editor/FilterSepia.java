@@ -21,10 +21,12 @@ public class FilterSepia implements IFilterRange{
 		original.toRGB(); temp.toRGB();
 		for(int i=0;i<mWidth;i++){
 			for(int j=0;j<mHeight;j++){
-				grey = 0.21f*origData[3*(i*mHeight+j)] + 0.71f*origData[3*(i*mHeight+j)+1] + 0.07f*origData[3*(i*mHeight+j)+2];
-				tempData[3*(i*mHeight+j)] = Math.min(255.0f, grey+2*det);
-				tempData[3*(i*mHeight+j)+1] = Math.min(255.0f, grey+det);
-				tempData[3*(i*mHeight+j)+2] = Math.min(255.0f, grey);
+				grey = 0.21f*origData[PixelData.mPixelSize*(i*mHeight+j)] + 
+						0.71f*origData[PixelData.mPixelSize*(i*mHeight+j)+1] + 
+						0.07f*origData[PixelData.mPixelSize*(i*mHeight+j)+2];
+				tempData[PixelData.mPixelSize*(i*mHeight+j)] = Math.min(ColorConverter.mRGBCMYByteMax, grey+2*det);
+				tempData[PixelData.mPixelSize*(i*mHeight+j)+1] = Math.min(ColorConverter.mRGBCMYByteMax, grey+det);
+				tempData[PixelData.mPixelSize*(i*mHeight+j)+2] = Math.min(ColorConverter.mRGBCMYByteMax, grey);
 			}
 		}
 	}

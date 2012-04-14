@@ -6,7 +6,7 @@ package manager.editor;
  */
 public class FilterBrightness implements IFilterRange{
 	private final Range[] mRange = new Range[]{
-		new Range(-128.0f, 128.0f, 0.0f, "Jasność")	
+		new Range(-ColorConverter.mRGBCMYByteMax / 2.0f, ColorConverter.mRGBCMYByteMax / 2.0f, 0.0f, "Jasność")	
 	};
 	@Override
 	public void apply(PixelData original, PixelData temp) {
@@ -18,7 +18,7 @@ public class FilterBrightness implements IFilterRange{
 		float delta = mRange[0].getValue();
 		original.toRGB(); temp.toRGB();
 		for(int i=0;i<origData.length;i++){
-			tempData[i] = Math.max(0.0f, Math.min(255.0f, origData[i] + delta));
+			tempData[i] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, origData[i] + delta));
 		}
 	}
 
