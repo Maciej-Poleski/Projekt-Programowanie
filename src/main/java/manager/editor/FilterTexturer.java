@@ -18,7 +18,7 @@ public class FilterTexturer implements IFilter{
 	 * aby pracować
 	 */
 	FilterTexturer(ITextureGenerator generator){
-		if(generator == null) throw new NullPointerException();
+		if(generator == null) {throw new NullPointerException();}
 		mGenerator = generator;
 	}
 	/**
@@ -52,44 +52,51 @@ public class FilterTexturer implements IFilter{
 	}
 	
 	@Override
-	public void apply(PixelData original, PixelData temp)
-			throws IllegalArgumentException {
-		if(original == null || temp == null) throw new NullPointerException();
-		if(original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
+	public void apply(PixelData original, PixelData temp) {
+		int mWidth = original.getWidth(), mHeight = original.getHeight();
+		if(mWidth != temp.getWidth() || mHeight != temp.getHeight()){
 			throw new IllegalArgumentException();
+		}
+		float[] origData = original.getData();
+		float[] tempData = temp.getData();
 		float gray; ColorRGB mCol = new ColorRGB(0,0,0);
 		original.toRGB(); temp.toRGB();
-		for(int i=0;i<original.mWidth;i++)
-			for(int j=0;j<original.mHeight;j++){
-				mGenerator.getValue((float)i/(float)original.mWidth, (float)j/(float)original.mHeight, mCol);
+		for(int i=0;i<mWidth;i++){
+			for(int j=0;j<mHeight;j++){
+				mGenerator.getValue((float)i/(float)mWidth, (float)j/(float)mHeight, mCol);
 				switch(mMode){
 				case ADD:
-					temp.mData[3*(j*original.mWidth+i)] = Math.min(255.0f, original.mData[3*(j*original.mWidth+i)] + mCol.getR()*255.0f);
-					temp.mData[3*(j*original.mWidth+i)+1] = Math.min(255.0f, original.mData[3*(j*original.mWidth+i)+1] + mCol.getG()*255.0f);
-					temp.mData[3*(j*original.mWidth+i)+2] = Math.min(255.0f, original.mData[3*(j*original.mWidth+i)+2] + mCol.getB()*255.0f);
+					tempData[PixelData.mPixelSize*(j*mWidth+i)] = Math.min(ColorConverter.mRGBCMYByteMax, origData[PixelData.mPixelSize*(j*mWidth+i)] + mCol.getR()*ColorConverter.mRGBCMYByteMax);
+					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = Math.min(ColorConverter.mRGBCMYByteMax, origData[PixelData.mPixelSize*(j*mWidth+i)+1] + mCol.getG()*ColorConverter.mRGBCMYByteMax);
+					tempData[PixelData.mPixelSize*(j*mWidth+i)+2] = Math.min(ColorConverter.mRGBCMYByteMax, origData[PixelData.mPixelSize*(j*mWidth+i)+2] + mCol.getB()*ColorConverter.mRGBCMYByteMax);
 					break;
 				case SUBSTRACT:
-					temp.mData[3*(j*original.mWidth+i)] = Math.max(0.0f, original.mData[3*(j*original.mWidth+i)] - mCol.getR()*255.0f);
-					temp.mData[3*(j*original.mWidth+i)+1] = Math.max(0.0f, original.mData[3*(j*original.mWidth+i)+1] - mCol.getG()*255.0f);
-					temp.mData[3*(j*original.mWidth+i)+2] = Math.max(0.0f, original.mData[3*(j*original.mWidth+i)+2] - mCol.getB()*255.0f);
+					tempData[PixelData.mPixelSize*(j*mWidth+i)] = Math.max(0.0f, origData[PixelData.mPixelSize*(j*mWidth+i)] - mCol.getR()*ColorConverter.mRGBCMYByteMax);
+					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = Math.max(0.0f, origData[PixelData.mPixelSize*(j*mWidth+i)+1] - mCol.getG()*ColorConverter.mRGBCMYByteMax);
+					tempData[PixelData.mPixelSize*(j*mWidth+i)+2] = Math.max(0.0f, origData[PixelData.mPixelSize*(j*mWidth+i)+2] - mCol.getB()*ColorConverter.mRGBCMYByteMax);
 					break;
 				case MULTIPLY:
-					temp.mData[3*(j*original.mWidth+i)] = original.mData[3*(j*original.mWidth+i)] * mCol.getR();
-					temp.mData[3*(j*original.mWidth+i)+1] = original.mData[3*(j*original.mWidth+i)+1] * mCol.getG();
-					temp.mData[3*(j*original.mWidth+i)+2] = original.mData[3*(j*original.mWidth+i)+2] * mCol.getB();
+					tempData[PixelData.mPixelSize*(j*mWidth+i)] = origData[PixelData.mPixelSize*(j*mWidth+i)] * mCol.getR();
+					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = origData[PixelData.mPixelSize*(j*mWidth+i)+1] * mCol.getG();
+					tempData[PixelData.mPixelSize*(j*mWidth+i)+2] = origData[PixelData.mPixelSize*(j*mWidth+i)+2] * mCol.getB();
 					break;
 				case MASK:
-					gray = 0.21f*original.mData[3*(j*original.mWidth+i)] + 0.71f*original.mData[3*(j*original.mWidth+i)+1] + 0.07f*original.mData[3*(j*original.mWidth+i)+2];
-					temp.mData[3*(j*original.mWidth+i)] = gray * mCol.getR();
-					temp.mData[3*(j*original.mWidth+i)+1] = gray * mCol.getG();
-					temp.mData[3*(j*original.mWidth+i)+2] = gray * mCol.getB();
+					gray = 0.21f*origData[PixelData.mPixelSize*(j*mWidth+i)] + 
+					0.71f*origData[PixelData.mPixelSize*(j*mWidth+i)+1] + 
+					0.07f*origData[PixelData.mPixelSize*(j*mWidth+i)+2];
+					tempData[PixelData.mPixelSize*(j*mWidth+i)] = gray * mCol.getR();
+					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = gray * mCol.getG();
+					tempData[PixelData.mPixelSize*(j*mWidth+i)+2] = gray * mCol.getB();
+					break;
+				default:
 					break;
 				}
 			}
+		}
 	}
 	@Override
 	public PixelData apply(PixelData image) {
-		if(image == null) return null;
+		if(image == null) {return null;}
 		PixelData ret = (PixelData)image.clone();
 		apply(image, image);
 		return ret;
