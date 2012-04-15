@@ -1,7 +1,8 @@
 package manager.files.backup;
 
 import java.io.File;
-import java.util.List;
+import java.io.Serializable;
+import java.util.Set;
 
 import manager.files.FileID;
 import manager.files.FileNotAvailableException;
@@ -13,7 +14,7 @@ import manager.files.OperationInterruptedException;
  * @author Piotr Kolacz
  * 
  */
-public interface Backup {
+public interface Backup extends Serializable {
 
 	/**
 	 * Retrieves a file with specified <code>fileId</code> from backup.
@@ -30,6 +31,6 @@ public interface Backup {
 	 * 
 	 * @return list of FileID's currently managed by this backup
 	 */
-	List<FileID> getListOfAvailableFiles() throws OperationInterruptedException;
+	Set<FileID> getListOfAvailableFiles() throws OperationInterruptedException;
 
 }

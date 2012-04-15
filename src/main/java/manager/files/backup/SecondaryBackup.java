@@ -14,6 +14,10 @@ import manager.files.OperationInterruptedException;
 public abstract class SecondaryBackup implements Backup {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
 	 * Reference to backup which state we are mirroring
 	 */
 	protected final PrimaryBackup originalBackup;

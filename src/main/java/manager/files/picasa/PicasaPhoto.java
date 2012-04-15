@@ -22,7 +22,6 @@ public final class PicasaPhoto {
 
 	public PicasaPhoto(PhotoEntry photoEntry) {
 		this.photoEntry = photoEntry;
-
 	}
 
 	public String getTitle() {
@@ -70,6 +69,42 @@ public final class PicasaPhoto {
 
 			throw new PicasaMediaDownloadException();
 		}
+	}
+
+	public static File downloadPhoto(String downloadDirectory,
+			PicasaPhoto photo) throws PicasaMediaDownloadException {
+		try {
+			String photoUrl = photo.photoEntry.getMediaContents().get(0)
+					.getUrl();
+			int index = photoUrl.lastIndexOf("/");
+			photoUrl = photoUrl.substring(0, index + 1) + "s2000"
+					+ photoUrl.substring(index);
+
+			System.out.println(photoUrl);
+
+			URL url = new URL(photoUrl);
+
+			try (InputStream is = url.openStream()) {
+
+				File file = new File(downloadDirectory + "/" + photo.getTitle());
+
+				try (OutputStream out = new BufferedOutputStream(
+						new FileOutputStream(file))) {
+
+					for (int b; (b = is.read()) != -1;) {
+						out.write(b);
+					}
+
+				}
+
+				return file;
+
+			}
+		} catch (IOException e) {
+
+			throw new PicasaMediaDownloadException();
+		}
+
 	}
 
 	public List<String> getListOfTags()

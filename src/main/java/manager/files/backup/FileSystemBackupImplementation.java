@@ -2,7 +2,7 @@ package manager.files.backup;
 
 import java.io.File;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import manager.files.FileID;
 
@@ -11,6 +11,8 @@ import manager.files.FileID;
  * 
  */
 public final class FileSystemBackupImplementation extends SecondaryBackup {
+
+	private static final long serialVersionUID = 1L;
 
 	public FileSystemBackupImplementation(PrimaryBackup originalBackup) {
 		super(originalBackup);
@@ -24,7 +26,7 @@ public final class FileSystemBackupImplementation extends SecondaryBackup {
 	}
 
 	@Override
-	public List<FileID> getListOfAvailableFiles() {
+	public Set<FileID> getListOfAvailableFiles() {
 		// TODO Auto-generated method stub
 		return null;
 	}

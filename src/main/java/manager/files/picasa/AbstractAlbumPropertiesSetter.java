@@ -12,7 +12,7 @@ import com.google.gdata.data.photos.AlbumEntry;
  * @author Piotr Kolacz
  * 
  */
-abstract class AbstractAlbumPropertiesSetter{
+public abstract class AbstractAlbumPropertiesSetter{
 
 	final AlbumEntry albumEntry;
 
@@ -50,7 +50,7 @@ abstract class AbstractAlbumPropertiesSetter{
 	 * @return
 	 */
 	public AbstractAlbumPropertiesSetter setDate(Date date) {
-		albumEntry.setDate(date);
+	 	albumEntry.setDate(date);
 		return this;
 	}
 
@@ -75,6 +75,6 @@ abstract class AbstractAlbumPropertiesSetter{
 	 * @return
 	 * @throws PicasaDataModificationException
 	 */
-	abstract PicasaAlbum execute() throws PicasaDataModificationException;
+	public abstract PicasaAlbum execute() throws PicasaDataModificationException;
 
 }
