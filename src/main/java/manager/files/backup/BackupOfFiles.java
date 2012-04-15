@@ -35,39 +35,23 @@ public class BackupOfFiles implements Backup {
 	 *            obrazujacy ścieżkę do pliku z którego chcemy skopiować.
 	 * @param String
 	 *            obrazujący scieżkę do pliku do którego chcemy skopiować.
+	 * @throws FileNotFoundException
+	 * @throws IOException
 	 */
-	static private void copyFile(String from, String to) {
+	static private void copyFile(String from, String to) throws FileNotFoundException, IOException {
 		FileInputStream inFrom;
 		FileOutputStream outTo;
-		try {
-			inFrom = new FileInputStream(from);
-		} catch (FileNotFoundException e) {
-			System.out.println("Plik IN nie został znaleziony");
-			return;
-		}
-		try {
-			outTo = new FileOutputStream(to);
-		} catch (FileNotFoundException e) {
-			System.out.println("Plik OUT nie został znaleziony");
-			return;
-		}
+		inFrom = new FileInputStream(from);
+		outTo = new FileOutputStream(to);
 		FileChannel fromFC = inFrom.getChannel(), toFC = outTo.getChannel();
 		ByteBuffer b = ByteBuffer.allocateDirect(1024);
-		try {
-			while (fromFC.read(b) != -1) {
-				b.flip();
-				toFC.write(b);
-				b.clear();
-			}
-		} catch (IOException e) {
-			System.out.println("I/O problems with read / write");
+		while (fromFC.read(b) != -1) {
+			b.flip();
+			toFC.write(b);
+			b.clear();
 		}
-		try {
-			inFrom.close();
-			outTo.close();
-		} catch (IOException e) {
-			System.out.println("I/O problems with clossing");
-		}
+		inFrom.close();
+		outTo.close();
 	}
 
 	/**
@@ -77,8 +61,9 @@ public class BackupOfFiles implements Backup {
 	 *            folder z którego będziemy chcieli kopiować.
 	 * @param File
 	 *            folder do którego będziemy chcieli kopiować.
+	 * @throws IOException 
 	 */
-	static private void copyDirectory(File from, File to) {
+	static private void copyDirectory(File from, File to) throws IOException {
 		if (from.isDirectory()) {
 			if (!to.exists())
 				to.mkdir();
@@ -88,11 +73,7 @@ public class BackupOfFiles implements Backup {
 						to, filesOrDirectories[i]));
 		} else {
 			if (!to.exists()) {
-				try {
-					to.createNewFile();
-				} catch (IOException e) {
-					System.out.println("Nie udało się utowrzyć pliku");
-				}
+				to.createNewFile();
 			}
 			copyFile(from.getAbsolutePath(), to.getAbsolutePath());
 		}
@@ -105,11 +86,17 @@ public class BackupOfFiles implements Backup {
 	 *            master Tag którego backup chcemy zrobić.
 	 * @param File
 	 *            ścieżka gdzie chcemy go zrobić.
+	 * @throws OperationInterruptedException 
 	 */
 	@Override
-	public void createNewBackup(MasterTag masterTag, File backupLocation) {
+	public void createNewBackup(MasterTag masterTag, File backupLocation) throws OperationInterruptedException {
 		Path pathFromMasterTag = tags.getPathFromMasterTag(masterTag);
-		copyDirectory(pathFromMasterTag.toFile(), backupLocation);
+		try {
+			copyDirectory(pathFromMasterTag.toFile(), backupLocation);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			throw new OperationInterruptedException();
+		}
 		Set<FileID> setOfFileID = tags.getStore().getFilesFrom(masterTag);
 		for (FileID f : setOfFileID) {
 			try {
@@ -131,8 +118,7 @@ public class BackupOfFiles implements Backup {
 	 *            ścieżka gdzie chcemy go zrobić.
 	 */
 	@Override
-	public void synchronizeBackup(MasterTag masterTag, File backupLocation)
-			throws OperationInterruptedException {
+	public void synchronizeBackup(MasterTag masterTag, File backupLocation) throws OperationInterruptedException {
 		// Ostrzeżenie, że jeżeli zostanie przerwany to utracisz go.
 		if (backupLocation.exists())
 			backupLocation.delete();
@@ -165,8 +151,7 @@ public class BackupOfFiles implements Backup {
 	 * @return Date data.
 	 */
 	@Override
-	public Date getLastBackupDate(File backupLocation)
-			throws OperationInterruptedException {
+	public Date getLastBackupDate(File backupLocation) {
 		return new Date(backupLocation.lastModified());
 	}
 
