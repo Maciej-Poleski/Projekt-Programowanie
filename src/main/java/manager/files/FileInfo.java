@@ -280,4 +280,9 @@ public class FileInfo {
 		}
 		saveHistory();
 	}
+
+	public static File getFile(FileID fileID) {
+		// FIXME (Marcin) potrzebna  metoda zwracająca ORGINALNA ścieżkę
+		return null;
+	}
 }

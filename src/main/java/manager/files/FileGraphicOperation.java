@@ -15,26 +15,39 @@ import manager.tags.MasterTag;
 import manager.tags.Tag;
 
 /**
- * Klasa udostepnia podstawowe operacje na plikach związane z grafiką (jej wyświetlanie i edycja zdjęć). 
- *
+ * Klasa udostepnia podstawowe operacje na plikach związane z grafiką (jej
+ * wyświetlanie i edycja zdjęć).
+ * 
  * @author Jakub Cieśla
  */
-
 public class FileGraphicOperation {
 
 	/**
 	 * Zapisuje plik po edycji.
 	 * 
-	 * @throws FileSaveException Nieudany zapis pliku.
-	 * @param editedImage Obraz po edycji.
+	 * @throws FileSaveException
+	 *             Nieudany zapis pliku.
+	 * @param editedImage
+	 *            Obraz po edycji.
 	 */
 	void saveEditedImage(ImageHolder editedImage) throws FileSaveException {
-		File file = FileInfo.getFile(editedImage.imageID); //(Marcin) potrzebna metoda zwracająca ORGINALNA ścieżkę
-		try{
+		File file = FileInfo.getFile(editedImage.imageID); // (Marcin) potrzebna
+															// metoda zwracająca
+															// ORGINALNA ścieżkę
+		try {
 			// Otwiera kanał na pliku, który ma być kopiowany
-			FileChannel srcChannel = new FileInputStream().getChannel(); //problem z przerobieniem BufferImage na File, do konsultacji z Patrykiem
+			FileChannel srcChannel = new FileInputStream(file).getChannel(); // problem
+																			// z
+																			// przerobieniem
+																			// BufferImage
+																			// na
+																			// File,
+																			// do
+																			// konsultacji
+																			// z
+																			// Patrykiem
 
-			//Otwiera kanał dla pliku docelowego
+			// Otwiera kanał dla pliku docelowego
 			FileChannel dstChannel = new FileOutputStream(file).getChannel();
 
 			// Kopiuje zawartość z jednego do drugiego
@@ -43,7 +56,7 @@ public class FileGraphicOperation {
 			// Zamknięcie kanałów.
 			srcChannel.close();
 			dstChannel.close();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			throw new FileSaveException();
 		}
 	}
@@ -51,16 +64,19 @@ public class FileGraphicOperation {
 	/**
 	 * Pobiera ID i zwraca obraz do edycji.
 	 * 
-	 * @throws FileNotAccessibleException Jeżeli niemożliwy dostęp do pliku.
-	 * @return Obraz gotowy do edycji. 
-	 * @param ID pliku do edycji.
+	 * @throws FileNotAccessibleException
+	 *             Jeżeli niemożliwy dostęp do pliku.
+	 * @return Obraz gotowy do edycji.
+	 * @param ID
+	 *            pliku do edycji.
 	 */
-	ImageHolder getImageForEdit(FileID fileID) throws FileNotAccessibleException{
-			try {
-				File file = FileInfo.getFile(fileID);
-				return new ImageHolder((BufferedImage)ImageIO.read(file), fileID);
-			} catch(Exception e) {
-				throw new FileNotAccessibleException();
-			}
+	ImageHolder getImageForEdit(FileID fileID)
+			throws FileNotAccessibleException {
+		try {
+			File file = FileInfo.getFile(fileID);
+			return new ImageHolder((BufferedImage) ImageIO.read(file), fileID);
+		} catch (Exception e) {
+			throw new FileNotAccessibleException();
+		}
 	}
 }
