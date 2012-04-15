@@ -4,9 +4,9 @@ import java.awt.image.BufferedImage;
 
 public final class ImageHolder {
 
-	private final BufferedImage editableImage;
+	protected final BufferedImage editableImage;
 
-	private final FileID imageID;
+	protected final FileID imageID;
 
 	/**
 	 * 
