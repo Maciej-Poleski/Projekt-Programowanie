@@ -72,10 +72,13 @@ public class MasterTag extends Tag<MasterTag> {
      * @param masterTag Tag który zostanie rodzicem tego tagu.
      */
     public void setParent(MasterTag masterTag) {
-        if (parent == null) addParent(masterTag);
-        else {
-            removeParent(parent);
+        if (parent == null && masterTag != null) {
             addParent(masterTag);
+        } else if (parent != null) {
+            removeParent(parent);
+            if (masterTag != null) {
+                addParent(masterTag);
+            }
         }
     }
 

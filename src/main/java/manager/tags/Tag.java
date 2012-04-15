@@ -15,7 +15,7 @@ import java.util.List;
 public abstract class Tag<T extends Tag<T>> implements Serializable {
     List<T> childrenList = new ArrayList<>();
     List<T> descendantsList = new ArrayList<>();
-    Tags creator;
+    private final Tags creator;
     private static final long serialVersionUID = 1;
 
     protected Tag(Tags creator) {

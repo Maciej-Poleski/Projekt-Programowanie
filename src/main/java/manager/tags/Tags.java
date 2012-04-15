@@ -5,9 +5,6 @@ import manager.files.FileID;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,14 +21,17 @@ public class Tags implements Serializable {
     private final List<Tag<?>> tags = new ArrayList<>();
     private TagFilesStore store = new TagFilesStore();
     private final Map<Tag<?>, String> tagNames = new HashMap<>();
-    private final Map<Tag<?>, Set<Object>> tagMetadata = new HashMap<>();
-    private static Tags defaultInstance = new Tags();
+    private final Map<Tag<?>, Set<Serializable>> tagMetadata = new HashMap<>();
+    private static Tags defaultInstance;
     private static final long serialVersionUID = 1;
 
     /**
      * Konstruuje nowy obiekt z pustą rodziną tagów.
      */
     public Tags() {
+        if (defaultInstance == null) {
+            setDefaultInstance(this);
+        }
     }
 
     /**
@@ -182,6 +182,16 @@ public class Tags implements Serializable {
     }
 
     /**
+     * Tworzy nowy tag macierzysty i przypisuje mu etykietę.
+     *
+     * @param name Etykieta nowego tagu macierzystego
+     * @return Nowy tag macierzysty o wskazanej etykiecie
+     */
+    public MasterTag newMasterTag(String name) {
+        return newMasterTag(null, name);
+    }
+
+    /**
      * Tworzy nowy tag użytkownika jako dziecko wskazanych tagów użytkownika i rodzic wskazanych tagów użytkownika.
      *
      * @param parents  Tagi użytkownika - rodzice
@@ -235,6 +245,21 @@ public class Tags implements Serializable {
     }
 
     /**
+     * Tworzy nowy tag użytkownika i przypisuje mu etykietę.
+     *
+     * @param name Etykieta nowego tagu użytkownika
+     * @return Nowy tag użytkownika o wskazanej etykiecie.
+     */
+    public UserTag newUserTag(String name) {
+        try {
+            return newUserTag(null, null, name);
+        } catch (CycleException e) {
+            assert false;
+            return null;
+        }
+    }
+
+    /**
      * Zwraca etykietę tagu (napis)
      *
      * @param tag Tag którego etykieta zostanie zwrócona.
@@ -260,8 +285,8 @@ public class Tags implements Serializable {
      * @param tag Tag którego metadane zostaną zwrócone
      * @return Wszystkie metadane związane z danym tagiem
      */
-    public Set<?> getAllMetadataOfTag(Tag<?> tag) {
-        return tagMetadata.get(tag);
+    public Set<Serializable> getAllMetadataOfTag(Tag<?> tag) {
+        return tagMetadata.get(tag) != null ? tagMetadata.get(tag) : new HashSet<Serializable>();
     }
 
     /**
@@ -271,9 +296,9 @@ public class Tags implements Serializable {
      * @param tag      Tag do którego dodajemy metadane
      * @param metadata Metadane które zostaną powiązane z wskazanym tagiem.
      */
-    public void addTagMetadata(Tag<?> tag, Object metadata) {
+    public void addTagMetadata(Tag<?> tag, Serializable metadata) {
         if (!tagMetadata.containsKey(tag)) {
-            tagMetadata.put(tag, new HashSet<>());
+            tagMetadata.put(tag, new HashSet<Serializable>());
         }
         tagMetadata.get(tag).add(metadata);
     }
@@ -286,7 +311,7 @@ public class Tags implements Serializable {
      * @throws IllegalStateException    Jeżeli wskazany tag nie posiada wskazanych metadanych
      * @throws IllegalArgumentException Jeżeli tag==null lub metadata=null
      */
-    public void removeTagMetadata(Tag<?> tag, Object metadata) {
+    public void removeTagMetadata(Tag<?> tag, Serializable metadata) {
         if (tag == null || metadata == null) {
             throw new IllegalArgumentException("Musisz wskazać obiekt (nie null)");
         }
@@ -437,6 +462,7 @@ public class Tags implements Serializable {
      * @param tag Wybrany tag
      * @return Fragment ścieżki odpowiadający wskazanemu tagowi
      * @throws IllegalArgumentException Jeżeli tag==null
+     * @throws IllegalStateException    Jeżeli któryś z rodziców wskazanego tagu nie posiada etykiety
      */
     public Path getPathFromMasterTag(MasterTag tag) {
         if (tag == null) {
@@ -444,13 +470,21 @@ public class Tags implements Serializable {
         }
         List<String> path = new ArrayList<>();
         for (MasterTag i = tag; i != null; i = i.getParent()) {
-            path.add(getNameOfTag(i));
+            if (getNameOfTag(i) == null || getNameOfTag(i).isEmpty()) {
+                throw new IllegalStateException("Nie można zbudować ścieżki w systemie plików z obecnego stanu tagów");
+            } else {
+                path.add(getNameOfTag(i));
+            }
         }
         String[] preparedPath = new String[path.size() - 1];
         for (int i = path.size() - 2; i >= 0; --i) {
             preparedPath[path.size() - 2 - i] = path.get(i);
         }
-        return Paths.get(path.get(path.size() - 1), preparedPath);
+        if (preparedPath.length != 0) {
+            return Paths.get(path.get(path.size() - 1), preparedPath);
+        } else {
+            return Paths.get(path.get(path.size() - 1));
+        }
     }
 
     /**
@@ -478,8 +512,14 @@ public class Tags implements Serializable {
      *
      * @return Obiekt klasy Tags
      */
-    public static Tags getDefaultInstance() {
-        return Tags.defaultInstance;
+    public static synchronized Tags getDefaultInstance() {
+        if (defaultInstance != null) {
+            return defaultInstance;
+        } else {
+            Tags result = new Tags();
+            defaultInstance = result;
+            return result;
+        }
     }
 
     /**
