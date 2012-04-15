@@ -10,13 +10,15 @@ import java.util.*;
 
 class Info implements Serializable {
 	Date created;
-	Map<FileID, Set<File>> infos = new HashMap<FileID, Set<File>>();
+    HashMap<FileID, File> masters = new HashMap<FileID, File>();
+	HashMap<FileID, Set<File>> infos = new HashMap<FileID, Set<File>>();
 	Info() { created = new Date(); }
 }
 
 class History implements Serializable {
 	Date created;
-	HashMap<FileID, Set<File>> history = new HashMap<FileID, Set<File>>();
+    HashMap<FileID, File> masters = new HashMap<FileID, File>();
+    HashMap<FileID, Set<File>> history = new HashMap<FileID, Set<File>>();
 	History() { created = new Date(); }
 }
 
@@ -31,6 +33,9 @@ public class FileInfo {
 	 * Funkcja wczytuje plik z informacjami na temat calej struktury 
 	 * oraz plik z historia zmian podczas dzialania ostatniej instancji programu.
 	 * W przypadku brutalnego zamkniecia programu dokonuje synchronizacji struktury z historia.
+     *
+     * @param sciezki do pliku z danymi i historia
+     * @throws IOException
 	 */
 	public static void readInput(File input, File history) throws IOException {
 		boolean sucD = false, sucH = false;
@@ -69,6 +74,7 @@ public class FileInfo {
 
         if((!sucD && sucH) || (sucH && sucD && data.created.before(guard.created))) { // Synchronizacja struktury danych z historia operacji
             Set<File> set;
+            File master;
 			for(FileID file : guard.history.keySet()) {
                 set = guard.history.get(file);
 				if(set!=null) {
@@ -76,6 +82,15 @@ public class FileInfo {
                 }
                 else {
                     data.infos.remove(file);
+                }
+                if(guard.masters.containsKey(file)) {
+                    master = guard.masters.get(file);
+                    if(master!=null) {
+                        data.masters.put(file,master);
+                    }
+                    else {
+                        data.masters.remove(file);
+                    }
                 }
 			}
 			saveChanges();
@@ -86,6 +101,8 @@ public class FileInfo {
 
 	/**
 	 * Funkcja uaktualnia plik z informacjami na temat calej struktury
+     *
+     * @throws IOException
 	 */
 	public static void saveChanges() throws IOException {
 		ObjectOutputStream wData = new ObjectOutputStream(new FileOutputStream(input));
@@ -96,7 +113,9 @@ public class FileInfo {
 
 	/**
 	 * Funkcja zapisuje biezaca historie zmian
-	 */
+     *
+     * @throws IOException
+     */
 	public static void saveHistory() throws IOException {
 		wHistory = new ObjectOutputStream(new FileOutputStream(hist));
 		guard.created = new Date();
@@ -104,15 +123,66 @@ public class FileInfo {
 		wHistory.close();
 	}
 
-	/**
-	 * Sprawdzenie czy podany plik znajduje sie w bazie
-	 */
-	public static boolean contains(FileID file) {
-		return data.infos.containsKey(file);
-	}
+    /**
+     * Sprawdzenie czy podany plik znajduje w oryginalnych katalogach
+     *
+     * @param ID danego pliku
+     * @return boolean
+     */
+    public static boolean containsMaster(FileID file) {
+        return data.masters.containsKey(file);
+    }
+
+    /**
+     * Sprawdzenie czy podany plik znajduje sie w backupach
+     *
+     * @param ID danego pliku
+     * @return boolean
+     */
+    public static boolean contains(FileID file) {
+        return data.infos.containsKey(file);
+    }
+
+    /**
+     * Dodanie oryginalnej sciezki do informacji na temat pliku
+     *
+     * @param ID danego pliku i sciezka do niego
+     * @throws IOException
+     */
+    public static void addMasterPath(FileID file, File path) throws IOException {
+        data.masters.put(file, path);
+        guard.masters.put(file, path);
+        saveHistory();
+    }
+
+    /**
+     * Usuniecie oryginalnej z informacji na temat pliku
+     *
+     * @param ID danego pliku
+     * @throws IOException
+     */
+    public static void removeMasterPath(FileID file) throws IOException {
+        guard.masters.put(file, null);
+        data.masters.remove(file);
+        saveHistory();
+    }
+
+    /**
+     * Pozyskanie sciezki do pliku w oryginalnym katalogu
+     * Jesli podany plik nie istnieje funkcja zwraca null.
+     *
+     * @param ID pliku
+     * @return sciezka do wskazanego pliku
+     */
+    public static File getMasterPath(FileID file) {
+        return data.masters.get(file);
+    }
 
 	/**
-	 * Dodanie sciezki do pliku
+	 * Dodanie sciezki do pliku w backupie
+     *
+     * @param ID danego pliku i sciezka do niego w backupie
+     * @throws IOException
 	 */
 	public static void addPath(FileID file, File path) throws IOException {
 		Set<File> set;
@@ -128,7 +198,10 @@ public class FileInfo {
 	}
 
 	/**
-	 * Usuniecie okreslonej sciezki ze zbioru informacji na temat pliku
+	 * Usuniecie okreslonej sciezki ze zbioru informacji na temat pliku zwiazanej z backupem
+     *
+     * @param ID danego pliku i sciezka z backupu przeznaczona do usuniecia
+     * @throws IOException
 	 */
 	public static void removePath(FileID file, File path) throws IOException {
 		Set<File> set = data.infos.get(file);
@@ -146,16 +219,22 @@ public class FileInfo {
 	}
 
 	/**
-	 * Pozyskanie wszystkich posiadanych sciezek do pliku,
+	 * Pozyskanie wszystkich posiadanych sciezek do pliku w backupach,
 	 * zwraca null, gdy zadna nie istnieje
+     *
+     * @param ID danego pliku
+     * @return Zbior wszystkich sciezke do pliku w backupach
 	 */
 	public static Set<File> getPaths(FileID file) {
 		return data.infos.get(file);
 	}
 
 	/**
-	 * Pozyskanie wszystkich posiadanych sciezek do plikow okreslonych przez kolekcje
-	 */
+	 * Pozyskanie wszystkich posiadanych sciezek do plikow w backupach okreslonych przez kolekcje
+     *
+     * @param Kolekcja ID plikow
+     * @return Mapa w ktorej kluczami sa ID plikow a wartosciami zbioru sciezek z nimi zwiazanymi
+     */
 	public static HashMap<FileID,Set<File>> getAllPaths(Collection<FileID> files) {
 		HashMap<FileID,Set<File>> map = new HashMap<FileID,Set<File>>();
 		Iterator<FileID> iterator = files.iterator();
@@ -171,22 +250,32 @@ public class FileInfo {
 
 	/**
 	 * Usuniecie wszelkich informacji na temat pewnego pliku
+     *
+     * @param ID pliku
+     * @throws IOException
 	 */
 	public static void removeFileInfo(FileID file) throws IOException {
 		data.infos.remove(file);
+        data.masters.remove(file);
+        guard.masters.put(file,null);
 		guard.history.put(file,null);
 		saveHistory();
 	}
 
 	/**
 	 * Usuniecie wszelkich informacji na temat kolekcji plikow
+     *
+     * @param Kolekcja ID plikow
+     * @throws IOException
 	 */
 	public static void removeFileInfo(Collection<FileID> files) throws IOException {
 		Iterator<FileID> iterator = files.iterator();
 		FileID file;
 		while(iterator.hasNext()) {
 			file = iterator.next();
-			data.infos.remove(file);
+            data.masters.remove(file);
+            guard.masters.put(file, null);
+            data.infos.remove(file);
 			guard.history.put(file,null);
 		}
 		saveHistory();
