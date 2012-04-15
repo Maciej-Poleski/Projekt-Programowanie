@@ -1,6 +1,7 @@
 package manager.tags;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,8 +13,8 @@ import java.util.List;
  * @author Zygmunt Łenyk
  */
 public abstract class Tag<T extends Tag<T>> implements Serializable {
-    private List<T> childrenList;
-
+    List<T> childrenList = new ArrayList<>();
+    List<T> descendantsList = new ArrayList<>();
     protected Tag() {
     }
 
@@ -30,7 +31,8 @@ public abstract class Tag<T extends Tag<T>> implements Serializable {
      * @return Lista dzieci (może być pusta)
      */
     public List<T> getChildren() {
-        return null;
+    	List<T> childrenListCopy = new ArrayList<>(childrenList);
+        return childrenListCopy;
     }
 
     /**
@@ -46,7 +48,18 @@ public abstract class Tag<T extends Tag<T>> implements Serializable {
      * @return Kolekcja potomków (może być pusta)
      */
     public Collection<T> getDescendants() {
-        return null;
+    	List<T> kolejkaDoWczytania = new ArrayList<>();
+    	for(T child : childrenList)
+    		kolejkaDoWczytania.add(child);
+    	while(!kolejkaDoWczytania.isEmpty()){
+    		descendantsList.add(kolejkaDoWczytania.get(0));
+    		for(T child : kolejkaDoWczytania.get(0).childrenList)
+    			kolejkaDoWczytania.add(child);
+    		kolejkaDoWczytania.remove(0);
+    	}
+    	List<T> descendantsListCopy = new ArrayList<>(descendantsList);
+    	descendantsList.clear();
+        return descendantsListCopy;
     }
 
     /**
@@ -54,16 +67,14 @@ public abstract class Tag<T extends Tag<T>> implements Serializable {
      *
      * @param child Tag który zostanie dzieckiem tego tagu
      */
-    void addChild(T child) {
-    }
+    abstract void addChild(T child);
 
     /**
      * Usuwa wskazany tag z listy dzieci tego tagu.
      *
      * @param child Tag do usunięcia
      */
-    void removeChild(T child) {
-    }
+    abstract void removeChild(T child);
 
     /**
      * Ustawia ten tag jako dziecko wskazanego tagu.
