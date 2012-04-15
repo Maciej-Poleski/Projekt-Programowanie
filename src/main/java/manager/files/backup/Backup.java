@@ -11,27 +11,30 @@ import manager.tags.MasterTag;
 public interface Backup {
 
 	/**
-	 * Tworzy nową lokalizację dla backupu
-	 * @param backupLocation
+	 * Tworzy nowy Backup.
+	 * @param MasterTag master Tag którego backup chcemy zrobić.
+	 * @param File ścieżka gdzie chcemy go zrobić.
 	 */
 	void createNewBackup(MasterTag masaterTag, File backupLocation);
 
 	/**
-	 * aktualizuje kopie zapasowa z wszystkimi zmianami dokonanymi od czasu
-	 * ostatniej synchronizacji.
-	 * @param Pobiera sciezka do katalogu, Mastertag
+	 * Synchronizuje backup.
+	 * @param MasterTag master Tag którego backup chcemy zrobić.
+	 * @param File ścieżka gdzie chcemy go zrobić.
 	 */
-	void synchronizeBackup(File backupLocation) throws OperationInterruptedException;
+	public void synchronizeBackup(MasterTag masterTag, File backupLocation) throws OperationInterruptedException;
 
 	/**
-	 * Pozwala odzyskać plik przypadkiem usunięty
-	 * @param Pobiera ID pliku
+	 * Zwraca odzyskany plik.
+	 * @param FileID id pliku.
+	 * @return Pilk.
 	 */
-	File retrieveFile(FileID file) throws OperationInterruptedException;
+	public File retrieveFile(FileID file) throws OperationInterruptedException;
 
 	/**
-	 * Zwraca date danego backupu tego pliku
-	 * @return Zwraca Data @param Pobiera Plik
+	 * Zwraca date dla danego backup'u.
+	 * @param File lokacja pliku.
+	 * @return Date data.
 	 */
-	Date getLastBackupDate(File backupLocation) throws OperationInterruptedException;
+	public Date getLastBackupDate(File backupLocation) throws OperationInterruptedException;
 }
