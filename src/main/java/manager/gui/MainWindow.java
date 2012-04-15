@@ -17,24 +17,25 @@ public class MainWindow extends javax.swing.JFrame {
         backupButton = new javax.swing.JButton();
         importButton = new javax.swing.JButton();
         rightPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        tagsLabel = new javax.swing.JLabel();
+        rightScrollPane = new javax.swing.JScrollPane();
+        rightTextPane = new javax.swing.JTextPane();
+        allTagsButton = new javax.swing.JButton();
+        commonTagsButton = new javax.swing.JButton();
         leftPanel = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTree2 = new javax.swing.JTree();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTextPane2 = new javax.swing.JTextPane();
-        jTextField1 = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
+        addTagButton = new javax.swing.JButton();
+        showButton = new javax.swing.JButton();
+        middlePanel = new javax.swing.JPanel();
+        middleScrollPane = new javax.swing.JScrollPane();
+        middleTextPane = new javax.swing.JTextPane();
+        searchTextField = new javax.swing.JTextField();
+        tagSearchButton = new javax.swing.JButton();
+        fileSearchButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Kompleksowa Obsługa Zdjęć i Katalogów");
@@ -42,10 +43,12 @@ public class MainWindow extends javax.swing.JFrame {
         setResizable(false);
 
         buttonPanel.setBackground(new java.awt.Color(204, 204, 255));
-        buttonPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        buttonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         buttonPanel.setForeground(new java.awt.Color(204, 204, 255));
 
         picasaButton.setText("EXPORT TO PICASA");
+        picasaButton.setMaximumSize(new java.awt.Dimension(180, 23));
+        picasaButton.setMinimumSize(new java.awt.Dimension(180, 23));
         picasaButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 picasaButtonActionPerformed(evt);
@@ -84,7 +87,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(editTagsButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(picasaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(picasaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(backupButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -96,30 +99,31 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(importButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(picasaButton)
+                        .addComponent(picasaButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(editTagsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(backupButton)))
                 .addContainerGap())
         );
 
         rightPanel.setBackground(new java.awt.Color(204, 204, 255));
+        rightPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel1.setText("Tags");
+        tagsLabel.setText("Tags");
 
-        jTextPane1.setAutoscrolls(false);
-        jScrollPane4.setViewportView(jTextPane1);
+        rightTextPane.setAutoscrolls(false);
+        rightScrollPane.setViewportView(rightTextPane);
 
-        jButton1.setText("All");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        allTagsButton.setText("All");
+        allTagsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                allTagsButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Common");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        commonTagsButton.setText("Common");
+        commonTagsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                commonTagsButtonActionPerformed(evt);
             }
         });
 
@@ -131,32 +135,33 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(rightPanelLayout.createSequentialGroup()
                         .addGap(74, 74, 74)
-                        .addComponent(jLabel1)
+                        .addComponent(tagsLabel)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(rightPanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4)
+                            .addComponent(rightScrollPane)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rightPanelLayout.createSequentialGroup()
-                                .addComponent(jButton1)
+                                .addComponent(allTagsButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(commonTagsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         rightPanelLayout.setVerticalGroup(
             rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rightPanelLayout.createSequentialGroup()
-                .addComponent(jLabel1)
+                .addComponent(tagsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(rightScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1))
-                .addGap(24, 24, 24))
+                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(commonTagsButton)
+                    .addComponent(allTagsButton))
+                .addGap(19, 19, 19))
         );
 
         leftPanel.setBackground(new java.awt.Color(204, 204, 255));
+        leftPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jScrollPane1.setViewportView(jTree1);
 
@@ -166,9 +171,9 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("User Tags", jScrollPane2);
 
-        jButton4.setText("Add Tag");
+        addTagButton.setText("Add Tag");
 
-        jButton5.setText("Show");
+        showButton.setText("Show");
 
         javax.swing.GroupLayout leftPanelLayout = new javax.swing.GroupLayout(leftPanel);
         leftPanel.setLayout(leftPanelLayout);
@@ -179,9 +184,9 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTabbedPane1)
                     .addGroup(leftPanelLayout.createSequentialGroup()
-                        .addComponent(jButton4)
+                        .addComponent(addTagButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)))
+                        .addComponent(showButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         leftPanelLayout.setVerticalGroup(
@@ -191,43 +196,49 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton5)
-                    .addComponent(jButton4))
+                    .addComponent(showButton)
+                    .addComponent(addTagButton))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 255));
+        middlePanel.setBackground(new java.awt.Color(204, 204, 255));
+        middlePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jScrollPane3.setViewportView(jTextPane2);
+        middleScrollPane.setViewportView(middleTextPane);
 
-        jTextField1.setText("Enter name of file...");
+        searchTextField.setText("Search...");
 
-        jButton3.setText("Search");
+        tagSearchButton.setText("Tag");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        fileSearchButton.setText("File");
+
+        javax.swing.GroupLayout middlePanelLayout = new javax.swing.GroupLayout(middlePanel);
+        middlePanel.setLayout(middlePanelLayout);
+        middlePanelLayout.setHorizontalGroup(
+            middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(middlePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+                .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(middlePanelLayout.createSequentialGroup()
+                        .addComponent(tagSearchButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(fileSearchButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchTextField))
+                    .addComponent(middleScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        middlePanelLayout.setVerticalGroup(
+            middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(middlePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(middleScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tagSearchButton)
+                    .addComponent(fileSearchButton))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -239,7 +250,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(middlePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(rightPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -251,9 +262,9 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(leftPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rightPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(17, 17, 17))
+                    .addComponent(middlePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(rightPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         getAccessibleContext().setAccessibleParent(buttonPanel);
@@ -278,13 +289,13 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_backupButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void allTagsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allTagsButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_allTagsButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void commonTagsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commonTagsButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_commonTagsButtonActionPerformed
     public static void main(String args[]) {
         /*
          * Set the Nimbus look and feel
@@ -323,29 +334,30 @@ public class MainWindow extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addTagButton;
+    private javax.swing.JButton allTagsButton;
     private javax.swing.JButton backupButton;
     private javax.swing.JPanel buttonPanel;
+    private javax.swing.JButton commonTagsButton;
     private javax.swing.JButton editTagsButton;
+    private javax.swing.JButton fileSearchButton;
     private javax.swing.JButton importButton;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextPane jTextPane1;
-    private javax.swing.JTextPane jTextPane2;
     private javax.swing.JTree jTree1;
     private javax.swing.JTree jTree2;
     private javax.swing.JPanel leftPanel;
+    private javax.swing.JPanel middlePanel;
+    private javax.swing.JScrollPane middleScrollPane;
+    private javax.swing.JTextPane middleTextPane;
     private javax.swing.JButton picasaButton;
     private javax.swing.JPanel rightPanel;
+    private javax.swing.JScrollPane rightScrollPane;
+    private javax.swing.JTextPane rightTextPane;
+    private javax.swing.JTextField searchTextField;
+    private javax.swing.JButton showButton;
+    private javax.swing.JButton tagSearchButton;
+    private javax.swing.JLabel tagsLabel;
     // End of variables declaration//GEN-END:variables
 }
