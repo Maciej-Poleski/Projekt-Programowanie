@@ -43,10 +43,8 @@ public class ImageProviderForGUI {
 	/**
 	 * Zapisuje plik po edycji.
 	 * 
-	 * @throws FileSaveException
-	 *             Nieudany zapis pliku.
-	 * @param editedImage
-	 *            Obraz po edycji.
+	 * @throws FileSaveException Nieudany zapis pliku.
+	 * @param editedImage Obraz po edycji.
 	 */
 	void saveEditedImage(ImageHolder editedImage) throws FileSaveException {
 		File file = FileInfo.getFile(editedImage.getImageID()); // (Marcin)
@@ -54,6 +52,7 @@ public class ImageProviderForGUI {
 		// metoda zwracająca
 		// ORGINALNA ścieżkę
 		try {
+
 			// Otwiera kanał na pliku, który ma być kopiowany
 			FileChannel srcChannel = new FileInputStream(file).getChannel(); // problem
 																				// z
@@ -75,6 +74,9 @@ public class ImageProviderForGUI {
 			// Zamknięcie kanałów.
 			srcChannel.close();
 			dstChannel.close();
+
+			ImageIO.write(editedImage.getBufferedImage(), "jpg", file); //potrzebne dodanie obsługi większej ilości typów plików
+
 		} catch (Exception e) {
 			throw new FileSaveException();
 		}
@@ -83,11 +85,14 @@ public class ImageProviderForGUI {
 	/**
 	 * Pobiera ID i zwraca obraz do edycji.
 	 * 
+<<<<<<< TREE
 	 * @throws FileNotAvailableException
 	 *             Jeżeli niemożliwy dostęp do pliku.
+=======
+	 * @throws FileNotAccessibleException Jeżeli niemożliwy dostęp do pliku.
+>>>>>>> MERGE-SOURCE
 	 * @return Obraz gotowy do edycji.
-	 * @param ID
-	 *            pliku do edycji.
+	 * @param fileID ID pliku do edycji.
 	 */
 	ImageHolder getImageForEdit(FileID fileID)
 			throws FileNotAvailableException {

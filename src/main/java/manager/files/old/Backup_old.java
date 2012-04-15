@@ -14,7 +14,7 @@ public interface Backup_old {
 	 * @param MasterTag master Tag którego backup chcemy zrobić.
 	 * @param File ścieżka gdzie chcemy go zrobić.
 	 */
-	void createNewBackup(MasterTag masterTag, File backupLocation);
+	void createNewBackup(MasterTag masterTag, File backupLocation) throws OperationInterruptedException;
 
 	/**
 	 * Synchronizuje backup.
@@ -35,5 +35,5 @@ public interface Backup_old {
 	 * @param File lokacja pliku.
 	 * @return Date data.
 	 */
-	public Date getLastBackupDate(File backupLocation) throws OperationInterruptedException;
+	public Date getLastBackupDate(File backupLocation) ;
 }
