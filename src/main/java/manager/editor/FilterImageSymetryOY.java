@@ -19,9 +19,9 @@ public class FilterImageSymetryOY implements IFilter{
 		original.toRGB(); temp.toRGB();
 		for(int i=0;i<mWidth;i++){
 			for(int j=0;j<mHeight;j++){
-				tempData[PixelData.mPixelSize*((mHeight-1-j)*mWidth+i)] = origData[PixelData.mPixelSize*(j*mWidth+i)];
-				tempData[PixelData.mPixelSize*((mHeight-1-j)*mWidth+i)+1] = origData[PixelData.mPixelSize*(j*mWidth+i)+1];
-				tempData[PixelData.mPixelSize*((mHeight-1-j)*mWidth+i)+2] = origData[PixelData.mPixelSize*(j*mWidth+i)+2];
+				tempData[PixelData.PIXEL_SIZE*((mHeight-1-j)*mWidth+i)] = origData[PixelData.PIXEL_SIZE*(j*mWidth+i)];
+				tempData[PixelData.PIXEL_SIZE*((mHeight-1-j)*mWidth+i)+1] = origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1];
+				tempData[PixelData.PIXEL_SIZE*((mHeight-1-j)*mWidth+i)+2] = origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2];
 			}
 		}
 	}

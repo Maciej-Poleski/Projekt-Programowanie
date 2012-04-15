@@ -35,9 +35,9 @@ public class FilterMatrixAdapter implements IFilterMatrix{
 					for(int mi=0;mi<matSize;mi++){
 						ip = i+mi-center;
 						if(ip >= 0 && ip < mWidth && jp >= 0 && jp < mHeight){
-							mR += origData[PixelData.mPixelSize*(jp*mWidth+ip)] * matTable[mj*matSize+mi];
-							mG += origData[PixelData.mPixelSize*(jp*mWidth+ip)+1] * matTable[mj*matSize+mi];
-							mB += origData[PixelData.mPixelSize*(jp*mWidth+ip)+2] * matTable[mj*matSize+mi];
+							mR += origData[PixelData.PIXEL_SIZE*(jp*mWidth+ip)] * matTable[mj*matSize+mi];
+							mG += origData[PixelData.PIXEL_SIZE*(jp*mWidth+ip)+1] * matTable[mj*matSize+mi];
+							mB += origData[PixelData.PIXEL_SIZE*(jp*mWidth+ip)+2] * matTable[mj*matSize+mi];
 						}
 					}
 				}
@@ -46,9 +46,9 @@ public class FilterMatrixAdapter implements IFilterMatrix{
 					mG /= sum;
 					mB /= sum;
 				}
-				tempData[PixelData.mPixelSize*(j*mWidth+i)] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, mR));
-				tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, mG));
-				tempData[PixelData.mPixelSize*(j*mWidth+i)+2] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, mB));
+				tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)] = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, mR));
+				tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, mG));
+				tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2] = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, mB));
 			}
 		}
 	}

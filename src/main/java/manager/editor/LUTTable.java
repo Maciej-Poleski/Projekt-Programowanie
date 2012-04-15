@@ -28,7 +28,7 @@ public class LUTTable {
 		if(arg >= 1.0f) {return mData[mData.length-1];}
 		float delta = 1.0f/(mData.length-1);
 		int beg = (int)(arg/delta);
-		if(Math.abs(delta*beg - arg) < .00001f) {return mData[beg];}
+		if(Math.abs(delta*beg - arg) < ColorConverter.FLOAT_PRECISION) {return mData[beg];}
 		float hdet = (mData[beg+1] - mData[beg])/delta;
 		return mData[beg] + hdet * (arg-beg*delta);
 	}

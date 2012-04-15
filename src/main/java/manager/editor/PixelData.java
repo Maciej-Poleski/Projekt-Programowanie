@@ -15,19 +15,19 @@ public class PixelData implements Cloneable {
 	/**
 	 * Rozmiar danych zajmowanych w tablicy przez każdego pixela w bajtach
 	 */
-	public final static int mPixelSize = 3;
+	public static final int PIXEL_SIZE = 3;
 	/**
 	 * Tablicowa precyzja zapisu kanałów Saturation i Value (modelu HSV)
 	 */
-	public final static int mSVChannelPrecision = 100;
+	public static final int SV_CHANNEL_PRECISON = 100;
 	/**
 	 * Tablicowa precyzja zapisu kanałów Hue (modelu HSV)
 	 */
-	public final static int mHueChannelPrecision = 360;
+	public static final int HUE_CHANNEL_PRECISION = 360;
 	/**
 	 * Tablicowa precyzja zapisu kanałów RGB i CMY
 	 */
-	public final static int mRGBCMYChannelPrecision = 256;
+	public static final int RGBCMY_CHANNEL_PRECISION = 256;
 	
 	private enum DataType{
 		RGB, CMY, HSV;
@@ -46,7 +46,7 @@ public class PixelData implements Cloneable {
 		if(width <= 0 || height <= 0) {throw new IllegalArgumentException();}
 		mWidth = width;
 		mHeight = height;
-		mData = new float[width*height*mPixelSize];
+		mData = new float[width*height*PIXEL_SIZE];
 	}
 	
     /**
@@ -78,7 +78,7 @@ public class PixelData implements Cloneable {
      * Zwraca tablicę danych o pixelach
      * @return tablica danych pixeli
      */
-    public float[] getData(){
+    final float[] getData(){
     	return mData;
     }
 
@@ -87,19 +87,19 @@ public class PixelData implements Cloneable {
      */
     public void toRGB() {
     	if(mDataType == DataType.CMY){
-    		for(int i=0;i<mData.length;i++) {mData[i] = ColorConverter.mRGBCMYByteMax - mData[i];}
+    		for(int i=0;i<mData.length;i++) {mData[i] = ColorConverter.RGBCMY_BYTE_MAX - mData[i];}
     	} 
     	if(mDataType == DataType.HSV){
     		float mH,mS,mV,mR=0.0f,mG=0.0f,mB=0.0f;
     		float f,p,q,t; int mI;
     		for(int i=0;i<mWidth;i++){
     			for(int j=0;j<mHeight;j++){
-    				mH = mData[mPixelSize*(i*mHeight+j)];
-    				mS = mData[mPixelSize*(i*mHeight+j)+1];
-    				mV = mData[mPixelSize*(i*mHeight+j)+2];
-    				if(Math.abs(mV) < ColorConverter.mFloatPrecision) {mR=0.0f; mG=0.0f; mB=0.0f;}
+    				mH = mData[PIXEL_SIZE*(i*mHeight+j)];
+    				mS = mData[PIXEL_SIZE*(i*mHeight+j)+1];
+    				mV = mData[PIXEL_SIZE*(i*mHeight+j)+2];
+    				if(Math.abs(mV) < ColorConverter.FLOAT_PRECISION) {mR=0.0f; mG=0.0f; mB=0.0f;}
     				else{
-    				 mH /= ColorConverter.mHueCircleSplitter;
+    				 mH /= ColorConverter.HUE_CIRCLE_SPLITTER;
     				 mI = (int)Math.floor(mH);
     				 f = mH-mI;
     				 p = mV*(1.0f-mS);
@@ -112,9 +112,9 @@ public class PixelData implements Cloneable {
     				 else if (mI==4) {mR=t; mG=p; mB=mV;}
     				 else if (mI==5) {mR=mV; mG=p; mB=q;}
     				}
-    				mData[mPixelSize*(i*mHeight+j)] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, ColorConverter.mRGBCMYByteMax * mR));
-    				mData[mPixelSize*(i*mHeight+j)+1] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, ColorConverter.mRGBCMYByteMax * mG));
-    				mData[mPixelSize*(i*mHeight+j)+2] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, ColorConverter.mRGBCMYByteMax * mB));
+    				mData[PIXEL_SIZE*(i*mHeight+j)] = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, ColorConverter.RGBCMY_BYTE_MAX * mR));
+    				mData[PIXEL_SIZE*(i*mHeight+j)+1] = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, ColorConverter.RGBCMY_BYTE_MAX * mG));
+    				mData[PIXEL_SIZE*(i*mHeight+j)+2] = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, ColorConverter.RGBCMY_BYTE_MAX * mB));
     			}
     		}
     	}
@@ -130,27 +130,27 @@ public class PixelData implements Cloneable {
     		float mH=0.0f,mS=0.0f,mV=0.0f,mR,mG,mB,x,f,mI;
     		for(int i=0;i<mWidth;i++){
     			for(int j=0;j<mHeight;j++){
-    				mR = mData[mPixelSize*(i*mHeight+j)] / ColorConverter.mRGBCMYByteMax;
-    				mG = mData[mPixelSize*(i*mHeight+j)+1] / ColorConverter.mRGBCMYByteMax;
-    				mB = mData[mPixelSize*(i*mHeight+j)+2] / ColorConverter.mRGBCMYByteMax;
+    				mR = mData[PIXEL_SIZE*(i*mHeight+j)] / ColorConverter.RGBCMY_BYTE_MAX;
+    				mG = mData[PIXEL_SIZE*(i*mHeight+j)+1] / ColorConverter.RGBCMY_BYTE_MAX;
+    				mB = mData[PIXEL_SIZE*(i*mHeight+j)+2] / ColorConverter.RGBCMY_BYTE_MAX;
     				x = Math.min(Math.min(mR, mG), mB);
     				mV = Math.max(Math.max(mR, mG), mB);
-    				if (Math.abs(x - mV) < ColorConverter.mFloatPrecision) {mH=0.0f; mS=0.0f;}
+    				if (Math.abs(x - mV) < ColorConverter.FLOAT_PRECISION) {mH=0.0f; mS=0.0f;}
     				else {
-    					if(Math.abs(mR - x) < ColorConverter.mFloatPrecision) {f = mG-mB;}
-    					else if(Math.abs(mG - x) < ColorConverter.mFloatPrecision) {f = mB-mR;}
+    					if(Math.abs(mR - x) < ColorConverter.FLOAT_PRECISION) {f = mG-mB;}
+    					else if(Math.abs(mG - x) < ColorConverter.FLOAT_PRECISION) {f = mB-mR;}
     					else {f = mR-mG;}
     					
-    					if(Math.abs(mR - x) < ColorConverter.mFloatPrecision) {mI=3.0f;}
-    					else if(Math.abs(mG - x) < ColorConverter.mFloatPrecision) {mI=5.0f;}
+    					if(Math.abs(mR - x) < ColorConverter.FLOAT_PRECISION) {mI=3.0f;}
+    					else if(Math.abs(mG - x) < ColorConverter.FLOAT_PRECISION) {mI=5.0f;}
     					else {mI=1.0f;}
-    					mH = (float)( (int)((mI-f/(mV-x))*ColorConverter.mHueCircleSplitter) )%mHueChannelPrecision;
+    					mH = (float)( (int)((mI-f/(mV-x))*ColorConverter.HUE_CIRCLE_SPLITTER) )%HUE_CHANNEL_PRECISION;
     					mS = ((mV-x)/mV);
     				}
     				
-    	            mData[mPixelSize*(i*mHeight+j)] = mH;
-    	            mData[mPixelSize*(i*mHeight+j)+1] = mS;
-    	            mData[mPixelSize*(i*mHeight+j)+2] = mV;
+    	            mData[PIXEL_SIZE*(i*mHeight+j)] = mH;
+    	            mData[PIXEL_SIZE*(i*mHeight+j)+1] = mS;
+    	            mData[PIXEL_SIZE*(i*mHeight+j)+2] = mV;
     			}
     		}
     	}
@@ -163,7 +163,7 @@ public class PixelData implements Cloneable {
     public void toCMY() {
     	if(mDataType == DataType.HSV) {toRGB();}
     	if(mDataType == DataType.RGB) {
-    		for(int i=0;i<mData.length;i++) {mData[i] = ColorConverter.mRGBCMYByteMax - mData[i];} 
+    		for(int i=0;i<mData.length;i++) {mData[i] = ColorConverter.RGBCMY_BYTE_MAX - mData[i];} 
     	}
     	mDataType = DataType.CMY;
     }
@@ -219,30 +219,30 @@ public class PixelData implements Cloneable {
     
     private Histogram getHistogramRed(){
     	toRGB();
-    	int[] table = new int[mRGBCMYChannelPrecision];
+    	int[] table = new int[RGBCMY_CHANNEL_PRECISION];
 		for(int i=0;i<mWidth;i++) {
 			for(int j=0;j<mHeight;j++) {
-				table[(int)mData[mPixelSize*(i*mHeight+j)]]++;
+				table[(int)mData[PIXEL_SIZE*(i*mHeight+j)]]++;
 			}
 		}
     	return new Histogram(table, HistogramChannel.RED);
     }
     private Histogram getHistogramGreen(){
     	toRGB();
-    	int[] table = new int[mRGBCMYChannelPrecision];
+    	int[] table = new int[RGBCMY_CHANNEL_PRECISION];
 		for(int i=0;i<mWidth;i++) {
 			for(int j=0;j<mHeight;j++) {
-				table[(int)mData[mPixelSize*(i*mHeight+j)+1]]++;
+				table[(int)mData[PIXEL_SIZE*(i*mHeight+j)+1]]++;
 			}
 		}
     	return new Histogram(table, HistogramChannel.GREEN);
     }
     private Histogram getHistogramBlue(){
     	toRGB();
-    	int[] table = new int[mRGBCMYChannelPrecision];
+    	int[] table = new int[RGBCMY_CHANNEL_PRECISION];
 		for(int i=0;i<mWidth;i++) {
 			for(int j=0;j<mHeight;j++) {
-				table[(int)mData[mPixelSize*(i*mHeight+j)+2]]++;
+				table[(int)mData[PIXEL_SIZE*(i*mHeight+j)+2]]++;
 			}
 		}
     	return new Histogram(table, HistogramChannel.BLUE);
@@ -250,58 +250,58 @@ public class PixelData implements Cloneable {
     
     private Histogram getHistogramCyan(){
     	toCMY();
-    	int[] table = new int[mRGBCMYChannelPrecision];
+    	int[] table = new int[RGBCMY_CHANNEL_PRECISION];
 		for(int i=0;i<mWidth;i++) {
 			for(int j=0;j<mHeight;j++) {
-				table[(int)mData[mPixelSize*(i*mHeight+j)]]++;
+				table[(int)mData[PIXEL_SIZE*(i*mHeight+j)]]++;
 			}
 		}
     	return new Histogram(table, HistogramChannel.CYAN);
     }
     private Histogram getHistogramMagenta(){
     	toCMY();
-    	int[] table = new int[mRGBCMYChannelPrecision];
+    	int[] table = new int[RGBCMY_CHANNEL_PRECISION];
 		for(int i=0;i<mWidth;i++) {
 			for(int j=0;j<mHeight;j++) {
-				table[(int)mData[mPixelSize*(i*mHeight+j)+1]]++;
+				table[(int)mData[PIXEL_SIZE*(i*mHeight+j)+1]]++;
 			}
 		}
     	return new Histogram(table, HistogramChannel.MAGENTA);
     }
     private Histogram getHistogramYellow(){
     	toCMY();
-    	int[] table = new int[mRGBCMYChannelPrecision];
+    	int[] table = new int[RGBCMY_CHANNEL_PRECISION];
 		for(int i=0;i<mWidth;i++) {
 			for(int j=0;j<mHeight;j++) {
-				table[(int)mData[mPixelSize*(i*mHeight+j)+2]]++;
+				table[(int)mData[PIXEL_SIZE*(i*mHeight+j)+2]]++;
 			}
 		}
     	return new Histogram(table, HistogramChannel.YELLOW);
     }
     
     private Histogram getHistogramHue(){
-    	int[] table = new int[mHueChannelPrecision]; toHSV();
+    	int[] table = new int[HUE_CHANNEL_PRECISION]; toHSV();
 		for(int i=0;i<mWidth;i++) {
 			for(int j=0;j<mHeight;j++) {
-				table[((int)mData[mPixelSize*(i*mHeight+j)])%mHueChannelPrecision]++;
+				table[((int)mData[PIXEL_SIZE*(i*mHeight+j)])%HUE_CHANNEL_PRECISION]++;
 			}
 		}
 		return new Histogram(table, HistogramChannel.HUE);
     }
     private Histogram getHistogramSaturation(){
-    	int[] table = new int[mSVChannelPrecision]; toHSV();
+    	int[] table = new int[SV_CHANNEL_PRECISON]; toHSV();
 		for(int i=0;i<mWidth;i++) {
 			for(int j=0;j<mHeight;j++) {
-				table[(int)(mData[mPixelSize*(i*mHeight+j)+1]*(float)mSVChannelPrecision)]++;
+				table[(int)(mData[PIXEL_SIZE*(i*mHeight+j)+1]*(float)SV_CHANNEL_PRECISON)]++;
 			}
 		}
 		return new Histogram(table, HistogramChannel.SATURATION);
     }
     private Histogram getHistogramValue(){
-    	int[] table = new int[mSVChannelPrecision]; toHSV();
+    	int[] table = new int[SV_CHANNEL_PRECISON]; toHSV();
 		for(int i=0;i<mWidth;i++) {
 			for(int j=0;j<mHeight;j++) {
-				table[(int)(mData[mPixelSize*(i*mHeight+j)+2]*(float)mSVChannelPrecision)]++;
+				table[(int)(mData[PIXEL_SIZE*(i*mHeight+j)+2]*(float)SV_CHANNEL_PRECISON)]++;
 			}
 		}
 		return new Histogram(table, HistogramChannel.VALUE);

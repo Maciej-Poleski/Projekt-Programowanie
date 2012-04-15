@@ -10,29 +10,40 @@ public final class ColorConverter {
 	/**
 	 * Stała opisuje precyzje porównywania floatów
 	 */
-	public final static float mFloatPrecision = 0.00001f;
+	public static final float FLOAT_PRECISION = 0.00001f;
 	/**
 	 * Kąt pełny palety barw (Hue) służy do zapętlenia wartości (modulo)
 	 */
-	public final static int mHueChannelPrecision = 360;
+	public static final int HUE_CHANNEL_PRECISION = 360;
 	/**
 	 * Kąt wyznaczający podział koła barw na podzbiory do konwersji RGB -> HSV i odwrotnie
 	 */
-	public final static float mHueCircleSplitter = 60.0f;
+	public static final float HUE_CIRCLE_SPLITTER = 60.0f;
 	/**
 	 * Maksymalna dopuszczalna wartość kanału barwy (Hue) zarówno w 
 	 * modelu barw jak i w bitmapie
 	 */
-	public final static float mHueMaxValue = 359.999f;
-	
+	public static final float HUE_MAX = 359.999f;
 	/**
 	 * Maksymalna wartość kanałów RGB, CMY oraz SV (z modelu HSV) w modelach barw
 	 */
-	public final static float mRGBCMYSVFloatMax = 1.0f;
+	public static final float RGBCMY_FLOAT_MAX = 1.0f;
 	/**
 	 * Maksymalna wartość kanałów RGB i CMY w bitmapie
 	 */
-	public final static float mRGBCMYByteMax = 255.0f;
+	public static final float RGBCMY_BYTE_MAX = 255.0f;
+	/**
+	 * Stosunek udziału koloru czerwonego w barwie wykrywanej przez ludzkie oko
+	 */
+	public static final float RED_LUMINOSITY = 0.21f;
+	/**
+	 * Stosunek udziału koloru zielonego w barwie wykrywanej przez ludzkie oko
+	 */
+	public static final float GREEN_LUMINOSITY =  0.71f;
+	/**
+	 * Stosunek udziału koloru niebieskiego w barwie wykrywanej przez ludzkie oko
+	 */
+	public static final float BLUE_LUMINOSITY = 0.07f;
 	
 	private ColorConverter(){throw new UnsupportedOperationException();};
 	/**
@@ -40,7 +51,7 @@ public final class ColorConverter {
 	 * @return odpowiadający kolor z przestrzeni RGB
 	 */
 	public static ColorRGB cmyTOrgb(ColorCMY color){
-		return new ColorRGB(mRGBCMYSVFloatMax-color.getC(), mRGBCMYSVFloatMax-color.getM(), mRGBCMYSVFloatMax-color.getY());
+		return new ColorRGB(RGBCMY_FLOAT_MAX-color.getC(), RGBCMY_FLOAT_MAX-color.getM(), RGBCMY_FLOAT_MAX-color.getY());
 	}
 	/**
 	 * @param color - kolor z przestrzeni HSV
@@ -51,14 +62,14 @@ public final class ColorConverter {
 		float mH = color.getH();
 		float mS = color.getS();
 		float mV = color.getV();
-		if(Math.abs(mV) < mFloatPrecision) {mR=0.0f; mG=0.0f; mB=0.0f;}
+		if(Math.abs(mV) < FLOAT_PRECISION) {mR=0.0f; mG=0.0f; mB=0.0f;}
 		else{
-		 mH /= mHueCircleSplitter;
+		 mH /= HUE_CIRCLE_SPLITTER;
 		 mI = (int)Math.floor(mH);
 		 f = mH-mI;
-		 p = mV*(mRGBCMYSVFloatMax-mS);
-		 q = mV*(mRGBCMYSVFloatMax-(mS*f));
-		 t = mV*(mRGBCMYSVFloatMax-(mS*(mRGBCMYSVFloatMax-f)));
+		 p = mV*(RGBCMY_FLOAT_MAX-mS);
+		 q = mV*(RGBCMY_FLOAT_MAX-(mS*f));
+		 t = mV*(RGBCMY_FLOAT_MAX-(mS*(RGBCMY_FLOAT_MAX-f)));
 		 if (mI==0) {mR=mV; mG=t; mB=p;}
 		 else if (mI==1) {mR=q; mG=mV; mB=p;}
 		 else if (mI==2) {mR=p; mG=mV; mB=t;}
@@ -74,7 +85,7 @@ public final class ColorConverter {
 	 * @return odpowiadający kolor z przestrzeni CMY
 	 */
 	public static ColorCMY rgbTOcmy(ColorRGB color){
-		return new ColorCMY(mRGBCMYSVFloatMax-color.getR(), mRGBCMYSVFloatMax-color.getG(), mRGBCMYSVFloatMax-color.getB());
+		return new ColorCMY(RGBCMY_FLOAT_MAX-color.getR(), RGBCMY_FLOAT_MAX-color.getG(), RGBCMY_FLOAT_MAX-color.getB());
 	}
 	/**
 	 * @param color - kolor z przestrzeni HSV
@@ -95,16 +106,16 @@ public final class ColorConverter {
 		mB = color.getB();
 		x = Math.min(Math.min(mR, mG), mB);
 		mV = Math.max(Math.max(mR, mG), mB);
-		if (Math.abs(x - mV) < mFloatPrecision) {mH=0.0f; mS=0.0f;}
+		if (Math.abs(x - mV) < FLOAT_PRECISION) {mH=0.0f; mS=0.0f;}
 		else {
-			if(Math.abs(mR - x) < mFloatPrecision) {f = mG-mB;}
-			else if(Math.abs(mG - x) < mFloatPrecision) {f = mB-mR;}
+			if(Math.abs(mR - x) < FLOAT_PRECISION) {f = mG-mB;}
+			else if(Math.abs(mG - x) < FLOAT_PRECISION) {f = mB-mR;}
 			else {f = mR-mG;}
 			
-			if(Math.abs(mR - x) < mFloatPrecision) {mI=3.0f;}
-			else if(Math.abs(mG - x) < mFloatPrecision) {mI=5.0f;}
+			if(Math.abs(mR - x) < FLOAT_PRECISION) {mI=3.0f;}
+			else if(Math.abs(mG - x) < FLOAT_PRECISION) {mI=5.0f;}
 			else {mI=1.0f;}
-			mH = (float)( (int)((mI-f/(mV-x))*mHueCircleSplitter) ) % mHueChannelPrecision;
+			mH = (float)( (int)((mI-f/(mV-x))*HUE_CIRCLE_SPLITTER) ) % HUE_CHANNEL_PRECISION;
 			mS = ((mV-x)/mV);
 		}		
 		return new ColorHSV(mH,mS,mV);

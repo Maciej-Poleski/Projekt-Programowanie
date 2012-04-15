@@ -21,12 +21,12 @@ public class FilterSepia implements IFilterRange{
 		original.toRGB(); temp.toRGB();
 		for(int i=0;i<mWidth;i++){
 			for(int j=0;j<mHeight;j++){
-				grey = 0.21f*origData[PixelData.mPixelSize*(i*mHeight+j)] + 
-						0.71f*origData[PixelData.mPixelSize*(i*mHeight+j)+1] + 
-						0.07f*origData[PixelData.mPixelSize*(i*mHeight+j)+2];
-				tempData[PixelData.mPixelSize*(i*mHeight+j)] = Math.min(ColorConverter.mRGBCMYByteMax, grey+2*det);
-				tempData[PixelData.mPixelSize*(i*mHeight+j)+1] = Math.min(ColorConverter.mRGBCMYByteMax, grey+det);
-				tempData[PixelData.mPixelSize*(i*mHeight+j)+2] = Math.min(ColorConverter.mRGBCMYByteMax, grey);
+				grey = ColorConverter.RED_LUMINOSITY * origData[PixelData.PIXEL_SIZE*(i*mHeight+j)] + 
+						ColorConverter.GREEN_LUMINOSITY * origData[PixelData.PIXEL_SIZE*(i*mHeight+j)+1] + 
+						ColorConverter.BLUE_LUMINOSITY * origData[PixelData.PIXEL_SIZE*(i*mHeight+j)+2];
+				tempData[PixelData.PIXEL_SIZE*(i*mHeight+j)] = Math.min(ColorConverter.RGBCMY_BYTE_MAX, grey+2*det);
+				tempData[PixelData.PIXEL_SIZE*(i*mHeight+j)+1] = Math.min(ColorConverter.RGBCMY_BYTE_MAX, grey+det);
+				tempData[PixelData.PIXEL_SIZE*(i*mHeight+j)+2] = Math.min(ColorConverter.RGBCMY_BYTE_MAX, grey);
 			}
 		}
 	}
@@ -41,6 +41,21 @@ public class FilterSepia implements IFilterRange{
 
 	@Override
 	public Range[] getRangeTable() {
-		return mRange;
+		return mRange.clone();
+	}
+
+	@Override
+	public void setRangeTable(Range[] table) {
+		if(table == null || table.length != mRange.length){
+			throw new IllegalArgumentException();
+		}
+		for(int i=0;i<table.length;i++){
+			if(table[i].getMin() != mRange[i].getMin() || table[i].getMax() != mRange[i].getMax()){
+				throw new IllegalArgumentException();
+			}
+		}
+		for(int i=0;i<table.length;i++){
+			mRange[i].setValue(table[i].getValue());
+		}
 	}
 }

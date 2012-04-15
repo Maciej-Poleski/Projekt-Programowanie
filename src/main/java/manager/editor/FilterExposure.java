@@ -21,7 +21,7 @@ public class FilterExposure implements IFilterRange{
 		float coef = (float)Math.pow(2.0f, mRange[0].getValue());
 		original.toRGB(); temp.toRGB();
 		for(int i=0;i<origData.length;i++){
-			tempData[i] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, coef*origData[i]));
+			tempData[i] = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, coef*origData[i]));
 		}
 	}
 
@@ -35,7 +35,22 @@ public class FilterExposure implements IFilterRange{
 
 	@Override
 	public Range[] getRangeTable() {
-		return mRange;
+		return mRange.clone();
+	}
+
+	@Override
+	public void setRangeTable(Range[] table) {
+		if(table == null || table.length != mRange.length){
+			throw new IllegalArgumentException();
+		}
+		for(int i=0;i<table.length;i++){
+			if(table[i].getMin() != mRange[i].getMin() || table[i].getMax() != mRange[i].getMax()){
+				throw new IllegalArgumentException();
+			}
+		}
+		for(int i=0;i<table.length;i++){
+			mRange[i].setValue(table[i].getValue());
+		}
 	}
 
 }

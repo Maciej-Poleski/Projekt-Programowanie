@@ -16,9 +16,9 @@ public class FilterContrast implements IFilterRange {
 		}
 		float[] origData = original.getData();
 		float[] tempData = temp.getData();
-		float mLUT[] = new float[PixelData.mRGBCMYChannelPrecision];
-		for(int i=0;i<PixelData.mRGBCMYChannelPrecision;i++){
-			mLUT[i] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, mRange[0].getValue()*((float)i-PixelData.mRGBCMYChannelPrecision/2.0f) + PixelData.mRGBCMYChannelPrecision/2.0f));
+		float mLUT[] = new float[PixelData.RGBCMY_CHANNEL_PRECISION];
+		for(int i=0;i<PixelData.RGBCMY_CHANNEL_PRECISION;i++){
+			mLUT[i] = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, mRange[0].getValue()*((float)i-PixelData.RGBCMY_CHANNEL_PRECISION/2.0f) + PixelData.RGBCMY_CHANNEL_PRECISION/2.0f));
 		}
 		original.toRGB(); temp.toRGB();
 		for(int i=0;i<origData.length;i++){
@@ -36,7 +36,22 @@ public class FilterContrast implements IFilterRange {
 
 	@Override
 	public Range[] getRangeTable() {
-		return mRange;
+		return mRange.clone();
+	}
+
+	@Override
+	public void setRangeTable(Range[] table) {
+		if(table == null || table.length != mRange.length){
+			throw new IllegalArgumentException();
+		}
+		for(int i=0;i<table.length;i++){
+			if(table[i].getMin() != mRange[i].getMin() || table[i].getMax() != mRange[i].getMax()){
+				throw new IllegalArgumentException();
+			}
+		}
+		for(int i=0;i<table.length;i++){
+			mRange[i].setValue(table[i].getValue());
+		}
 	}
 
 }

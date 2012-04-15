@@ -36,20 +36,20 @@ public class ColorHSV {
 	 * @param mH - kanał barwy
 	 */
 	public final void setH(float mH){
-		mHue = Math.max(0.0f, Math.min(359.9f, mH));
+		mHue = Math.max(0.0f, Math.min(ColorConverter.HUE_MAX, mH));
 	}
 	/**
 	 * Ustawia wartość kanału nasycenia dla koloru
 	 * @param mS - kanał nasycenia
 	 */
 	public final void setS(float mS){
-		mSaturation = Math.max(0.0f, Math.min(1.0f, mS));
+		mSaturation = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_FLOAT_MAX, mS));
 	}
 	/**
 	 * Ustawia wartość kanału jasności dla koloru
 	 * @param mV - kanał jasności
 	 */
 	public final void setV(float mV){
-		mValue = Math.max(0.0f, Math.min(1.0f, mV));
+		mValue = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_FLOAT_MAX, mV));
 	}
 }

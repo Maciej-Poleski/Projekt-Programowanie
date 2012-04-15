@@ -8,7 +8,7 @@ package manager.editor;
  */
 public class FilterBinaryzation implements IFilterRange{
 	private final Range[] mRange = new Range[]{
-		new Range(0.0f, ColorConverter.mRGBCMYByteMax, ColorConverter.mRGBCMYByteMax / 2.0f, "Próg")	
+		new Range(0.0f, ColorConverter.RGBCMY_BYTE_MAX, ColorConverter.RGBCMY_BYTE_MAX / 2.0f, "Próg")	
 	};
 
 	@Override
@@ -23,17 +23,17 @@ public class FilterBinaryzation implements IFilterRange{
 		original.toRGB(); temp.toRGB();
 		for(int j=0;j<mHeight;j++){
 			for(int i=0;i<mWidth;i++){
-				gray = (origData[PixelData.mPixelSize*(j*mWidth+i)]+
-						origData[PixelData.mPixelSize*(j*mWidth+i)+1]+
-						origData[PixelData.mPixelSize*(j*mWidth+i)+2]) / ((float)PixelData.mPixelSize);
+				gray = (origData[PixelData.PIXEL_SIZE*(j*mWidth+i)]+
+						origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1]+
+						origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2]) / ((float)PixelData.PIXEL_SIZE);
 				if(gray < prog) {
-					tempData[PixelData.mPixelSize*(j*mWidth+i)] = 0.0f;
-					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = 0.0f;
-					tempData[PixelData.mPixelSize*(j*mWidth+i)+2] = 0.0f;
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)] = 0.0f;
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] = 0.0f;
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2] = 0.0f;
 				} else {
-					tempData[PixelData.mPixelSize*(j*mWidth+i)] = ColorConverter.mRGBCMYByteMax;
-					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = ColorConverter.mRGBCMYByteMax;
-					tempData[PixelData.mPixelSize*(j*mWidth+i)+2] = ColorConverter.mRGBCMYByteMax;
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)] = ColorConverter.RGBCMY_BYTE_MAX;
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] = ColorConverter.RGBCMY_BYTE_MAX;
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2] = ColorConverter.RGBCMY_BYTE_MAX;
 				}
 			}
 		}
@@ -49,7 +49,22 @@ public class FilterBinaryzation implements IFilterRange{
 
 	@Override
 	public Range[] getRangeTable() {
-		return mRange;
+		return mRange.clone();
+	}
+
+	@Override
+	public void setRangeTable(Range[] table) {
+		if(table == null || table.length != mRange.length){
+			throw new IllegalArgumentException();
+		}
+		for(int i=0;i<table.length;i++){
+			if(table[i].getMin() != mRange[i].getMin() || table[i].getMax() != mRange[i].getMax()){
+				throw new IllegalArgumentException();
+			}
+		}
+		for(int i=0;i<table.length;i++){
+			mRange[i].setValue(table[i].getValue());
+		}
 	}
 
 }

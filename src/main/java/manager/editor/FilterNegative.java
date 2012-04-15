@@ -14,7 +14,7 @@ public class FilterNegative implements IFilter {
 		float[] tempData = temp.getData();
 		original.toRGB(); temp.toRGB();
 		for(int i=0;i<origData.length;i++) {
-			tempData[i] = ColorConverter.mRGBCMYByteMax - origData[i];
+			tempData[i] = ColorConverter.RGBCMY_BYTE_MAX - origData[i];
 		}
 	}
 	

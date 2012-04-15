@@ -46,41 +46,41 @@ public class ColorCMY {
 	 * @param mC - kanał cyjan [0,1]
 	 */
 	public final void setC(float mC){
-		mCyan = Math.max(0.0f, Math.min(1.0f, mC));
+		mCyan = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_FLOAT_MAX, mC));
 	}
 	/**
 	 * Ustawia wartość kanału purpury
 	 * @param mM - kanał purpury [0,1]
 	 */
 	public final void setM(float mM){
-		mMagenta = Math.max(0.0f, Math.min(1.0f, mM));
+		mMagenta = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_FLOAT_MAX, mM));
 	}
 	/**
 	 * Ustawia wartość kanału żółtego
 	 * @param mY - kanał żółty [0,1]
 	 */
 	public final void setY(float mY){
-		mYellow = Math.max(0.0f, Math.min(1.0f, mY));
+		mYellow = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_FLOAT_MAX, mY));
 	}
 	/**
 	 * Ustawia wartość kanału cyjanu
 	 * @param mC - kanał cyjan [0,255]
 	 */
 	public final void setC(int mC){
-		mCyan = Math.max(0.0f, Math.min(255.0f, (float)mC/255.0f));
+		mCyan = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, (float)mC/ColorConverter.RGBCMY_BYTE_MAX));
 	}
 	/**
 	 * Ustawia wartość kanału purpury
 	 * @param mM - kanał purpury [0,255]
 	 */
 	public final void setM(int mM){
-		mMagenta = Math.max(0.0f, Math.min(255.0f, (float)mM/255.0f));
+		mMagenta = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, (float)mM/ColorConverter.RGBCMY_BYTE_MAX));
 	}
 	/**
 	 * Ustawia wartość kanału żółtego
 	 * @param mY - kanał żółty [0,255]
 	 */
 	public final void setY(int mY){
-		mYellow = Math.max(0.0f, Math.min(255.0f, (float)mY/255.0f));
+		mYellow = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, (float)mY/ColorConverter.RGBCMY_BYTE_MAX));
 	}
 }
