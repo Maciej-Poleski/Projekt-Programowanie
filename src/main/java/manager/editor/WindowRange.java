@@ -46,6 +46,8 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 		timage=(PixelData) image.clone();
 		this.setTitle(name);
 		InitGui();
+		filter.apply(image, timage);
+		preview.setImage(timage.toBufferedImage());
 
 	}
 	private void InitGui() {
@@ -76,8 +78,7 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 					fSliders[i].addChangeListener(this);
 					SlidersPanel.add(fSliders[i]);
 					jlabels[i].setText(ranges[i].getName());
-					System.out.println(ranges[i].getMin()+ " " + ranges[i].getMax() + " " + ranges[i].getValue() );
-				}
+					}
 			}
 
 		}
@@ -106,7 +107,6 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 	public void stateChanged(ChangeEvent e) {
 		JSlider source = (JSlider)e.getSource();
 		if (!source.getValueIsAdjusting()) {
-			source.setToolTipText("("+ source.getMinimum() + " - " + source.getMaximum()+ ") Aktualnie: " +  source.getValue());
 			for (int i=0; i<ranges.length;++i){
 				ranges[i].interpolate(new Integer (fSliders[i].getValue()).floatValue()/100);
 				filter.setRangeTable(ranges);
@@ -124,7 +124,7 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 		if ("OK".equals(e.getActionCommand())) {
 
 		} else {
-			timage=image;
+			timage=null;
 		}
 		this.setVisible(false);
 		this.dispose();
