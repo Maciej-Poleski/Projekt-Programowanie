@@ -8,7 +8,10 @@ import java.util.List;
  * @author Zygmunt Łenyk
  */
 public class UserTag extends Tag<UserTag> {
-    protected UserTag() {
+    
+	private static final long serialVersionUID = 1L;
+
+	protected UserTag() {
     }
 
     @Override

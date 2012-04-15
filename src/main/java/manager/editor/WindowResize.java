@@ -7,6 +7,9 @@ import javax.swing.JDialog;
  * @author Wojtek Jędras
  */
 public class WindowResize extends JDialog {
+	
+	private static final long serialVersionUID = 1L;
+
 	/**
      * Konstruktor - wymagany jest obraz do edycji
      * @param image - referencja do objektu klasy PixelData przechowująca obraz do edycji

@@ -2,10 +2,19 @@ package manager.files;
 
 import java.io.Serializable;
 
-public final class FileID implements Comparable<FileID>, Serializable {
+/**
+ * Klasa służy jako id dla pliku.
+ * 
+ * Aktualnie wykorzystywane jest po prostu unikalne id kazdego obiektu w Javie.
+ * 
+ * @author Piotr Kolacz
+ * 
+ */
+public final class FileID implements Serializable {
 
-	public int compareTo(FileID o) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 }

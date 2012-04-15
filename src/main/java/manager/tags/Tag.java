@@ -12,7 +12,10 @@ import java.util.List;
  * @author Zygmunt Łenyk
  */
 public abstract class Tag<T extends Tag<T>> implements Serializable {
-    private List<T> childrenList;
+    
+	private static final long serialVersionUID = 1L;
+	
+	private List<T> childrenList;
 
     protected Tag() {
     }

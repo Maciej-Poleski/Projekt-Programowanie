@@ -7,6 +7,9 @@ import javax.swing.JDialog;
  * @author Marcin Regdos
  */
 public class WindowRange extends JDialog {
+	
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Konstruktor wymaga podania obrazu na którym filtr ma pracować oraz samego filtru
 	 * @param image - obraz do edycji

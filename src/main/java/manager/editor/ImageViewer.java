@@ -1,8 +1,6 @@
 package manager.editor;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Image;
 
 import javax.swing.BorderFactory;
@@ -10,8 +8,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -21,6 +17,9 @@ import javax.swing.event.ChangeListener;
  * @author Marcin Regdos
  */
 public class ImageViewer extends JPanel implements ChangeListener{
+	
+	private static final long serialVersionUID = 1L;
+	
 	private ImagePanel iPanel;
 	private JPanel topPanel;
 	private JScrollPane scrollPane;

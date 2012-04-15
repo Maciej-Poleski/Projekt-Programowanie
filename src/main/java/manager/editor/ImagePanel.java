@@ -12,6 +12,9 @@ import javax.swing.JPanel;
  * @author Marcin Regdos
  */
 class ImagePanel extends JPanel  {
+	
+	private static final long serialVersionUID = 1L;
+	
 	private Image image; //? BufferedImage
 	private int zoom;
 	public ImagePanel (Image image){

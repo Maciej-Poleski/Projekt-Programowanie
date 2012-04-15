@@ -8,7 +8,10 @@ import javax.swing.JDialog;
  * @author Wojtek Jędras
  */
 public class WindowHistogram extends JDialog{
-    /**
+    
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Kontruktor pobierający informacje o obrazie które potem będzie wyświetlał
      * @param table - tablica historgamów pobranych z obrazu
      */

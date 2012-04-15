@@ -8,6 +8,9 @@ import javax.swing.JDialog;
  * @author Mikołaj Bińkowski
  */
 public class WindowMatrix extends JDialog{
+	
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Konstruktor wymaga podania obrazu na którym pracujemy
 	 * @param image - obraz

@@ -1,7 +1,6 @@
 package manager.files.backup;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.Date;
 
 import manager.files.FileID;
@@ -15,7 +14,7 @@ public interface Backup {
 	 * @param MasterTag master Tag którego backup chcemy zrobić.
 	 * @param File ścieżka gdzie chcemy go zrobić.
 	 */
-	void createNewBackup(MasterTag masaterTag, File backupLocation);
+	void createNewBackup(MasterTag masterTag, File backupLocation);
 
 	/**
 	 * Synchronizuje backup.

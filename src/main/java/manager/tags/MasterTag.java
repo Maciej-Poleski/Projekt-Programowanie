@@ -5,45 +5,49 @@ import java.util.List;
 
 /**
  * Tag macierzysty. Tagi tego typu tworzą strukturę drzewiastą.
- *
+ * 
  * @author Zygmunt Łenyk
  */
 public class MasterTag extends Tag<MasterTag> {
-    protected MasterTag() {
-    }
 
-    @Override
-    public List<MasterTag> getParents() {
-        return null;
-    }
+	private static final long serialVersionUID = 1L;
 
-    @Override
-    public Collection<MasterTag> getPredecessors() {
-        return null;
-    }
+	protected MasterTag() {
+	}
 
-    @Override
-    void addParent(MasterTag parent) {
-    }
+	@Override
+	public List<MasterTag> getParents() {
+		return null;
+	}
 
-    @Override
-    void removeParent(MasterTag parent) {
-    }
+	@Override
+	public Collection<MasterTag> getPredecessors() {
+		return null;
+	}
 
-    /**
-     * Zwraca rodzica tego tagu (jeżeli istnieje) lub null
-     *
-     * @return Rodzic tego tagu lub null
-     */
-    public MasterTag getParent() {
-        return null;
-    }
+	@Override
+	void addParent(MasterTag parent) {
+	}
 
-    /**
-     * Ustawia rodzica tego tagu. Poprzedni rodzic jest usuwany.
-     *
-     * @param masterTag Tag który zostanie rodzicem tego tagu.
-     */
-    public void setParent(MasterTag masterTag) {
-    }
+	@Override
+	void removeParent(MasterTag parent) {
+	}
+
+	/**
+	 * Zwraca rodzica tego tagu (jeżeli istnieje) lub null
+	 * 
+	 * @return Rodzic tego tagu lub null
+	 */
+	public MasterTag getParent() {
+		return null;
+	}
+
+	/**
+	 * Ustawia rodzica tego tagu. Poprzedni rodzic jest usuwany.
+	 * 
+	 * @param masterTag
+	 *            Tag który zostanie rodzicem tego tagu.
+	 */
+	public void setParent(MasterTag masterTag) {
+	}
 }

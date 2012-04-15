@@ -1,18 +1,12 @@
 package manager.files;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.nio.channels.FileChannel;
-import java.util.Collection;
-import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
 
 import javax.imageio.ImageIO;
-
-import manager.tags.MasterTag;
-import manager.tags.Tag;
 
 /**
  * Klasa udostepnia podstawowe operacje na plikach związane z grafiką (jej
@@ -31,7 +25,7 @@ public class FileGraphicOperation {
 	 *            Obraz po edycji.
 	 */
 	void saveEditedImage(ImageHolder editedImage) throws FileSaveException {
-		File file = FileInfo.getFile(editedImage.imageID); // (Marcin) potrzebna
+		File file = FileInfo.getFile(editedImage.getImageID()); // (Marcin) potrzebna
 															// metoda zwracająca
 															// ORGINALNA ścieżkę
 		try {

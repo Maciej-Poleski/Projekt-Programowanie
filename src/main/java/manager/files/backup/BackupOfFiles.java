@@ -16,7 +16,6 @@ import manager.files.FileInfo;
 import manager.files.OperationInterruptedException;
 import manager.tags.MasterTag;
 import manager.tags.Tags;
-import manager.tags.TagFilesStore;
 
 /**
  * @author Karol Banys
@@ -111,8 +110,7 @@ public class BackupOfFiles implements Backup {
 	public void createNewBackup(MasterTag masterTag, File backupLocation) {
 		Path pathFromMasterTag = tags.getPathFromMasterTag(masterTag);
 		copyDirectory(pathFromMasterTag.toFile(), backupLocation);
-		Set<FileID> setOfFileID = tags.getStore()
-				.getFilesFrom(masterTag);
+		Set<FileID> setOfFileID = tags.getStore().getFilesFrom(masterTag);
 		for (FileID f : setOfFileID) {
 			try {
 				FileInfo.addPath(f, backupLocation);
