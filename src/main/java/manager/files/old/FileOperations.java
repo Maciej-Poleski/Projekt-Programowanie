@@ -1,4 +1,4 @@
-package manager.files;
+package manager.files.old;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 
+import manager.files.FileID;
+import manager.files.FileNotAvailableException;
+import manager.files.FileSaveException;
 import manager.tags.MasterTag;
 import manager.tags.Tags;
 
@@ -134,13 +137,13 @@ public class FileOperations {
 	 * 
 	 * @throws IllegalArgumentException
 	 *             Jeżeli fileID == null.
-	 * @throws FileNotAccessibleException
+	 * @throws FileNotAvailableException
 	 *             Brak dostępu do pliku.
 	 * @param file
 	 *            Plik do usunięcia.
 	 */
 	public void deleteFile(FileID fileID) throws IllegalArgumentException,
-			FileNotAccessibleException {
+			FileNotAvailableException {
 		if (fileID == null)
 			throw new IllegalArgumentException();
 		try {
@@ -149,7 +152,7 @@ public class FileOperations {
 			FileInfo.removePath(fileID, file.getCanonicalFile());
 			file.delete();
 		} catch (Exception e) {
-			throw new FileNotAccessibleException();
+			throw new FileNotAvailableException();
 		}
 	}
 
@@ -164,7 +167,7 @@ public class FileOperations {
 	 *            MasterTag do usunięcia.
 	 */
 	public void deleteDirectory(MasterTag masterTag)
-			throws IllegalArgumentException, FileNotAccessibleException {
+			throws IllegalArgumentException, FileNotAvailableException {
 		if (masterTag == null)
 			throw new IllegalArgumentException();
 		try {
@@ -183,8 +186,10 @@ public class FileOperations {
 			// należy usunąć także fileID, ale do tego jest potrzebna fukcja
 			// Maćka getFilesFrom z klasy TagFilesStore
 			deleteAll(real);
-		} catch (FileNotAccessibleException e) {
-			throw new FileNotAccessibleException();
+		} catch (FileNotAvailableException e) {
+			throw new
+
+			FileNotAvailableException();
 		}
 	}
 
@@ -193,13 +198,13 @@ public class FileOperations {
 	 * 
 	 * @throws IllegalArgumentException
 	 *             Jeżeli file == null.
-	 * @throws FileNotAccessibleException
+	 * @throws FileNotAvailableException
 	 *             Brak dostępu do pliku.
 	 * @param file
 	 *            Plik (katalog) do usunięcia.
 	 */
 	private void deleteAll(File file) throws IllegalArgumentException,
-			FileNotAccessibleException {
+			FileNotAvailableException {
 		if (file == null)
 			throw new IllegalArgumentException();
 		try {
@@ -211,7 +216,7 @@ public class FileOperations {
 				// jak usuwać te FileID ????
 			}
 		} catch (Exception e) {
-			throw new FileNotAccessibleException();
+			throw new FileNotAvailableException();
 		}
 	}
 }

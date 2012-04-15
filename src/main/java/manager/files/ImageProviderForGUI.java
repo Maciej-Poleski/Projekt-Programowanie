@@ -5,8 +5,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.util.Collection;
 
 import javax.imageio.ImageIO;
+
+import manager.files.old.FileInfo;
+import manager.tags.Tag;
 
 /**
  * Klasa udostepnia podstawowe operacje na plikach związane z grafiką (jej
@@ -14,7 +18,27 @@ import javax.imageio.ImageIO;
  * 
  * @author Jakub Cieśla
  */
-public class FileGraphicOperation {
+public class ImageProviderForGUI {
+
+	public static final class ImageHolder {
+
+		private final BufferedImage editableImage;
+		private final FileID imageID;
+
+		ImageHolder(BufferedImage editableImage, FileID imageID) {
+			this.editableImage = editableImage;
+			this.imageID = imageID;
+		}
+
+		public BufferedImage getBufferedImage() {
+			return editableImage;
+		}
+
+		public FileID getImageID() {
+			return imageID;
+		}
+
+	}
 
 	/**
 	 * Zapisuje plik po edycji.
@@ -25,21 +49,22 @@ public class FileGraphicOperation {
 	 *            Obraz po edycji.
 	 */
 	void saveEditedImage(ImageHolder editedImage) throws FileSaveException {
-		File file = FileInfo.getFile(editedImage.getImageID()); // (Marcin) potrzebna
-															// metoda zwracająca
-															// ORGINALNA ścieżkę
+		File file = FileInfo.getFile(editedImage.getImageID()); // (Marcin)
+																// potrzebna
+		// metoda zwracająca
+		// ORGINALNA ścieżkę
 		try {
 			// Otwiera kanał na pliku, który ma być kopiowany
 			FileChannel srcChannel = new FileInputStream(file).getChannel(); // problem
-																			// z
-																			// przerobieniem
-																			// BufferImage
-																			// na
-																			// File,
-																			// do
-																			// konsultacji
-																			// z
-																			// Patrykiem
+																				// z
+																				// przerobieniem
+																				// BufferImage
+																				// na
+																				// File,
+																				// do
+																				// konsultacji
+																				// z
+																				// Patrykiem
 
 			// Otwiera kanał dla pliku docelowego
 			FileChannel dstChannel = new FileOutputStream(file).getChannel();
@@ -58,19 +83,24 @@ public class FileGraphicOperation {
 	/**
 	 * Pobiera ID i zwraca obraz do edycji.
 	 * 
-	 * @throws FileNotAccessibleException
+	 * @throws FileNotAvailableException
 	 *             Jeżeli niemożliwy dostęp do pliku.
 	 * @return Obraz gotowy do edycji.
 	 * @param ID
 	 *            pliku do edycji.
 	 */
 	ImageHolder getImageForEdit(FileID fileID)
-			throws FileNotAccessibleException {
+			throws FileNotAvailableException {
 		try {
 			File file = FileInfo.getFile(fileID);
 			return new ImageHolder((BufferedImage) ImageIO.read(file), fileID);
 		} catch (Exception e) {
-			throw new FileNotAccessibleException();
+			throw new FileNotAvailableException();
 		}
 	}
+	
+	Collection<ImageHolder> getImagesWithTags(Collection<Tag<?>> tags, boolean intersection){
+		return null;
+	}
+	
 }

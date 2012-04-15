@@ -1,4 +1,4 @@
-package manager.files.backup;
+package manager.files.old;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.Set;
 
 import manager.files.FileID;
-import manager.files.FileInfo;
 import manager.files.OperationInterruptedException;
 import manager.tags.MasterTag;
 import manager.tags.Tags;
@@ -20,7 +19,7 @@ import manager.tags.Tags;
 /**
  * @author Karol Banys
  */
-public class BackupOfFiles implements Backup {
+public class BackupOfFiles implements Backup_old {
 
 	private final Tags tags;
 

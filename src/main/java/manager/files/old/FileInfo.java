@@ -1,14 +1,9 @@
-package manager.files;
-
-/**
- * Klasa odpowiedzialna za przechowywanie struktury informacji na temat sciezek do plikow oraz 
- * za udostepnianie metod do modyfikacji tej struktury. 
- *
- * @author Marcin Zieminski
- */
+package manager.files.old;
 
 import java.io.*;
 import java.util.*;
+
+import manager.files.FileID;
 
 class Info implements Serializable {
 
@@ -28,6 +23,7 @@ class History implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	Date created;
+	
 	HashMap<FileID, File> masters = new HashMap<FileID, File>();
 	HashMap<FileID, Set<File>> history = new HashMap<FileID, Set<File>>();
 
@@ -36,6 +32,12 @@ class History implements Serializable {
 	}
 }
 
+/**
+ * Klasa odpowiedzialna za przechowywanie struktury informacji na temat sciezek
+ * do plikow oraz za udostepnianie metod do modyfikacji tej struktury.
+ * 
+ * @author Marcin Zieminski
+ */
 public class FileInfo {
 
 	private static Info data;
@@ -64,9 +66,7 @@ public class FileInfo {
 			try {
 				data = (Info) inData.readObject();
 				sucD = true;
-			} catch (ClassNotFoundException e) {
-				data = new Info();
-			} catch (InvalidClassException e) {
+			} catch (ClassNotFoundException | InvalidClassException e) {
 				data = new Info();
 			}
 			inData.close();

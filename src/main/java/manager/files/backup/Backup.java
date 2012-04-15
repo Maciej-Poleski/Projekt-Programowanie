@@ -1,39 +1,35 @@
 package manager.files.backup;
 
 import java.io.File;
-import java.util.Date;
+import java.util.List;
 
 import manager.files.FileID;
+import manager.files.FileNotAvailableException;
 import manager.files.OperationInterruptedException;
-import manager.tags.MasterTag;
 
+/**
+ * Basic class for backup implementations.
+ * 
+ * @author Piotr Kolacz
+ * 
+ */
 public interface Backup {
 
 	/**
-	 * Tworzy nowy Backup.
-	 * @param MasterTag master Tag którego backup chcemy zrobić.
-	 * @param File ścieżka gdzie chcemy go zrobić.
+	 * Retrieves a file with specified <code>fileId</code> from backup.
+	 * 
+	 * @param fileId
+	 *            id of file to be returned
+	 * @return File handler for <b>copy</b> of that file for safety reasons.
 	 */
-	void createNewBackup(MasterTag masterTag, File backupLocation);
+	File getFile(FileID fileId) throws FileNotAvailableException, OperationInterruptedException;
 
 	/**
-	 * Synchronizuje backup.
-	 * @param MasterTag master Tag którego backup chcemy zrobić.
-	 * @param File ścieżka gdzie chcemy go zrobić.
+	 * Returns list of FileID's currently managed by this backup. This list can
+	 * by used to check backup state.
+	 * 
+	 * @return list of FileID's currently managed by this backup
 	 */
-	public void synchronizeBackup(MasterTag masterTag, File backupLocation) throws OperationInterruptedException;
+	List<FileID> getListOfAvailableFiles() throws OperationInterruptedException;
 
-	/**
-	 * Zwraca odzyskany plik.
-	 * @param FileID id pliku.
-	 * @return Pilk.
-	 */
-	public File retrieveFile(FileID file) throws OperationInterruptedException;
-
-	/**
-	 * Zwraca date dla danego backup'u.
-	 * @param File lokacja pliku.
-	 * @return Date data.
-	 */
-	public Date getLastBackupDate(File backupLocation) throws OperationInterruptedException;
 }
