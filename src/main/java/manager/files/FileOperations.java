@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import manager.tags.MasterTag;
@@ -41,7 +40,7 @@ public class FileOperations {
 			throws IllegalArgumentException, FileSaveException {
 		MasterTag tempSuperMasterTag = tempTags.getOldestAncestor(masterTag);
 
-		 Path first; //= ... // tutaj zostanie zwrócona ścieżka do
+		 Path first = null; //= ... // tutaj zostanie zwrócona ścieżka do
 		// tempSuperMasterTag z pliku, kto się zajmuję tym plikiem?
 		 //FIXME o co w ogóle chodzi?
 		 
@@ -50,7 +49,12 @@ public class FileOperations {
 		File real = new File(first.toString() + File.separator
 				+ second.toString() + File.separator + file.getName());
 
-		real.createNewFile(); // tutaj trzeba skomunikować się z GUI co jeśli
+		try {
+			real.createNewFile();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} // tutaj trzeba skomunikować się z GUI co jeśli
 								// taki plik już istnieje
 
 		try {
@@ -87,7 +91,7 @@ public class FileOperations {
 	public void addDirectory(MasterTag masterTag, String name)
 			throws IllegalArgumentException {
 		MasterTag tempSuperMasterTag = tempTags.getOldestAncestor(masterTag);
-		Path first; //FIXME= ... // tutaj zostanie zwrócona ścieżka do
+		Path first = null; //FIXME= ... // tutaj zostanie zwrócona ścieżka do
 		// tempSuperMasterTag z pliku, na którym będzie operował prawdopodobnie
 		// Marcin
 		Path second = tempTags.getPathFromMasterTag(masterTag);
@@ -166,13 +170,13 @@ public class FileOperations {
 		try {
 			MasterTag tempSuperMasterTag = tempTags
 					.getOldestAncestor(masterTag);
-			 Path first; //FIXME= ... // tutaj zostanie zwrócona ścieżka do
+			 Path first = null; //FIXME= ... // tutaj zostanie zwrócona ścieżka do
 			// tempSuperMasterTag z pliku, kto się zajmuje tym plikiem?
 			Path second = tempTags.getPathFromMasterTag(masterTag);
 			File real = new File(first.toString() + File.separator
 					+ second.toString());
 			if (masterTag.toString().compareTo(
-					tempTags.getOldestAncestor(masterTag).toString())) {
+					tempTags.getOldestAncestor(masterTag).toString()) == 0) {
 				// usuniecie z pliku zewnętrznego MastetTagu, kto się zajmuje
 				// tym plikiem???
 			}

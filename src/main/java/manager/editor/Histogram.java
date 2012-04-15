@@ -24,7 +24,7 @@ public class Histogram {
      * @return częstotliwość wystąpień danego argumentu
      */
     public int getValue(int argument) {
-    	if(argument < 0 || argument >= mData.length) return 0;
+    	if(argument < 0 || argument >= mData.length) {return 0;}
         return mData[argument];
     }
     /**
