@@ -25,6 +25,25 @@ public class FileOperations {
 	}
 
 	/**
+	 * Fukcja tworzy pełną ścieżkę do nowego pliku, katalogu.
+	 * 
+	 * @param masterTag
+	 *            MasterTag, w którym będzie tworzony nowy plik, folder.
+	 * @param end
+	 *            Koniec ścieżki.
+	 * @return Prawdziwa, pełna ścieżka (typ File).
+	 */
+	private File buildPath(MasterTag masterTag, String end) {
+		MasterTag tempSuperMasterTag = tempTags.getOldestAncestor(masterTag);
+
+		Path first = null; // = ... // tutaj zostanie zwrócona ścieżka do
+		// tempSuperMasterTag z pliku, kto się zajmuję tym plikiem?
+		Path second = tempTags.getPathFromMasterTag(masterTag);
+		return new File(first.toString() + File.separator + second.toString()
+				+ File.separator + end);
+	}
+
+	/**
 	 * Funkcja slużąca do dodania nowego pliku do zarządzania przez aplikację.
 	 * 
 	 * @throws IllegalArgumentException
@@ -38,16 +57,8 @@ public class FileOperations {
 	 */
 	public void addFile(File file, MasterTag masterTag)
 			throws IllegalArgumentException, FileSaveException {
-		MasterTag tempSuperMasterTag = tempTags.getOldestAncestor(masterTag);
 
-		 Path first = null; //= ... // tutaj zostanie zwrócona ścieżka do
-		// tempSuperMasterTag z pliku, kto się zajmuję tym plikiem?
-		 //FIXME o co w ogóle chodzi?
-		 
-		 
-		Path second = tempTags.getPathFromMasterTag(masterTag);
-		File real = new File(first.toString() + File.separator
-				+ second.toString() + File.separator + file.getName());
+		File real = buildPath(masterTag, file.getName());
 
 		try {
 			real.createNewFile();
@@ -55,7 +66,7 @@ public class FileOperations {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} // tutaj trzeba skomunikować się z GUI co jeśli
-								// taki plik już istnieje
+			// taki plik już istnieje
 
 		try {
 			// Otwiera kanał na pliku, który ma być kopiowany
@@ -90,13 +101,9 @@ public class FileOperations {
 	 */
 	public void addDirectory(MasterTag masterTag, String name)
 			throws IllegalArgumentException {
-		MasterTag tempSuperMasterTag = tempTags.getOldestAncestor(masterTag);
-		Path first = null; //FIXME= ... // tutaj zostanie zwrócona ścieżka do
-		// tempSuperMasterTag z pliku, na którym będzie operował prawdopodobnie
-		// Marcin
-		Path second = tempTags.getPathFromMasterTag(masterTag);
-		File real = new File(first.toString() + File.separator
-				+ second.toString() + File.separator + name);
+
+		File real = buildPath(masterTag, name);
+
 		real.mkdir(); // tutaj trzeba skomunikowac się z GUI co jeśli taki
 						// folder już istnieje
 	}
@@ -170,7 +177,8 @@ public class FileOperations {
 		try {
 			MasterTag tempSuperMasterTag = tempTags
 					.getOldestAncestor(masterTag);
-			 Path first = null; //FIXME= ... // tutaj zostanie zwrócona ścieżka do
+			Path first = null; // FIXME= ... // tutaj zostanie zwrócona ścieżka
+								// do
 			// tempSuperMasterTag z pliku, kto się zajmuje tym plikiem?
 			Path second = tempTags.getPathFromMasterTag(masterTag);
 			File real = new File(first.toString() + File.separator
