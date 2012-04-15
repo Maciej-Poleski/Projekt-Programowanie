@@ -19,7 +19,7 @@ import java.awt.event.ActionListener;
  * Klasa reprezentująca okno do modyfikacji filtrów zakresowych
  * @author Marcin Regdos
  */
-public class WindowRange extends JDialog implements ChangeListener, ActionListener {
+public class WindowRange extends JDialog implements ChangeListener, ActionListener, IWindowFilter {
 
 	private final JPanel contentPanel = new JPanel();
 
@@ -115,6 +115,7 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 			}
 		}
 	}
+	@Override
 	public PixelData showDialog(){
 		this.setVisible(true);
 		return timage;

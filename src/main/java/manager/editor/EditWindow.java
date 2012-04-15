@@ -18,6 +18,15 @@ public class EditWindow extends JFrame implements ActionListener  {
 	private PixelData PDImage;
 	private LinkedList<PixelData> history;
 	private ImageViewer mainImageViewer;
+	private String [] filterNames;
+	private String [] filterNamesGUI;
+	private String [] filterCategoryNamesGUI;
+	private IFilter [] filters;
+	private int [] filterType;
+	private JMenuItem [] JMenuFilterButtons;
+	private JMenuItem [] JMenuFilterCategories;
+	private int nFilters=2;
+	private int nCategories=1;
 	private void InitGui(){
 		setTitle("Edytor plików graficznych");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,36 +44,63 @@ public class EditWindow extends JFrame implements ActionListener  {
 		toolBar.add(buttonUndo);
 		buttonUndo.setActionCommand("undo");
 		buttonUndo.addActionListener(this);
+		JButton bClose = new JButton("Koniec");
+		toolBar.add(bClose);
+		bClose.setActionCommand("close");
+		bClose.addActionListener(this);
 
 	}
 	private void InitMenu(){
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		
+
 		JMenu mEdycja = new JMenu("Edycja");
 		menuBar.add(mEdycja);
-		
+
 		JMenuItem mUndo = new JMenuItem("Cofnij");
 		mUndo.setActionCommand("undo");
 		mUndo.addActionListener(this);
 		mEdycja.add(mUndo);
-		
-		JMenu mFiltryPodstawowe = new JMenu("Filtry podstawowe");
-		menuBar.add(mFiltryPodstawowe);
-		
-		JMenuItem mFilterBinaryzation = new JMenuItem("Binaryzacja");
-		mFilterBinaryzation.setActionCommand("FilterBinaryzation");
-		mFilterBinaryzation.addActionListener(this);
-		mFiltryPodstawowe.add(mFilterBinaryzation);
-		
+		for (int i=0; i<nCategories; ++i){
+			JMenuFilterCategories[i]=new JMenu(filterCategoryNamesGUI[i]);
+			menuBar.add(JMenuFilterCategories[i]);
+		}
+		for (int i=0; i<nFilters; ++i){
+			JMenuFilterButtons[i]=new JMenuItem(filterNamesGUI[i]);
+			JMenuFilterButtons[i].setActionCommand(filterNames[i]);
+			JMenuFilterButtons[i].addActionListener(this);
+		}
+		JMenuFilterCategories[0].add(JMenuFilterButtons[0]);
+		JMenuFilterCategories[0].add(JMenuFilterButtons[1]);
 	}
 
 	/**
 	 * Konstruktor - wymagany jest obraz do edycji
 	 * @param image - referencja do objektu klasy BufferedImage przechowująca obraz do edycji
 	 */
-
+	private void InitFiltersToGUI(){
+		filterNames =new String[]{
+				"FilterBinaryzation", "FilterSepia"
+		};
+		filterNamesGUI =new String[]{
+				"Binaryzacja", "Sepia"
+		};
+		filterCategoryNamesGUI=new String[]{
+				"Filtry podstawowe"
+		};
+		filters=new IFilter[]{
+				new FilterBinaryzation(), new FilterSepia()		
+		};
+		//(1,2..)= (WindowRange, WindowResize, WindowMatrix, WindowLUT..)
+		filterType=new int[]{
+				1, 1		
+		};
+		JMenuFilterButtons=new JMenuItem[nFilters];
+		JMenuFilterCategories=new JMenu[nCategories];
+		
+	}
 	public EditWindow(BufferedImage image) {
+		InitFiltersToGUI();
 		mainImageViewer=new ImageViewer(image, 400, 400);
 		PDImage=new PixelData(image);
 		history=new LinkedList<PixelData>();
@@ -77,7 +113,8 @@ public class EditWindow extends JFrame implements ActionListener  {
 	 * @return przetworzony obraz
 	 */
 	public BufferedImage getTransformedImage() {
-		return null;
+		this.setVisible(true);
+		return PDImage.toBufferedImage();
 	}
 	private void undo (){
 		if (history.isEmpty()==false){
@@ -95,14 +132,23 @@ public class EditWindow extends JFrame implements ActionListener  {
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if ("undo".equals(e.getActionCommand())) {
+		if (e.getActionCommand().equals("undo")) {
 			undo();
 			return;
 		} 
-		if ("FilterBinaryzation".equals(e.getActionCommand())) {
-			WindowRange dialog = new WindowRange(PDImage, new FilterBinaryzation(), "Binaryzacja");
-			apply (dialog.showDialog());
+		if (e.getActionCommand().equals("close")) {
+			this.setVisible(false);
+			this.dispose();
 			return;
+		} 
+		for (int i=0; i<filterNames.length; ++i){
+			if (e.getActionCommand().equals(filterNames[i])) {
+				switch(filterType[i]){
+				case 1: apply (new WindowRange(PDImage, (IFilterRange)filters[i], filterNamesGUI[i]).showDialog()); break;
+				case 2: apply (new WindowResize(PDImage,  filterNamesGUI[i]).showDialog()); break;
+				}
+				return;
+			}
 		} 
 	}
 }
