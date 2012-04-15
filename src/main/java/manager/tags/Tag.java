@@ -15,7 +15,11 @@ import java.util.List;
 public abstract class Tag<T extends Tag<T>> implements Serializable {
     List<T> childrenList = new ArrayList<>();
     List<T> descendantsList = new ArrayList<>();
-    protected Tag() {
+    Tags creator;
+    private static final long serialVersionUID = 1;
+
+    protected Tag(Tags creator) {
+        this.creator = creator;
     }
 
     /**
@@ -31,7 +35,7 @@ public abstract class Tag<T extends Tag<T>> implements Serializable {
      * @return Lista dzieci (może być pusta)
      */
     public List<T> getChildren() {
-    	List<T> childrenListCopy = new ArrayList<>(childrenList);
+        List<T> childrenListCopy = new ArrayList<>(childrenList);
         return childrenListCopy;
     }
 
@@ -48,17 +52,19 @@ public abstract class Tag<T extends Tag<T>> implements Serializable {
      * @return Kolekcja potomków (może być pusta)
      */
     public Collection<T> getDescendants() {
-    	List<T> kolejkaDoWczytania = new ArrayList<>();
-    	for(T child : childrenList)
-    		kolejkaDoWczytania.add(child);
-    	while(!kolejkaDoWczytania.isEmpty()){
-    		descendantsList.add(kolejkaDoWczytania.get(0));
-    		for(T child : kolejkaDoWczytania.get(0).childrenList)
-    			kolejkaDoWczytania.add(child);
-    		kolejkaDoWczytania.remove(0);
-    	}
-    	List<T> descendantsListCopy = new ArrayList<>(descendantsList);
-    	descendantsList.clear();
+        List<T> kolejkaDoWczytania = new ArrayList<>();
+        for (T child : childrenList) {
+            kolejkaDoWczytania.add(child);
+        }
+        while (!kolejkaDoWczytania.isEmpty()) {
+            descendantsList.add(kolejkaDoWczytania.get(0));
+            for (T child : kolejkaDoWczytania.get(0).childrenList) {
+                kolejkaDoWczytania.add(child);
+            }
+            kolejkaDoWczytania.remove(0);
+        }
+        List<T> descendantsListCopy = new ArrayList<>(descendantsList);
+        descendantsList.clear();
         return descendantsListCopy;
     }
 
@@ -89,4 +95,13 @@ public abstract class Tag<T extends Tag<T>> implements Serializable {
      * @param parent Tag który przestaje być rodzicem tego tagu
      */
     abstract void removeParent(T parent);
+
+    Tags getCreator() {
+        return creator;
+    }
+
+    @Override
+    public String toString() {
+        return getCreator().getNameOfTag(this);
+    }
 }

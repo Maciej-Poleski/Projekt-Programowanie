@@ -27,7 +27,6 @@ public class Tags implements Serializable {
     private final Map<Tag<?>, Set<Object>> tagMetadata = new HashMap<>();
     private static Tags defaultInstance = new Tags();
     private static final long serialVersionUID = 1;
-    private static Map<Tag<?>, Tags> tagsCreator = new HashMap<>();
 
     /**
      * Konstruuje nowy obiekt z pustą rodziną tagów.
@@ -41,9 +40,8 @@ public class Tags implements Serializable {
      * @return Nowy tag macierzysty
      */
     public MasterTag newMasterTag() {
-        MasterTag tag = new MasterTag();
+        MasterTag tag = new MasterTag(this);
         tags.add(tag);
-        tagsCreator.put(tag, this);
         return tag;
     }
 
@@ -53,9 +51,8 @@ public class Tags implements Serializable {
      * @return Nowy tag użytkownika
      */
     public UserTag newUserTag() {
-        UserTag tag = new UserTag();
+        UserTag tag = new UserTag(this);
         tags.add(tag);
-        tagsCreator.put(tag, this);
         return tag;
     }
 
@@ -193,7 +190,7 @@ public class Tags implements Serializable {
      * @throws CycleException Jeżeli dodanie wskazanych relacji spowoduje powstanie cyklu
      */
     public UserTag newUserTag(Set<UserTag> parents, Set<UserTag> children) throws CycleException {
-        UserTag result = new UserTag();
+        UserTag result = newUserTag();
         if (parents == null) {
             parents = new HashSet<>();
         }
@@ -499,20 +496,6 @@ public class Tags implements Serializable {
     }
 
     /**
-     * Zwraca obiekt klasy Tags który odpowiada za stworzenie wskazanego tagu.
-     *
-     * @param tag Wybrany Tag
-     * @return Obiekt klasy Tags który stworzył wybrany Tag
-     * @throws IllegalArgumentException Jeżeli tag==null
-     */
-    public static Tags getTagCreator(Tag<?> tag) {
-        if (tag == null) {
-            throw new IllegalArgumentException("Pytanie o twórce null-a nie ma sensu");
-        }
-        return tagsCreator.get(tag);
-    }
-
-    /**
      * Zwraca najstarszego przodka wskazanego tagu macierzystego.
      *
      * @param tag Tag macierzysty
@@ -528,34 +511,6 @@ public class Tags implements Serializable {
             result = result.getParent();
         }
         return result;
-    }
-
-    /**
-     * Serializuje statyczne pola klasy.
-     *
-     * @param stream Strumień do którego będą serializowane statyczne pola klasy
-     * @throws IOException Jeżeli wystąpi wyjątek podczas serializacji
-     */
-    public static void serializeStatic(ObjectOutputStream stream) throws IOException {
-        stream.writeObject(defaultInstance);
-        stream.writeObject((Serializable) tagsCreator);
-    }
-
-    /**
-     * Deserializuje statyczne pola klasy.
-     *
-     * @param stream Strumień z któego będą deserializowane statyczne pola klasy
-     * @throws IOException Jeżeli wystąpi wyjątek podczas deserializacji
-     */
-    public static void deserializeStatic(ObjectInputStream stream) throws IOException {
-        try {
-            defaultInstance = (Tags) stream.readObject();
-        } catch (ClassNotFoundException ignored) {
-        }
-        try {
-            tagsCreator = (Map<Tag<?>, Tags>) stream.readObject();
-        } catch (ClassNotFoundException ignored) {
-        }
     }
 
     private void checkStore() {
@@ -585,7 +540,6 @@ public class Tags implements Serializable {
             tag.removeChild(child);
         }
         tags.remove(tag);
-        tagsCreator.remove(tag);
     }
 
     private void removeUserTagFromStructure(UserTag tag) {
@@ -596,7 +550,6 @@ public class Tags implements Serializable {
             tag.removeChild(child);
         }
         tags.remove(tag);
-        tagsCreator.remove(tag);
     }
 
     private static class CycleParentFinder {

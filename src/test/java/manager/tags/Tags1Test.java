@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -36,104 +35,44 @@ public class Tags1Test {
 
     }
 
-    private MasterTag newMasterTagInTags() throws Exception {
-        MasterTag tagMock = createMockAndExpectNew(MasterTag.class);
-        expect(tagMock.getParent()).andReturn(null).anyTimes();
-        expect(tagMock.getParents()).andReturn(new ArrayList<MasterTag>()).anyTimes();
-        expect(tagMock.getChildren()).andReturn(new ArrayList<MasterTag>()).anyTimes();
-        expect(tagMock.getPredecessors()).andReturn(new ArrayList<MasterTag>()).anyTimes();
-        expect(tagMock.getDescendants()).andReturn(new ArrayList<MasterTag>()).anyTimes();
-        replay(tagMock, MasterTag.class);
-        MasterTag tagReal = tags.newMasterTag();
-        assertEquals(tagMock, tagReal);
-        return tagReal;
-    }
-
-    private UserTag newUserTagInTags() throws Exception {
-        UserTag tagMock = createMockAndExpectNew(UserTag.class);
-        expect(tagMock.getParents()).andReturn(new ArrayList<UserTag>()).anyTimes();
-        expect(tagMock.getChildren()).andReturn(new ArrayList<UserTag>()).anyTimes();
-        expect(tagMock.getPredecessors()).andReturn(new ArrayList<UserTag>()).anyTimes();
-        expect(tagMock.getDescendants()).andReturn(new ArrayList<UserTag>()).anyTimes();
-        replay(tagMock, UserTag.class);
-        UserTag tagReal = tags.newUserTag();
-        assertEquals(tagMock, tagReal);
-        return tagReal;
-    }
-
     @Test
     public void testNewMasterTag1() throws Exception {
-        MasterTag tagMock = createMockAndExpectNew(MasterTag.class);
-        replay(tagMock, MasterTag.class);
         MasterTag tagReal = tags.newMasterTag();
-        assertEquals(tagMock, tagReal);
         verifyAll();
     }
 
     @Test
     public void testNewUserTag1() throws Exception {
-        UserTag tagMock = createMockAndExpectNew(UserTag.class);
-        replay(tagMock, UserTag.class);
         UserTag tagReal = tags.newUserTag();
-        assertEquals(tagMock, tagReal);
         verifyAll();
     }
 
     @Test
     public void testGetHeads() throws Exception {
-        MasterTag masterMock = createMockAndExpectNew(MasterTag.class);
-        expect(masterMock.getParents()).andReturn(new ArrayList<MasterTag>()).atLeastOnce();
-        replay(masterMock, MasterTag.class);
         MasterTag masterReal = tags.newMasterTag();
-        assertEquals(masterMock, masterReal);
-        UserTag userMock = createMockAndExpectNew(UserTag.class);
-        expect(userMock.getParents()).andReturn(new ArrayList<UserTag>()).atLeastOnce();
-        replay(userMock, UserTag.class);
         UserTag userReal = tags.newUserTag();
-        assertEquals(userMock, userReal);
         assertEquals(tags.getHeads(), new HashSet<>(Arrays.asList(userReal, masterReal)));
         verifyAll();
     }
 
     @Test
     public void testGetMasterTagHeads() throws Exception {
-        MasterTag masterMock = createMockAndExpectNew(MasterTag.class);
-        expect(masterMock.getParents()).andReturn(new ArrayList<MasterTag>()).atLeastOnce();
-        replay(masterMock, MasterTag.class);
         MasterTag masterReal = tags.newMasterTag();
-        assertEquals(masterMock, masterReal);
-        UserTag userMock = createMockAndExpectNew(UserTag.class);
-        expect(userMock.getParents()).andReturn(new ArrayList<UserTag>()).anyTimes();
-        replay(userMock, UserTag.class);
         UserTag userReal = tags.newUserTag();
-        assertEquals(userMock, userReal);
         assertEquals(tags.getMasterTagHeads(), new HashSet<>(Arrays.asList(masterReal)));
         verifyAll();
     }
 
     @Test
     public void testGetUserTagHeads() throws Exception {
-        MasterTag masterMock = createMockAndExpectNew(MasterTag.class);
-        expect(masterMock.getParents()).andReturn(new ArrayList<MasterTag>()).anyTimes();
-        replay(masterMock, MasterTag.class);
         MasterTag masterReal = tags.newMasterTag();
-        assertEquals(masterMock, masterReal);
-        UserTag userMock = createMockAndExpectNew(UserTag.class);
-        expect(userMock.getParents()).andReturn(new ArrayList<UserTag>()).atLeastOnce();
-        replay(userMock, UserTag.class);
         UserTag userReal = tags.newUserTag();
-        assertEquals(userMock, userReal);
         assertEquals(tags.getUserTagHeads(), new HashSet<>(Arrays.asList(userReal)));
         verifyAll();
     }
 
     @Test
     public void testRemoveTag1() throws Exception {
-        MasterTag masterMock = createMockAndExpectNew(MasterTag.class);
-        expect(masterMock.getParent()).andReturn(null).anyTimes();
-        expect(masterMock.getParents()).andReturn(new ArrayList<MasterTag>()).anyTimes();
-        expect(masterMock.getChildren()).andReturn(new ArrayList<MasterTag>()).anyTimes();
-        replay(masterMock, MasterTag.class);
         MasterTag masterReal = tags.newMasterTag();
         TagFilesStore store = createMock(TagFilesStore.class);
         expect(store.removeFamily(masterReal)).andReturn(new HashSet<FileID>());
@@ -146,7 +85,7 @@ public class Tags1Test {
 
     @Test
     public void testRemoveTag2() throws Exception {
-        UserTag tag = newUserTagInTags();
+        UserTag tag = tags.newUserTag();
         TagFilesStore store = createMock(TagFilesStore.class);
         expect(store.getFilesWithRealTag(tag)).andReturn(new HashSet<FileID>());
         replay(store);
