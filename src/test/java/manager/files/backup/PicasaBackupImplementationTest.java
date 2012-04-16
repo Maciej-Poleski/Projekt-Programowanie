@@ -1,10 +1,13 @@
-package manager.files;
+package manager.files.backup;
 
 
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import manager.files.FileID;
+import manager.files.FileNotAvailableException;
+import manager.files.OperationInterruptedException;
 import manager.files.backup.PicasaBackupImplementation;
 import manager.files.backup.PrimaryBackup;
 

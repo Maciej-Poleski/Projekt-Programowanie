@@ -21,7 +21,7 @@ public interface Backup extends Serializable {
 	 * 
 	 * @param fileId
 	 *            id of file to be returned
-	 * @return File handler for <b>copy</b> of that file for safety reasons.
+	 * @return File handler for requested file
 	 */
 	File getFile(FileID fileId) throws FileNotAvailableException, OperationInterruptedException;
 
