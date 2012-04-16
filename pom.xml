@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+﻿<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -45,6 +45,41 @@
             <artifactId>powermock-api-easymock</artifactId>
             <version>${powermock.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.4.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gdata</groupId>
+            <artifactId>gdata-client-1.0</artifactId>
+            <version>1.41.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gdata</groupId>
+            <artifactId>gdata-client-meta-1.0</artifactId>
+            <version>1.41.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gdata</groupId>
+            <artifactId>gdata-core-1.0</artifactId>
+            <version>1.41.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gdata</groupId>
+            <artifactId>gdata-media-1.0</artifactId>
+            <version>1.41.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gdata</groupId>
+            <artifactId>gdata-photos-2.0</artifactId>
+            <version>1.41.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gdata</groupId>
+            <artifactId>gdata-photos-meta-2.0</artifactId>
+            <version>1.41.1</version>
         </dependency>
     </dependencies>
     <build>
