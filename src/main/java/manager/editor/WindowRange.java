@@ -88,6 +88,10 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
+			JButton revertButton = new JButton("Resetuj filtr");
+			revertButton.setActionCommand("reset");
+			buttonPane.add(revertButton);
+			revertButton.addActionListener(this);
 			{
 				JButton okButton = new JButton("Zastosuj");
 				okButton.setActionCommand("OK");
@@ -100,20 +104,23 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 				buttonPane.add(cancelButton);
 				cancelButton.addActionListener(this);
 			}
+			
 		}
 
 
 	}
 	public void stateChanged(ChangeEvent e) {
 		JSlider source = (JSlider)e.getSource();
-		if (!source.getValueIsAdjusting()) {
+		//if (!source.getValueIsAdjusting()) {
 			for (int i=0; i<ranges.length;++i){
-				ranges[i].interpolate(new Integer (fSliders[i].getValue()).floatValue()/100);
-				filter.setRangeTable(ranges);
-				filter.apply(image, timage);
-				preview.setImage(timage.toBufferedImage());
+				if (source==fSliders[i]){
+					ranges[i].interpolate(new Integer (fSliders[i].getValue()).floatValue()/100);
+				}
 			}
-		}
+			filter.setRangeTable(ranges);
+			filter.apply(image, timage);
+			preview.setImage(timage.toBufferedImage());
+		//}
 	}
 	@Override
 	public PixelData showDialog(){
@@ -123,11 +130,22 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 
 	public void actionPerformed(ActionEvent e) {
 		if ("OK".equals(e.getActionCommand())) {
-
-		} else {
+			this.setVisible(false);
+			this.dispose();
+			return;
+		} 
+		if ("Cancel".equals(e.getActionCommand())) {
 			timage=null;
+			this.setVisible(false);
+			this.dispose();
+			return;
 		}
-		this.setVisible(false);
-		this.dispose();
+		if (e.getActionCommand().equals("reset")){
+			filter.reset();
+			for (int i=0; i<ranges.length;++i){
+					fSliders[i].setValue( new Float((ranges[i].getValue()-ranges[i].getMin())/(ranges[i].getMax()-ranges[i].getMin())*100).intValue());
+			}
+			return;
+		}
 	} 
 }
