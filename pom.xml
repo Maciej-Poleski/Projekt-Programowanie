@@ -15,6 +15,13 @@
         <powermock.version>1.4.12</powermock.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>mandubian-mvn</id>
+            <url>http://mandubian-mvn.googlecode.com/svn/trunk/mandubian-mvn/repository</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
