@@ -1,8 +1,8 @@
 ./.idea
 ./target
-./manager.iml
 ./.classpath
 ./.project
 ./.settings
 ./.bzignore
 ./bin
+./*.iml
