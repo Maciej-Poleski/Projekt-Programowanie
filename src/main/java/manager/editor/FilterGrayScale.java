@@ -60,5 +60,8 @@ public class FilterGrayScale implements IFilter{
 		apply(image, image);
 		return ret;
 	}
+	
+	@Override
+	public void reset() {}
 
 }

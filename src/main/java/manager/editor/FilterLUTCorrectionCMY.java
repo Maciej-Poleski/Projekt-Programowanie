@@ -62,5 +62,12 @@ public class FilterLUTCorrectionCMY implements IFilterLUT{
 			mTable[i] = table[i];
 		}
 	}
+	
+	@Override
+	public void reset() {
+		for(int i=0;i<mTable.length;i++){
+			mTable[i].reset();
+		}
+	}
 
 }

@@ -25,4 +25,7 @@ public class FilterNegative implements IFilter {
 		apply(image, image);
 		return ret;
 	}
+	
+	@Override
+	public void reset() {}
 }

@@ -50,4 +50,11 @@ public class FilterBrightness implements IFilterRange{
 		}
 	}
 
+	@Override
+	public void reset() {
+		for(int i=0;i<mRange.length;i++){
+			mRange[i].reset();
+		}
+	}
+
 }

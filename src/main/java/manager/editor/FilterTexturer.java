@@ -101,4 +101,9 @@ public class FilterTexturer implements IFilter{
 		apply(image, image);
 		return ret;
 	}
+	
+	@Override
+	public void reset() {
+		mMode = TexturingMode.ADD;
+	}
 }

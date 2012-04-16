@@ -6,9 +6,11 @@ package manager.editor;
  */
 public class FilterMatrixAdapter implements IFilterMatrix{
 	private Matrix mMatrix;
+	private final Matrix mDefault;
 	
 	FilterMatrixAdapter(Matrix mat){
 		mMatrix = mat;
+		mDefault = new Matrix(mMatrix.getTable());
 	}
 
 	@Override
@@ -69,6 +71,11 @@ public class FilterMatrixAdapter implements IFilterMatrix{
 	@Override
 	public void setMatrix(Matrix matrix) {
 		mMatrix = matrix;
+	}
+	
+	@Override
+	public void reset() {
+		mMatrix = new Matrix(mDefault.getTable());
 	}
 
 }

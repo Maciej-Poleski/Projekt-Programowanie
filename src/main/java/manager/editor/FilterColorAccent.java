@@ -72,5 +72,12 @@ public class FilterColorAccent implements IFilterRange{
 			mRange[i].setValue(table[i].getValue());
 		}
 	}
+	
+	@Override
+	public void reset() {
+		for(int i=0;i<mRange.length;i++){
+			mRange[i].reset();
+		}
+	}
 
 }

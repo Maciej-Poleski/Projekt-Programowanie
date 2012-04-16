@@ -24,4 +24,9 @@ public interface IFilter {
      * @return kopia obrazu przed zastosowaniem filtru lub null gdy <b>image</b> jest null
      */
     PixelData apply(PixelData image);
+    
+    /**
+     * Resetuje ustawienia filtru do wartości podstawoaych
+     */
+    void reset();
 }

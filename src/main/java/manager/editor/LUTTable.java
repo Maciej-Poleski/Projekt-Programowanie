@@ -54,4 +54,11 @@ public class LUTTable {
 			mData[1] = 1.0f;
 		} else {mData = table.clone();}
     }
+    
+    /**
+     * Resetuje ustawienia tablicy LUT
+     */
+    public final void reset(){
+    	mData = new float[]{0.0f,1.0f};
+    }
 }

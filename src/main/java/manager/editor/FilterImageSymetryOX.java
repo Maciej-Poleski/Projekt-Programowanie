@@ -37,4 +37,7 @@ public class FilterImageSymetryOX implements IFilter{
 		apply(image, ret);
 		return ret;
 	}
+	
+	@Override
+	public void reset() {}
 }

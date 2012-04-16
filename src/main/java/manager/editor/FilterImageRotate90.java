@@ -38,5 +38,8 @@ public class FilterImageRotate90 implements IFilter{
 		apply(image, ret);
 		return ret;
 	}
+	
+	@Override
+	public void reset() {}
 
 }
