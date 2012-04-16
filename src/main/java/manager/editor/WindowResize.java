@@ -6,11 +6,11 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 /**
- * Klasa opisuje okno dialogowe s³u¿¹ce zmianie rozmiaru obrazka
- * @author Wojtek Jêdras
+ * Klasa opisuje okno dialogowe sï¿½uï¿½ï¿½ce zmianie rozmiaru obrazka
+ * @author Wojtek Jï¿½dras
  */
 
-public class WindowResize extends JDialog implements ActionListener
+public class WindowResize extends JDialog implements ActionListener, IWindowFilter
 {
     private PixelData iMage;
     private ButtonGroup buttonGroup1;
@@ -30,7 +30,7 @@ public class WindowResize extends JDialog implements ActionListener
    
     /**
      * Konstruktor - wymagany jest obraz do edycji
-     * @param image - referencja do objektu klasy PixelData przechowuj¹ca obraz do edycji
+     * @param image - referencja do objektu klasy PixelData przechowujï¿½ca obraz do edycji
      */
    
     public WindowResize(PixelData image)
@@ -68,7 +68,7 @@ public class WindowResize extends JDialog implements ActionListener
             jRadioButton1.setText("Dwuliniowy");
             
              buttonGroup1.add(jRadioButton2);
-            jRadioButton2.setText("Najbli¿szy s¹siad");
+            jRadioButton2.setText("Najbliï¿½szy sï¿½siad");
             
             jLabel2.setText("Zmiana rozmiaru:");
             
@@ -82,7 +82,7 @@ public class WindowResize extends JDialog implements ActionListener
             jRadioButton3.setText("Piksele");
             
             buttonGroup2.add(jRadioButton4);
-            jRadioButton4.setText("Wartoœæ procentowa");
+            jRadioButton4.setText("Wartoï¿½ï¿½ procentowa");
             
 		
             jButton1.addActionListener(this);
