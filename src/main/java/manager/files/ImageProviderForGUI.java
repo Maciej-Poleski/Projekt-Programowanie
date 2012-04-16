@@ -13,6 +13,11 @@ import manager.files.old.FileInfo;
 import manager.tags.Tag;
 
 /**
+ * 
+ * !!!!!!!!!!!!!!!INFO!!!!!!!!!!!!!!!!!
+ * 
+ * work in progress
+ * 
  * Klasa udostepnia podstawowe operacje na plikach związane z grafiką (jej
  * wyświetlanie i edycja zdjęć).
  * 

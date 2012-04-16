@@ -1,10 +1,8 @@
-/**
- * 
- */
 package manager.files.backup;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import manager.files.FileID;
 import manager.files.FileNotAvailableException;
@@ -32,8 +30,10 @@ public interface PrimaryBackup extends Backup {
 	 *            specifies connection of file with tag
 	 * @param file
 	 *            file to backup
+	 * @throws IOException
 	 */
-	void addFile(MasterTag tag, File file) throws OperationInterruptedException, FileNotFoundException;
+	void addFile(MasterTag tag, File file)
+			throws OperationInterruptedException, FileNotFoundException;
 
 	/**
 	 * Removes file specified by <code>fileId</code> from backup. This operation
@@ -41,7 +41,9 @@ public interface PrimaryBackup extends Backup {
 	 * 
 	 * @param fileId
 	 *            id of file to be deleted
+	 * @throws IOException
 	 */
-	void removeFile(FileID fileId) throws FileNotAvailableException, OperationInterruptedException;
+	void removeFile(FileID fileId) throws FileNotAvailableException,
+			OperationInterruptedException;
 
 }
