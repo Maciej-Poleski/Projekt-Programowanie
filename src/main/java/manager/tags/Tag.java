@@ -13,12 +13,12 @@ import java.util.List;
  * @author Zygmunt Łenyk
  */
 public abstract class Tag<T extends Tag<T>> implements Serializable {
-    List<T> childrenList = new ArrayList<>();
-    List<T> descendantsList = new ArrayList<>();
+    final List<T> childrenList = new ArrayList<>();
+    private final List<T> descendantsList = new ArrayList<>();
     private final Tags creator;
     private static final long serialVersionUID = 1;
 
-    protected Tag(Tags creator) {
+    Tag(Tags creator) {
         this.creator = creator;
     }
 
@@ -35,8 +35,7 @@ public abstract class Tag<T extends Tag<T>> implements Serializable {
      * @return Lista dzieci (może być pusta)
      */
     public List<T> getChildren() {
-        List<T> childrenListCopy = new ArrayList<>(childrenList);
-        return childrenListCopy;
+        return new ArrayList<>(childrenList);
     }
 
     /**

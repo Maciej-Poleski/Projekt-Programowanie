@@ -9,18 +9,17 @@ import java.util.List;
  * @author Zygmunt Łenyk
  */
 public class UserTag extends Tag<UserTag> {
-    List<UserTag> parentsList = new ArrayList<>();
-    List<UserTag> predecessorsList = new ArrayList<>();
+    private final List<UserTag> parentsList = new ArrayList<>();
+    private final List<UserTag> predecessorsList = new ArrayList<>();
     private static final long serialVersionUID = 1;
 
-    protected UserTag(Tags creator) {
+    UserTag(Tags creator) {
         super(creator);
     }
 
     @Override
     public List<UserTag> getParents() {
-        List<UserTag> parentsListCopy = new ArrayList<>(parentsList);
-        return parentsListCopy;
+        return new ArrayList<>(parentsList);
     }
 
     @Override
