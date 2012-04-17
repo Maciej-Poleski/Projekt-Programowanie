@@ -66,27 +66,27 @@ public class FilterTexturer implements IFilter{
 				mGenerator.getValue((float)i/(float)mWidth, (float)j/(float)mHeight, mCol);
 				switch(mMode){
 				case ADD:
-					tempData[PixelData.mPixelSize*(j*mWidth+i)] = Math.min(ColorConverter.mRGBCMYByteMax, origData[PixelData.mPixelSize*(j*mWidth+i)] + mCol.getR()*ColorConverter.mRGBCMYByteMax);
-					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = Math.min(ColorConverter.mRGBCMYByteMax, origData[PixelData.mPixelSize*(j*mWidth+i)+1] + mCol.getG()*ColorConverter.mRGBCMYByteMax);
-					tempData[PixelData.mPixelSize*(j*mWidth+i)+2] = Math.min(ColorConverter.mRGBCMYByteMax, origData[PixelData.mPixelSize*(j*mWidth+i)+2] + mCol.getB()*ColorConverter.mRGBCMYByteMax);
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)] = Math.min(ColorConverter.RGBCMY_BYTE_MAX, origData[PixelData.PIXEL_SIZE*(j*mWidth+i)] + mCol.getR()*ColorConverter.RGBCMY_BYTE_MAX);
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] = Math.min(ColorConverter.RGBCMY_BYTE_MAX, origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] + mCol.getG()*ColorConverter.RGBCMY_BYTE_MAX);
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2] = Math.min(ColorConverter.RGBCMY_BYTE_MAX, origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2] + mCol.getB()*ColorConverter.RGBCMY_BYTE_MAX);
 					break;
 				case SUBSTRACT:
-					tempData[PixelData.mPixelSize*(j*mWidth+i)] = Math.max(0.0f, origData[PixelData.mPixelSize*(j*mWidth+i)] - mCol.getR()*ColorConverter.mRGBCMYByteMax);
-					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = Math.max(0.0f, origData[PixelData.mPixelSize*(j*mWidth+i)+1] - mCol.getG()*ColorConverter.mRGBCMYByteMax);
-					tempData[PixelData.mPixelSize*(j*mWidth+i)+2] = Math.max(0.0f, origData[PixelData.mPixelSize*(j*mWidth+i)+2] - mCol.getB()*ColorConverter.mRGBCMYByteMax);
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)] = Math.max(0.0f, origData[PixelData.PIXEL_SIZE*(j*mWidth+i)] - mCol.getR()*ColorConverter.RGBCMY_BYTE_MAX);
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] = Math.max(0.0f, origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] - mCol.getG()*ColorConverter.RGBCMY_BYTE_MAX);
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2] = Math.max(0.0f, origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2] - mCol.getB()*ColorConverter.RGBCMY_BYTE_MAX);
 					break;
 				case MULTIPLY:
-					tempData[PixelData.mPixelSize*(j*mWidth+i)] = origData[PixelData.mPixelSize*(j*mWidth+i)] * mCol.getR();
-					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = origData[PixelData.mPixelSize*(j*mWidth+i)+1] * mCol.getG();
-					tempData[PixelData.mPixelSize*(j*mWidth+i)+2] = origData[PixelData.mPixelSize*(j*mWidth+i)+2] * mCol.getB();
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)] = origData[PixelData.PIXEL_SIZE*(j*mWidth+i)] * mCol.getR();
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] = origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] * mCol.getG();
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2] = origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2] * mCol.getB();
 					break;
 				case MASK:
-					gray = 0.21f*origData[PixelData.mPixelSize*(j*mWidth+i)] + 
-					0.71f*origData[PixelData.mPixelSize*(j*mWidth+i)+1] + 
-					0.07f*origData[PixelData.mPixelSize*(j*mWidth+i)+2];
-					tempData[PixelData.mPixelSize*(j*mWidth+i)] = gray * mCol.getR();
-					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = gray * mCol.getG();
-					tempData[PixelData.mPixelSize*(j*mWidth+i)+2] = gray * mCol.getB();
+					gray = 0.21f*origData[PixelData.PIXEL_SIZE*(j*mWidth+i)] + 
+					0.71f*origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] + 
+					0.07f*origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2];
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)] = gray * mCol.getR();
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] = gray * mCol.getG();
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2] = gray * mCol.getB();
 					break;
 				default:
 					break;
@@ -100,5 +100,10 @@ public class FilterTexturer implements IFilter{
 		PixelData ret = (PixelData)image.clone();
 		apply(image, image);
 		return ret;
+	}
+	
+	@Override
+	public void reset() {
+		mMode = TexturingMode.ADD;
 	}
 }

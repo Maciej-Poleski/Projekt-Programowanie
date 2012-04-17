@@ -12,7 +12,7 @@ package manager.editor;
  */
 public class FilterSolarize implements IFilterRange{
 	private final Range[] mRange = new Range[]{
-			new Range(0.0f, ColorConverter.mRGBCMYByteMax, ColorConverter.mRGBCMYByteMax/2.0f, "Próg")
+			new Range(0.0f, ColorConverter.RGBCMY_BYTE_MAX, ColorConverter.RGBCMY_BYTE_MAX/2.0f, "Próg")
 	};
 	
 	@Override
@@ -22,11 +22,11 @@ public class FilterSolarize implements IFilterRange{
 		}
 		float[] origData = original.getData();
 		float[] tempData = temp.getData();
-		float mLUT[] = new float[PixelData.mRGBCMYChannelPrecision];
+		float mLUT[] = new float[PixelData.RGBCMY_CHANNEL_PRECISION];
 		float prog = mRange[0].getValue();
-		for(int i=0;i<PixelData.mRGBCMYChannelPrecision;i++) {
+		for(int i=0;i<PixelData.RGBCMY_CHANNEL_PRECISION;i++) {
 			if(i < prog) {mLUT[i] = (float)i;}
-			else {mLUT[i] = ColorConverter.mRGBCMYByteMax-(float)i;}
+			else {mLUT[i] = ColorConverter.RGBCMY_BYTE_MAX-(float)i;}
 		}
 		original.toRGB(); temp.toRGB();
 		for(int i=0;i<origData.length;i++){
@@ -44,7 +44,29 @@ public class FilterSolarize implements IFilterRange{
 
 	@Override
 	public Range[] getRangeTable() {
-		return mRange;
+		return mRange.clone();
+	}
+
+	@Override
+	public void setRangeTable(Range[] table) {
+		if(table == null || table.length != mRange.length){
+			throw new IllegalArgumentException();
+		}
+		for(int i=0;i<table.length;i++){
+			if(table[i].getMin() != mRange[i].getMin() || table[i].getMax() != mRange[i].getMax()){
+				throw new IllegalArgumentException();
+			}
+		}
+		for(int i=0;i<table.length;i++){
+			mRange[i].setValue(table[i].getValue());
+		}
+	}
+	
+	@Override
+	public void reset() {
+		for(int i=0;i<mRange.length;i++){
+			mRange[i].reset();
+		}
 	}
 
 }

@@ -104,6 +104,27 @@ public final class FilterFactory {
 		return new FilterColorAccent();
 	}
 	
+	//LUT
+	
+	/**
+	 * @return Filtr odpowiedzialny za kanałowa korektę RGB tablicą LUT
+	 */
+	public static IFilterLUT lutRGBCorrection(){
+		return new FilterLUTCorrectionRGB();
+	}
+	/**
+	 * @return Filtr odpowiedzialny za kanałowa korektę CMY tablicą LUT
+	 */
+	public static IFilterLUT lutCMYCorrection(){
+		return new FilterLUTCorrectionCMY();
+	}
+	/**
+	 * @return Filtr odpowiedzialny za kanałowa korektę HSV tablicą LUT
+	 */
+	public static IFilterLUT lutHSVCorrection(){
+		return new FilterLUTCorrectionHSV();
+	}
+	
 	//EDGE DETECTING
 	
 	/**

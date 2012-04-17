@@ -27,26 +27,28 @@ public class FilterGrayScale implements IFilter{
 		float gray=0.0f,mR,mG,mB;
 		for(int i=0;i<mWidth;i++){
 			for(int j=0;j<mHeight;j++){
-				mR = origData[PixelData.mPixelSize*(i*mHeight+j)];
-				mG = origData[PixelData.mPixelSize*(i*mHeight+j)+1];
-				mB = origData[PixelData.mPixelSize*(i*mHeight+j)+2];
+				mR = origData[PixelData.PIXEL_SIZE*(i*mHeight+j)];
+				mG = origData[PixelData.PIXEL_SIZE*(i*mHeight+j)+1];
+				mB = origData[PixelData.PIXEL_SIZE*(i*mHeight+j)+2];
 				switch(mType){
 				case LIGHTNESS:
 					gray = (Math.max(mR, Math.max(mG, mB)) + Math.min(mR, Math.min(mG, mB)))/2.0f;
 					break;
 				case AVERAGE:
-					gray = (mR+mG+mB)/3.0f;
+					gray = (mR+mG+mB)/(float)PixelData.PIXEL_SIZE;
 					break;
 				case LUMINOSITY:
-					gray = 0.21f*mR + 0.71f*mG + 0.07f*mB;
+					gray = ColorConverter.RED_LUMINOSITY * mR + 
+					ColorConverter.GREEN_LUMINOSITY * mG + 
+					ColorConverter.BLUE_LUMINOSITY * mB;
 					break;
 				default:
 					gray = 0.0f;
 					break;
 				}
-				tempData[PixelData.mPixelSize*(i*mHeight+j)] = gray;
-				tempData[PixelData.mPixelSize*(i*mHeight+j)+1] = gray;
-				tempData[PixelData.mPixelSize*(i*mHeight+j)+2] = gray;
+				tempData[PixelData.PIXEL_SIZE*(i*mHeight+j)] = gray;
+				tempData[PixelData.PIXEL_SIZE*(i*mHeight+j)+1] = gray;
+				tempData[PixelData.PIXEL_SIZE*(i*mHeight+j)+2] = gray;
 			}
 		}
 	}
@@ -58,5 +60,8 @@ public class FilterGrayScale implements IFilter{
 		apply(image, image);
 		return ret;
 	}
+	
+	@Override
+	public void reset() {}
 
 }

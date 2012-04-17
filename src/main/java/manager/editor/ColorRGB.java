@@ -46,41 +46,41 @@ public class ColorRGB {
 	 * @param mR - kanał czerwony [0,1]
 	 */
 	public final void setR(float mR){
-		mRed = Math.max(0.0f, Math.min(1.0f, mR));
+		mRed = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_FLOAT_MAX, mR));
 	}
 	/**
 	 * Ustawia wartość kanału zielonego
 	 * @param mG - kanał zielony [0,1]
 	 */
 	public final void setG(float mG){
-		mGreen = Math.max(0.0f, Math.min(1.0f, mG));
+		mGreen = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_FLOAT_MAX, mG));
 	}
 	/**
 	 * Ustawia wartość kanału niebieskiego
 	 * @param mB - kanał niebieski [0,1]
 	 */
 	public final void setB(float mB){
-		mBlue = Math.max(0.0f, Math.min(1.0f, mB));
+		mBlue = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_FLOAT_MAX, mB));
 	}
 	/**
 	 * Ustawia wartość kanału czerwonego
 	 * @param mR - kanał czerwony [0,255]
 	 */
 	public final void setR(int mR){
-		mRed = Math.max(0.0f, Math.min(255.0f, (float)mR/255.0f));
+		mRed = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, (float)mR/ColorConverter.RGBCMY_BYTE_MAX));
 	}
 	/**
 	 * Ustawia wartość kanału zielonego
 	 * @param mG - kanał zielony [0,255]
 	 */
 	public final void setG(int mG){
-		mGreen = Math.max(0.0f, Math.min(255.0f, (float)mG/255.0f));
+		mGreen = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, (float)mG/ColorConverter.RGBCMY_BYTE_MAX));
 	}
 	/**
 	 * Ustawia wartość kanału niebieskiego
 	 * @param mB - kanał niebieski [0,255]
 	 */
 	public final void setB(int mB){
-		mBlue = Math.max(0.0f, Math.min(255.0f, (float)mB/255.0f));
+		mBlue = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, (float)mB/ColorConverter.RGBCMY_BYTE_MAX));
 	}
 }

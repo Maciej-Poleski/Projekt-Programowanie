@@ -6,9 +6,9 @@ package manager.editor;
  */
 public class FilterRGBCorrection implements IFilterRange{
 	private final Range[] mRange = new Range[]{
-		new Range(-ColorConverter.mRGBCMYByteMax/2.0f, ColorConverter.mRGBCMYByteMax/2.0f, 0.0f, "Czerwony"),
-		new Range(-ColorConverter.mRGBCMYByteMax/2.0f, ColorConverter.mRGBCMYByteMax/2.0f, 0.0f, "Zielony"),
-		new Range(-ColorConverter.mRGBCMYByteMax/2.0f, ColorConverter.mRGBCMYByteMax/2.0f, 0.0f, "Niebieski")
+		new Range(-ColorConverter.RGBCMY_BYTE_MAX/2.0f, ColorConverter.RGBCMY_BYTE_MAX/2.0f, 0.0f, "Czerwony"),
+		new Range(-ColorConverter.RGBCMY_BYTE_MAX/2.0f, ColorConverter.RGBCMY_BYTE_MAX/2.0f, 0.0f, "Zielony"),
+		new Range(-ColorConverter.RGBCMY_BYTE_MAX/2.0f, ColorConverter.RGBCMY_BYTE_MAX/2.0f, 0.0f, "Niebieski")
 	};
 
 	@Override
@@ -24,12 +24,12 @@ public class FilterRGBCorrection implements IFilterRange{
 		float dR = mRange[0].getValue(), dG = mRange[1].getValue(), dB = mRange[2].getValue();
 		for(int i=0;i<mWidth;i++){
 			for(int j=0;j<mHeight;j++){
-				mR = origData[PixelData.mPixelSize*(i*mHeight+j)];
-				mG = origData[PixelData.mPixelSize*(i*mHeight+j)+1];
-				mB = origData[PixelData.mPixelSize*(i*mHeight+j)+2];
-				tempData[PixelData.mPixelSize*(i*mHeight+j)] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, mR+dR));
-				tempData[PixelData.mPixelSize*(i*mHeight+j)+1] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, mG+dG));
-				tempData[PixelData.mPixelSize*(i*mHeight+j)+2] = Math.max(0.0f, Math.min(ColorConverter.mRGBCMYByteMax, mB+dB));
+				mR = origData[PixelData.PIXEL_SIZE*(i*mHeight+j)];
+				mG = origData[PixelData.PIXEL_SIZE*(i*mHeight+j)+1];
+				mB = origData[PixelData.PIXEL_SIZE*(i*mHeight+j)+2];
+				tempData[PixelData.PIXEL_SIZE*(i*mHeight+j)] = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, mR+dR));
+				tempData[PixelData.PIXEL_SIZE*(i*mHeight+j)+1] = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, mG+dG));
+				tempData[PixelData.PIXEL_SIZE*(i*mHeight+j)+2] = Math.max(0.0f, Math.min(ColorConverter.RGBCMY_BYTE_MAX, mB+dB));
 			}	
 		}
 	}
@@ -44,7 +44,29 @@ public class FilterRGBCorrection implements IFilterRange{
 
 	@Override
 	public Range[] getRangeTable() {
-		return mRange;
+		return mRange.clone();
+	}
+
+	@Override
+	public void setRangeTable(Range[] table) {
+		if(table == null || table.length != mRange.length){
+			throw new IllegalArgumentException();
+		}
+		for(int i=0;i<table.length;i++){
+			if(table[i].getMin() != mRange[i].getMin() || table[i].getMax() != mRange[i].getMax()){
+				throw new IllegalArgumentException();
+			}
+		}
+		for(int i=0;i<table.length;i++){
+			mRange[i].setValue(table[i].getValue());
+		}
+	}
+	
+	@Override
+	public void reset() {
+		for(int i=0;i<mRange.length;i++){
+			mRange[i].reset();
+		}
 	}
 
 }

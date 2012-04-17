@@ -12,6 +12,7 @@ import javax.swing.JPanel;
  * @author Marcin Regdos
  */
 class ImagePanel extends JPanel  {
+	private static final long serialVersionUID = 1L;
 	private Image image; //? BufferedImage
 	private int zoom;
 	public ImagePanel (Image image){
@@ -24,9 +25,11 @@ class ImagePanel extends JPanel  {
      */
 	void changeImage (Image image){
 		this.image=image;
+		this.repaint();
 	}
 	void changeZoom (int zoom){
 		this.zoom=zoom;
+		this.repaint();
 	}
 	@Override
 	protected void paintComponent(Graphics g){
