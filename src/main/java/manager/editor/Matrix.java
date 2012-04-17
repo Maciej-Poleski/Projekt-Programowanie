@@ -8,6 +8,7 @@ package manager.editor;
  *
  */
 public class Matrix {
+	private static final int MinimumMatrixSize = 3;
 	private int mSize;
 	private float[] mData;
 	
@@ -63,7 +64,7 @@ public class Matrix {
     		throw new IllegalArgumentException();
     	}
     	int size = (int)Math.sqrt(table.length);
-    	if(size*size != table.length || size < 3 || size%2==0){
+    	if(size*size != table.length || size < MinimumMatrixSize || size%2==0){
     		throw new IllegalArgumentException();
     	}
     	mSize = size;

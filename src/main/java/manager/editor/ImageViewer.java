@@ -1,17 +1,12 @@
 package manager.editor;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Image;
-
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -21,6 +16,7 @@ import javax.swing.event.ChangeListener;
  * @author Marcin Regdos
  */
 public class ImageViewer extends JPanel implements ChangeListener{
+	private static final long serialVersionUID = 1L;
 	private ImagePanel iPanel;
 	private JPanel topPanel;
 	private JScrollPane scrollPane;
@@ -28,7 +24,7 @@ public class ImageViewer extends JPanel implements ChangeListener{
 	private int height, width;
 	/**
      * Zostanie utworzona nowa kontrolka
-     * @param image - wyswietlany obraz
+     * @param image  wyswietlany obraz
      * @param width szerokosc kontrolki
      * @param height wysokosc kontrolki
      */
@@ -48,7 +44,7 @@ public class ImageViewer extends JPanel implements ChangeListener{
 		scrollPane.setWheelScrollingEnabled(true);
 		scrollPane.setColumnHeaderView(topPanel);
 		scrollPane.setPreferredSize(new  java.awt.Dimension(this.width, this.height));
-		scrollPane.setSize(scrollPane.getPreferredSize());
+		//scrollPane.setSize(scrollPane.getPreferredSize());
 		this.setPreferredSize(scrollPane.getPreferredSize());
 		this.add(scrollPane);
 		this.repaint();
@@ -64,7 +60,7 @@ public class ImageViewer extends JPanel implements ChangeListener{
 	public void stateChanged(ChangeEvent arg0) {
 		iPanel.changeZoom((Integer)zoomSpinner.getValue());	
 		this.revalidate();
-		this.repaint();
+		//this.repaint();
 	}
 }
 

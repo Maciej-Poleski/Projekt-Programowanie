@@ -20,9 +20,9 @@ public class FilterImageRotate90 implements IFilter{
 		original.toRGB(); temp.toRGB();
 		for(int i=0;i<mOrigWidth;i++){
 			for(int j=0;j<mOrigHeight;j++){
-				tempData[PixelData.mPixelSize*(i*mTempWidth+mTempWidth-1-j)] = origData[PixelData.mPixelSize*(j*mOrigWidth+i)];
-				tempData[PixelData.mPixelSize*(i*mTempWidth+mTempWidth-1-j)+1] = origData[PixelData.mPixelSize*(j*mOrigWidth+i)+1];
-				tempData[PixelData.mPixelSize*(i*mTempWidth+mTempWidth-1-j)+2] = origData[PixelData.mPixelSize*(j*mOrigWidth+i)+2];
+				tempData[PixelData.PIXEL_SIZE*(i*mTempWidth+mTempWidth-1-j)] = origData[PixelData.PIXEL_SIZE*(j*mOrigWidth+i)];
+				tempData[PixelData.PIXEL_SIZE*(i*mTempWidth+mTempWidth-1-j)+1] = origData[PixelData.PIXEL_SIZE*(j*mOrigWidth+i)+1];
+				tempData[PixelData.PIXEL_SIZE*(i*mTempWidth+mTempWidth-1-j)+2] = origData[PixelData.PIXEL_SIZE*(j*mOrigWidth+i)+2];
 			}
 		}
 	}
@@ -38,5 +38,8 @@ public class FilterImageRotate90 implements IFilter{
 		apply(image, ret);
 		return ret;
 	}
+	
+	@Override
+	public void reset() {}
 
 }

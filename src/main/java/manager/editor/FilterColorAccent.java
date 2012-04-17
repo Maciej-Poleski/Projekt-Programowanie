@@ -1,7 +1,5 @@
 package manager.editor;
 
-import java.awt.Color;
-
 /**
  * Filtr odpowiedzialny za tworzenie akcentu kolorystycznego
  * filtr dwu-argumentowy:
@@ -13,8 +11,8 @@ import java.awt.Color;
  */
 public class FilterColorAccent implements IFilterRange{
 	private final Range[] mRange = new Range[]{
-		new Range(0.0f, ColorConverter.mHueMaxValue, 0.0f, "Barwa"),
-		new Range(0.0f, ColorConverter.mHueMaxValue / 2.0f, 10.0f, "Tolerancja")
+		new Range(0.0f, 360.0f, 0.0f, "Barwa"),
+		new Range(0.0f, 180.0f, 10.0f, "Tolerancja")
 	};
 	
 	@Override
@@ -31,18 +29,18 @@ public class FilterColorAccent implements IFilterRange{
 		float mH=0,mS=0,mV=0;
 		for(int i=0;i<mWidth;i++){
 			for(int j=0;j<mHeight;j++){
-				mH = origData[PixelData.mPixelSize*(j*mWidth+i)];
-				mS = origData[PixelData.mPixelSize*(j*mWidth+i)+1];
-				mV = origData[PixelData.mPixelSize*(j*mWidth+i)+2];
+				mH = origData[PixelData.PIXEL_SIZE*(j*mWidth+i)];
+				mS = origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1];
+				mV = origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2];
 				if((mHmin <= mH && mH <= mHmax) || 
-						(mHmin <= mH - ColorConverter.mHueMaxValue && mH - ColorConverter.mHueMaxValue <= mHmax) || 
-						(mHmin <= mH + ColorConverter.mHueMaxValue && mH + ColorConverter.mHueMaxValue <= mHmax)){
-					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = mS;
+						(mHmin <= mH - ColorConverter.HUE_MAX && mH - ColorConverter.HUE_MAX <= mHmax) || 
+						(mHmin <= mH + ColorConverter.HUE_MAX && mH + ColorConverter.HUE_MAX <= mHmax)){
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] = mS;
 				} else {
-					tempData[PixelData.mPixelSize*(j*mWidth+i)+1] = 0.0f;
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] = 0.0f;
 				}
-				tempData[PixelData.mPixelSize*(j*mWidth+i)] = mH;
-				tempData[PixelData.mPixelSize*(j*mWidth+i)+2] = mV;
+				tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)] = mH;
+				tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2] = mV;
 			}
 		}
 	}
@@ -57,7 +55,29 @@ public class FilterColorAccent implements IFilterRange{
 
 	@Override
 	public Range[] getRangeTable() {
-		return mRange;
+		return mRange.clone();
+	}
+
+	@Override
+	public void setRangeTable(Range[] table) {
+		if(table == null || table.length != mRange.length){
+			throw new IllegalArgumentException();
+		}
+		for(int i=0;i<table.length;i++){
+			if(table[i].getMin() != mRange[i].getMin() || table[i].getMax() != mRange[i].getMax()){
+				throw new IllegalArgumentException();
+			}
+		}
+		for(int i=0;i<table.length;i++){
+			mRange[i].setValue(table[i].getValue());
+		}
+	}
+	
+	@Override
+	public void reset() {
+		for(int i=0;i<mRange.length;i++){
+			mRange[i].reset();
+		}
 	}
 
 }

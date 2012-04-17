@@ -7,7 +7,7 @@ package manager.editor;
  * 
  */
 public class Range {
-	private float mMin, mMax, mValue;
+	private float mMin, mMax, mValue, mDefault;
 	private final String mName;
 	
     /**
@@ -21,6 +21,7 @@ public class Range {
     	mMax = Math.max(a, b);
     	mValue = (a+b)/2.0f;
     	mName = name;
+    	mDefault = mValue;
     }
     
     /**
@@ -34,6 +35,14 @@ public class Range {
     public Range(float a, float b, float val, String name){
     	this(a,b,name);
     	setValue(val);
+    	mDefault = mValue;
+    }
+    
+    /**
+     * Resetuje ustawienia przedzialu tzn ustawia wartośc w przedziale na domyślną
+     */
+    public void reset(){
+    	setValue(mDefault);
     }
 
     /**
