@@ -29,13 +29,13 @@ public class EditTagsWindow extends javax.swing.JFrame {
         buttonPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Edit tags");
         setPreferredSize(new java.awt.Dimension(797, 472));
         setResizable(false);
 
         buttonPanel1.setBackground(new java.awt.Color(204, 204, 255));
-        buttonPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        buttonPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         buttonPanel1.setForeground(new java.awt.Color(204, 204, 255));
 
         jLabel1.setText("Edit tags");
@@ -47,7 +47,7 @@ public class EditTagsWindow extends javax.swing.JFrame {
             .addGroup(buttonPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(304, Short.MAX_VALUE))
+                .addContainerGap(302, Short.MAX_VALUE))
         );
         buttonPanel1Layout.setVerticalGroup(
             buttonPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -67,7 +67,7 @@ public class EditTagsWindow extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(buttonPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 253, Short.MAX_VALUE))
+                .addGap(0, 251, Short.MAX_VALUE))
         );
 
         pack();
@@ -103,16 +103,6 @@ public class EditTagsWindow extends javax.swing.JFrame {
       java.util.logging.Logger.getLogger(EditTagsWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
     //</editor-fold>
-
-    /*
-     * Create and display the form
-     */
-    java.awt.EventQueue.invokeLater(new Runnable() {
-
-      public void run() {
-        new EditTagsWindow().setVisible(true);
-      }
-    });
   }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel1;
