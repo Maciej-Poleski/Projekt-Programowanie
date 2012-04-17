@@ -2,6 +2,9 @@ package manager.tags;
 
 import manager.files.FileID;
 
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,15 +19,19 @@ import java.util.*;
  */
 public class Tags implements Serializable {
     private final List<Tag<?>> tags = new ArrayList<>();
-    private TagFilesStore store = null;
+    private TagFilesStore store = new TagFilesStore();
     private final Map<Tag<?>, String> tagNames = new HashMap<>();
-    private final Map<Tag<?>, Set<Object>> tagMetadata = new HashMap<>();
+    private final Map<Tag<?>, Set<Serializable>> tagMetadata = new HashMap<>();
+    private static Tags defaultInstance;
     private static final long serialVersionUID = 1;
 
     /**
      * Konstruuje nowy obiekt z pustą rodziną tagów.
      */
     public Tags() {
+        if (defaultInstance == null) {
+            setDefaultInstance(this);
+        }
     }
 
     /**
@@ -33,7 +40,7 @@ public class Tags implements Serializable {
      * @return Nowy tag macierzysty
      */
     public MasterTag newMasterTag() {
-        MasterTag tag = new MasterTag();
+        MasterTag tag = new MasterTag(this);
         tags.add(tag);
         return tag;
     }
@@ -44,7 +51,7 @@ public class Tags implements Serializable {
      * @return Nowy tag użytkownika
      */
     public UserTag newUserTag() {
-        UserTag tag = new UserTag();
+        UserTag tag = new UserTag(this);
         tags.add(tag);
         return tag;
     }
@@ -175,6 +182,16 @@ public class Tags implements Serializable {
     }
 
     /**
+     * Tworzy nowy tag macierzysty i przypisuje mu etykietę.
+     *
+     * @param name Etykieta nowego tagu macierzystego
+     * @return Nowy tag macierzysty o wskazanej etykiecie
+     */
+    public MasterTag newMasterTag(String name) {
+        return newMasterTag(null, name);
+    }
+
+    /**
      * Tworzy nowy tag użytkownika jako dziecko wskazanych tagów użytkownika i rodzic wskazanych tagów użytkownika.
      *
      * @param parents  Tagi użytkownika - rodzice
@@ -183,7 +200,7 @@ public class Tags implements Serializable {
      * @throws CycleException Jeżeli dodanie wskazanych relacji spowoduje powstanie cyklu
      */
     public UserTag newUserTag(Set<UserTag> parents, Set<UserTag> children) throws CycleException {
-        UserTag result = new UserTag();
+        UserTag result = newUserTag();
         if (parents == null) {
             parents = new HashSet<>();
         }
@@ -228,6 +245,21 @@ public class Tags implements Serializable {
     }
 
     /**
+     * Tworzy nowy tag użytkownika i przypisuje mu etykietę.
+     *
+     * @param name Etykieta nowego tagu użytkownika
+     * @return Nowy tag użytkownika o wskazanej etykiecie.
+     */
+    public UserTag newUserTag(String name) {
+        try {
+            return newUserTag(null, null, name);
+        } catch (CycleException e) {
+            assert false;
+            return null;
+        }
+    }
+
+    /**
      * Zwraca etykietę tagu (napis)
      *
      * @param tag Tag którego etykieta zostanie zwrócona.
@@ -253,8 +285,8 @@ public class Tags implements Serializable {
      * @param tag Tag którego metadane zostaną zwrócone
      * @return Wszystkie metadane związane z danym tagiem
      */
-    public Set<?> getAllMetadataOfTag(Tag<?> tag) {
-        return tagMetadata.get(tag);
+    public Set<Serializable> getAllMetadataOfTag(Tag<?> tag) {
+        return tagMetadata.get(tag) != null ? tagMetadata.get(tag) : new HashSet<Serializable>();
     }
 
     /**
@@ -264,9 +296,9 @@ public class Tags implements Serializable {
      * @param tag      Tag do którego dodajemy metadane
      * @param metadata Metadane które zostaną powiązane z wskazanym tagiem.
      */
-    public void addTagMetadata(Tag<?> tag, Object metadata) {
+    public void addTagMetadata(Tag<?> tag, Serializable metadata) {
         if (!tagMetadata.containsKey(tag)) {
-            tagMetadata.put(tag, new HashSet<>());
+            tagMetadata.put(tag, new HashSet<Serializable>());
         }
         tagMetadata.get(tag).add(metadata);
     }
@@ -276,10 +308,15 @@ public class Tags implements Serializable {
      *
      * @param tag      Tag z którego będą usunięte metadane
      * @param metadata Metadane które zostaną usunięte z tagu.
+     * @throws IllegalStateException    Jeżeli wskazany tag nie posiada wskazanych metadanych
+     * @throws IllegalArgumentException Jeżeli tag==null lub metadata=null
      */
-    public void removeTagMetadata(Tag<?> tag, Object metadata) {
-        if (!tagMetadata.containsKey(tag)) {
-            return;
+    public void removeTagMetadata(Tag<?> tag, Serializable metadata) {
+        if (tag == null || metadata == null) {
+            throw new IllegalArgumentException("Musisz wskazać obiekt (nie null)");
+        }
+        if (!tagMetadata.containsKey(tag) || !tagMetadata.get(tag).contains(metadata)) {
+            throw new IllegalStateException("Tag " + tag + " nie posiada metadanych " + metadata);
         }
         tagMetadata.get(tag).remove(metadata);
         if (tagMetadata.get(tag).isEmpty()) {
@@ -425,6 +462,7 @@ public class Tags implements Serializable {
      * @param tag Wybrany tag
      * @return Fragment ścieżki odpowiadający wskazanemu tagowi
      * @throws IllegalArgumentException Jeżeli tag==null
+     * @throws IllegalStateException    Jeżeli któryś z rodziców wskazanego tagu nie posiada etykiety
      */
     public Path getPathFromMasterTag(MasterTag tag) {
         if (tag == null) {
@@ -432,13 +470,87 @@ public class Tags implements Serializable {
         }
         List<String> path = new ArrayList<>();
         for (MasterTag i = tag; i != null; i = i.getParent()) {
-            path.add(getNameOfTag(i));
+            if (getNameOfTag(i) == null || getNameOfTag(i).isEmpty()) {
+                throw new IllegalStateException("Nie można zbudować ścieżki w systemie plików z obecnego stanu tagów");
+            } else {
+                path.add(getNameOfTag(i));
+            }
         }
         String[] preparedPath = new String[path.size() - 1];
         for (int i = path.size() - 2; i >= 0; --i) {
             preparedPath[path.size() - 2 - i] = path.get(i);
         }
-        return Paths.get(path.get(path.size() - 1), preparedPath);
+        if (preparedPath.length != 0) {
+            return Paths.get(path.get(path.size() - 1), preparedPath);
+        } else {
+            return Paths.get(path.get(path.size() - 1));
+        }
+    }
+
+    /**
+     * Zwraca model drzewa na potrzeby widoku drzewa tagów macierzystych. Tylko do odczytu. Zmiana struktury tagów
+     * macierzystych spowoduje uszkodzenie wszystkich obiektów tej klasy.
+     *
+     * @return Model drzewa tagów macierzystych
+     */
+    public TreeModel getModelOfMasterTags() {
+        return new MasterTagsTreeModel();
+    }
+
+    /**
+     * Zwraca model drzewa na potrzeby widoku DAG-u tagów użytkownika. Tylko do odczytu. Zmiana struktury tagów
+     * użytkownika spowoduje uszkodzenie wszystkich obiektów tej klasy.
+     *
+     * @return Model drzewa tagów użytkownika
+     */
+    public TreeModel getModelOfUserTags() {
+        return new UserTagsTreeModel();
+    }
+
+    /**
+     * Zwraca domyślną instancję klasy Tags
+     *
+     * @return Obiekt klasy Tags
+     */
+    public static synchronized Tags getDefaultInstance() {
+        if (defaultInstance != null) {
+            return defaultInstance;
+        } else {
+            Tags result = new Tags();
+            defaultInstance = result;
+            return result;
+        }
+    }
+
+    /**
+     * Ustawia domyślną instancję klasy Tags w ramach aplikacji.
+     *
+     * @param defaultInstance Instancja klasy Tags
+     * @throws IllegalArgumentException Jeżeli defaultInstance==null
+     */
+    public static void setDefaultInstance(Tags defaultInstance) {
+        if (defaultInstance == null) {
+            throw new IllegalArgumentException("Null jest niedozwolony");
+        }
+        Tags.defaultInstance = defaultInstance;
+    }
+
+    /**
+     * Zwraca najstarszego przodka wskazanego tagu macierzystego.
+     *
+     * @param tag Tag macierzysty
+     * @return Najstarszy przodek wskazanego tagu macierzystego
+     * @throws IllegalArgumentException Jeżeli tag==null
+     */
+    public MasterTag getOldestAncestor(MasterTag tag) {
+        if (tag == null) {
+            throw new IllegalArgumentException("Pytanie o przodka null-a nie ma sensu");
+        }
+        MasterTag result = tag;
+        while (result.getParent() != null) {
+            result = result.getParent();
+        }
+        return result;
     }
 
     private void checkStore() {
@@ -527,6 +639,239 @@ public class Tags implements Serializable {
                 tryTravel(parent);
             }
             state.put(tag, true);
+        }
+    }
+
+    private class UserTagsTreeModel implements TreeModel {
+        private final List<UserTag> heads = new ArrayList<>(getUserTagHeads());
+
+        private class Node {
+            private final UserTag tag;
+
+            Node(UserTag tag) {
+                this.tag = tag;
+            }
+
+            Node() {
+                tag = null;
+            }
+
+            final UserTag getTag() {
+                return tag;
+            }
+
+            Node getChild(int index) {
+                if (tag == null) {
+                    if (index == 0) {
+                        return new Children();
+                    } else {
+                        return null;
+                    }
+                } else {
+                    if (index == 0) {
+                        return new Parents(tag);
+                    } else if (index == 1) {
+                        return new Children(tag);
+                    } else {
+                        return null;
+                    }
+                }
+            }
+
+            int getChildCount() {
+                if (tag == null) {
+                    return 1;
+                } else {
+                    return 2;
+                }
+            }
+
+            int getIndexOfChild(Object child) {
+                if (tag == null) {
+                    if (child instanceof Children) {
+                        return 0;
+                    } else {
+                        return -1;
+                    }
+                } else {
+                    if (child instanceof Parents) {
+                        return 0;
+                    } else {
+                        assert child instanceof Children;
+                        return 1;
+                    }
+                }
+            }
+
+            @Override
+            public String toString() {
+                return getNameOfTag(tag);
+            }
+        }
+
+        private class Children extends Node {
+            Children(UserTag tag) {
+                super(tag);
+            }
+
+            Children() {
+            }
+
+            @Override
+            public String toString() {
+                return "dzieci";
+            }
+
+            @Override
+            Node getChild(int index) {
+                if (getTag() == null) {
+                    return new Node(heads.get(index));
+                } else {
+                    return new Node(getTag().getChildren().get(index));
+                }
+            }
+
+            @Override
+            int getIndexOfChild(Object child) {
+                //noinspection SuspiciousMethodCalls
+                return getTag().getChildren().indexOf(child);
+            }
+
+            @Override
+            int getChildCount() {
+                return getTag().getChildren().size();
+            }
+        }
+
+        private class Parents extends Node {
+            Parents(UserTag tag) {
+                super(tag);
+                assert tag != null;
+            }
+
+            @Override
+            public String toString() {
+                return "rodzice";
+            }
+
+            @Override
+            Node getChild(int index) {
+                return new Node(getTag().getParents().get(index));
+            }
+
+            @Override
+            int getIndexOfChild(Object child) {
+                //noinspection SuspiciousMethodCalls
+                return getTag().getParents().indexOf(child);
+            }
+
+            @Override
+            int getChildCount() {
+                return getTag().getParents().size();
+            }
+        }
+
+        @Override
+        public Object getRoot() {
+            return new Node();
+        }
+
+        @Override
+        public Object getChild(Object parent, int index) {
+            return ((Node) parent).getChild(index);
+        }
+
+        @Override
+        public int getChildCount(Object parent) {
+            return ((Node) parent).getChildCount();
+        }
+
+        @Override
+        public boolean isLeaf(Object node) {
+            return false;  // We mean it
+        }
+
+        @Override
+        public void valueForPathChanged(TreePath path, Object newValue) {
+            // UNSUPPORTED
+        }
+
+        @Override
+        public int getIndexOfChild(Object parent, Object child) {
+            return ((Node) parent).getIndexOfChild(child);
+        }
+
+        @Override
+        public void addTreeModelListener(TreeModelListener l) {
+            // UNSUPPORTED
+        }
+
+        @Override
+        public void removeTreeModelListener(TreeModelListener l) {
+            // UNSUPPORTED
+        }
+    }
+
+    private class MasterTagsTreeModel implements TreeModel {
+        private final Object root = new Object();
+        private final List<MasterTag> heads = new ArrayList<>(getMasterTagHeads());
+
+        @Override
+        public Object getRoot() {
+            return root;
+        }
+
+        @Override
+        public Object getChild(Object parent, int index) {
+            if (parent.equals(root)) {
+                return heads.get(index);
+            } else {
+                return ((MasterTag) parent).getChildren().get(index);
+            }
+        }
+
+        @Override
+        public int getChildCount(Object parent) {
+            if (parent.equals(root)) {
+                return heads.size();
+            } else {
+                return ((MasterTag) parent).getChildren().size();
+            }
+        }
+
+        @Override
+        public boolean isLeaf(Object node) {
+            return false; // We mean it
+        }
+
+        @Override
+        public void valueForPathChanged(TreePath path, Object newValue) {
+            // DO NOTHING - UNSUPPORTED
+        }
+
+        @Override
+        public int getIndexOfChild(Object parent, Object child) {
+            if (parent == null || child == null) {
+                return -1;
+            } else {
+                if (parent.equals(root)) {
+                    //noinspection SuspiciousMethodCalls
+                    return heads.indexOf(child);
+                } else {
+                    //noinspection SuspiciousMethodCalls
+                    return ((MasterTag) parent).getChildren().indexOf(child);
+                }
+            }
+        }
+
+        @Override
+        public void addTreeModelListener(TreeModelListener l) {
+            // DO NOTHING - UNSUPPORTED
+        }
+
+        @Override
+        public void removeTreeModelListener(TreeModelListener l) {
+            // DO NOTHING - UNSUPPORTED
         }
     }
 }
