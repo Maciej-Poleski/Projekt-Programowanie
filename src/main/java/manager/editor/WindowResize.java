@@ -1,8 +1,11 @@
 package manager.editor;
 
 
+
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 import javax.swing.*;
 
 /**
@@ -25,25 +28,24 @@ public class WindowResize extends JDialog implements ActionListener, IWindowFilt
     private JRadioButton jRadioButton2;
     private JRadioButton jRadioButton3;
     private JRadioButton jRadioButton4;
-    private JTextField jTextField1;
-    private JTextField jTextField2;
-   
+    private JFormattedTextField jTextField1;
+    private JFormattedTextField jTextField2;
+    private int m, n;
     /**
      * Konstruktor - wymagany jest obraz do edycji
      * @param image - referencja do objektu klasy PixelData przechowuj�ca obraz do edycji
      */
-   
     public WindowResize(PixelData image)
 	{
             iMage = image;
             initComponents();
         }
 
-                    
         
         private void initComponents()
         {
             this.setModal(true);
+            
             buttonGroup1 = new ButtonGroup();
             buttonGroup2 = new ButtonGroup();
             jLabel1 = new JLabel();
@@ -54,12 +56,19 @@ public class WindowResize extends JDialog implements ActionListener, IWindowFilt
             jRadioButton4 = new JRadioButton();
             jLabel3 = new JLabel();
             jLabel4 = new JLabel();
-            jTextField1 = new JTextField();
-            jTextField2 = new JTextField();
+            jTextField1 =  new JFormattedTextField(NumberFormat.getInstance());
+            jTextField2 =  new JFormattedTextField(NumberFormat.getInstance());
             jButton1 = new JButton();
             jButton2 = new JButton();
             
+            m = iMage.getWidth();
+            n = iMage.getHeight();
+            
+            setResizable(false);
             setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+            
+            jTextField1.setValue(new Integer(m));
+            jTextField2.setValue(new Integer(n));
             
             jLabel1.setText("Algorytm kowersji:");
             
@@ -68,7 +77,7 @@ public class WindowResize extends JDialog implements ActionListener, IWindowFilt
             jRadioButton1.setText("Dwuliniowy");
             
              buttonGroup1.add(jRadioButton2);
-            jRadioButton2.setText("Najbli�szy s�siad");
+            jRadioButton2.setText("Najbliższy sąsiad");
             
             jLabel2.setText("Zmiana rozmiaru:");
             
@@ -82,9 +91,8 @@ public class WindowResize extends JDialog implements ActionListener, IWindowFilt
             jRadioButton3.setText("Piksele");
             
             buttonGroup2.add(jRadioButton4);
-            jRadioButton4.setText("Warto�� procentowa");
+            jRadioButton4.setText("Wartość procentowa");
             
-		
             jButton1.addActionListener(this);
             jButton2.addActionListener(this);
         
@@ -128,8 +136,12 @@ public class WindowResize extends JDialog implements ActionListener, IWindowFilt
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2)
+                            .addGap(50, 50, 50)            
+                            .addComponent(jButton2)
+                          
+                                
+                            
+                        
                         .addGap(35, 35, 35))))
         );
         layout.setVerticalGroup(
@@ -163,28 +175,25 @@ public class WindowResize extends JDialog implements ActionListener, IWindowFilt
         );
 
         pack();
-    }       	
-   
-    /**
-    * Zwraca obraz po edycji
-    * @return przetworzony obraz
-    */
+    }
         
-    public PixelData showDialog()
+        /**
+         * Zwraca obraz po edycji
+         * @return przetworzony obraz
+         */
+	public PixelData showDialog()
 	{
                 this.setVisible(true);
                 return iMage;
 	}
-	
+
     @Override
     public void actionPerformed(ActionEvent e) 
     {
         if ("OK".equals(e.getActionCommand())) 
         {
-                String s1 = jTextField1.getText();
-		String s2 = jTextField2.getText();
-		int a1 = Integer.parseInt(s1);
-		int a2 = Integer.parseInt(s2);
+		int a1 = ((Number)jTextField1.getValue()).intValue();
+		int a2 = ((Number)jTextField2.getValue()).intValue();
                 if (!jRadioButton3.isSelected())
                 {
                     a1=(iMage.getWidth() * a1)/100;
@@ -210,5 +219,4 @@ public class WindowResize extends JDialog implements ActionListener, IWindowFilt
          this.dispose();
     }
 
-    
 }
