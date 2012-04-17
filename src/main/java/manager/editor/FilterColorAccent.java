@@ -11,36 +11,43 @@ package manager.editor;
  */
 public class FilterColorAccent implements IFilterRange{
 	private final Range[] mRange = new Range[]{
-		new Range(0.0f, 359.9f, 0.0f),
-		new Range(0.0f, 180.0f, 10.0f)
+		new Range(0.0f, 360.0f, 0.0f, "Barwa"),
+		new Range(0.0f, 180.0f, 10.0f, "Tolerancja")
 	};
 	
 	@Override
-	public void apply(PixelData original, PixelData temp)
-			throws IllegalArgumentException {
-		if(original == null || temp == null) throw new NullPointerException();
-		if(original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
+	public void apply(PixelData original, PixelData temp){
+		int mWidth = original.getWidth(), mHeight = original.getHeight();
+		if(mWidth != temp.getWidth() || mHeight != temp.getHeight()){
 			throw new IllegalArgumentException();
+		}
+		float[] origData = original.getData();
+		float[] tempData = temp.getData();
 		original.toHSV(); temp.toHSV();
-		float Hue = mRange[0].getValue(), Tol = mRange[1].getValue();
-		float Hmax = Hue+Tol, Hmin = Hue-Tol;
-		float H=0,S=0,V=0;
-		for(int i=0;i<original.mWidth;i++)
-			for(int j=0;j<original.mHeight;j++){
-				H = original.mData[3*(j*original.mWidth+i)];
-				S = original.mData[3*(j*original.mWidth+i)+1];
-				V = original.mData[3*(j*original.mWidth+i)+2];
-				if((Hmin <= H && H <= Hmax) || (Hmin <= H-360.0f && H-360.0f <= Hmax) || (Hmin <= H+360.0f && H+360.0f <= Hmax))
-					temp.mData[3*(j*original.mWidth+i)+1] = S;
-				else temp.mData[3*(j*original.mWidth+i)+1] = 0.0f;
-				temp.mData[3*(j*original.mWidth+i)] = H;
-				temp.mData[3*(j*original.mWidth+i)+2] = V;
+		float mHue = mRange[0].getValue(), mTol = mRange[1].getValue();
+		float mHmax = mHue+mTol, mHmin = mHue-mTol;
+		float mH=0,mS=0,mV=0;
+		for(int i=0;i<mWidth;i++){
+			for(int j=0;j<mHeight;j++){
+				mH = origData[PixelData.PIXEL_SIZE*(j*mWidth+i)];
+				mS = origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1];
+				mV = origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2];
+				if((mHmin <= mH && mH <= mHmax) || 
+						(mHmin <= mH - ColorConverter.HUE_MAX && mH - ColorConverter.HUE_MAX <= mHmax) || 
+						(mHmin <= mH + ColorConverter.HUE_MAX && mH + ColorConverter.HUE_MAX <= mHmax)){
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] = mS;
+				} else {
+					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] = 0.0f;
+				}
+				tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)] = mH;
+				tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2] = mV;
 			}
+		}
 	}
 
 	@Override
 	public PixelData apply(PixelData image) {
-		if(image == null) return null;
+		if(image == null) {return null;}
 		PixelData ret = (PixelData)image.clone();
 		apply(image, image);
 		return ret;
@@ -48,7 +55,29 @@ public class FilterColorAccent implements IFilterRange{
 
 	@Override
 	public Range[] getRangeTable() {
-		return mRange;
+		return mRange.clone();
+	}
+
+	@Override
+	public void setRangeTable(Range[] table) {
+		if(table == null || table.length != mRange.length){
+			throw new IllegalArgumentException();
+		}
+		for(int i=0;i<table.length;i++){
+			if(table[i].getMin() != mRange[i].getMin() || table[i].getMax() != mRange[i].getMax()){
+				throw new IllegalArgumentException();
+			}
+		}
+		for(int i=0;i<table.length;i++){
+			mRange[i].setValue(table[i].getValue());
+		}
+	}
+	
+	@Override
+	public void reset() {
+		for(int i=0;i<mRange.length;i++){
+			mRange[i].reset();
+		}
 	}
 
 }

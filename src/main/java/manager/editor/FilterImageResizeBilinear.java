@@ -20,38 +20,41 @@ public class FilterImageResizeBilinear implements IFilter{
 	 * zapisuje obraz original do obrazu image odpowiednio go skalując
 	 */
 	@Override
-	public void apply(PixelData original, PixelData temp)
-			throws IllegalArgumentException {
-		if(original == null || temp == null) throw new NullPointerException();
-		float ratioX = (float)original.mWidth/(float)temp.mWidth;
-		float ratioY = (float)original.mHeight/(float)temp.mHeight;
+	public void apply(PixelData original, PixelData temp) {
+		int mOrigWidth = original.getWidth(), mOrigHeight = original.getHeight();
+		int mTempWidth = temp.getWidth(), mTempHeight = temp.getHeight();
+		float ratioX = (float)mOrigWidth/(float)mTempWidth;
+		float ratioY = (float)mOrigHeight/(float)mTempHeight;
+		float[] origData = original.getData();
+		float[] tempData = temp.getData();
 		original.toRGB(); temp.toRGB();
-		float ip,jp,Rbeg,Rend,Gbeg,Gend,Bbeg,Bend,coef; 
+		float ip,jp,mRbeg,mRend,mGbeg,mGend,mBbeg,mBend,coef; 
 		int indIbeg, indIend, indJbeg, indJend;
-		for(int j=0;j<temp.mHeight;j++)
-			for(int i=0;i<temp.mWidth;i++){
+		for(int j=0;j<mTempHeight;j++){
+			for(int i=0;i<mTempWidth;i++){
 				ip = (float)i*ratioX;
 				jp = (float)j*ratioY;
 				//wspolrzene kraty próbkowania
-				if((int)ip >= original.mWidth) indIbeg = original.mWidth-1; else indIbeg = (int)ip;
-				if((int)jp >= original.mHeight) indJbeg = original.mHeight-1; else indJbeg = (int)jp;
-				if(indIbeg + 1 >= original.mWidth) indIend = original.mWidth-1; else indIend = indIbeg+1;
-				if(indJbeg + 1 >= original.mHeight) indJend = original.mHeight-1; else indJend = indJbeg+1;
-				jp = Math.min(original.mHeight, jp); ip = Math.min(original.mWidth, ip);
+				if((int)ip >= mOrigWidth) {indIbeg = mOrigWidth-1;} else {indIbeg = (int)ip;}
+				if((int)jp >= mOrigHeight) {indJbeg = mOrigHeight-1;} else {indJbeg = (int)jp;}
+				if(indIbeg + 1 >= mOrigWidth) {indIend = mOrigWidth-1;} else {indIend = indIbeg+1;}
+				if(indJbeg + 1 >= mOrigHeight) {indJend = mOrigHeight-1;} else {indJend = indJbeg+1;}
+				jp = Math.min(mOrigHeight, jp); ip = Math.min(mOrigWidth, ip);
 				//probkowanie poziome
 				coef = ip-(float)indIbeg;
-				Rbeg = original.mData[3*(indJbeg*original.mWidth+indIbeg)] * coef + original.mData[3*(indJbeg*original.mWidth+indIend)] * (1.0f-coef);
-				Gbeg = original.mData[3*(indJbeg*original.mWidth+indIbeg)+1] * coef + original.mData[3*(indJbeg*original.mWidth+indIend)+1] * (1.0f-coef);
-				Bbeg = original.mData[3*(indJbeg*original.mWidth+indIbeg)+2] * coef + original.mData[3*(indJbeg*original.mWidth+indIend)+2] * (1.0f-coef);
-				Rend = original.mData[3*(indJend*original.mWidth+indIbeg)] * coef + original.mData[3*(indJend*original.mWidth+indIend)] * (1.0f-coef);
-				Gend = original.mData[3*(indJend*original.mWidth+indIbeg)+1] * coef + original.mData[3*(indJend*original.mWidth+indIend)+1] * (1.0f-coef);
-				Bend = original.mData[3*(indJend*original.mWidth+indIbeg)+2] * coef + original.mData[3*(indJend*original.mWidth+indIend)+2] * (1.0f-coef);
+				mRbeg = origData[PixelData.PIXEL_SIZE*(indJbeg*mOrigWidth+indIbeg)] * coef + origData[PixelData.PIXEL_SIZE*(indJbeg*mOrigWidth+indIend)] * (1.0f-coef);
+				mGbeg = origData[PixelData.PIXEL_SIZE*(indJbeg*mOrigWidth+indIbeg)+1] * coef + origData[PixelData.PIXEL_SIZE*(indJbeg*mOrigWidth+indIend)+1] * (1.0f-coef);
+				mBbeg = origData[PixelData.PIXEL_SIZE*(indJbeg*mOrigWidth+indIbeg)+2] * coef + origData[PixelData.PIXEL_SIZE*(indJbeg*mOrigWidth+indIend)+2] * (1.0f-coef);
+				mRend = origData[PixelData.PIXEL_SIZE*(indJend*mOrigWidth+indIbeg)] * coef + origData[PixelData.PIXEL_SIZE*(indJend*mOrigWidth+indIend)] * (1.0f-coef);
+				mGend = origData[PixelData.PIXEL_SIZE*(indJend*mOrigWidth+indIbeg)+1] * coef + origData[PixelData.PIXEL_SIZE*(indJend*mOrigWidth+indIend)+1] * (1.0f-coef);
+				mBend = origData[PixelData.PIXEL_SIZE*(indJend*mOrigWidth+indIbeg)+2] * coef + origData[PixelData.PIXEL_SIZE*(indJend*mOrigWidth+indIend)+2] * (1.0f-coef);
 				//probkowanie pionowe
 				coef = jp-(float)indJbeg;
-				temp.mData[3*(j*temp.mWidth+i)] = Rbeg * coef + Rend * (1.0f-coef);
-				temp.mData[3*(j*temp.mWidth+i)+1] = Gbeg * coef + Gend * (1.0f-coef);
-				temp.mData[3*(j*temp.mWidth+i)+2] = Bbeg * coef + Bend * (1.0f-coef);
+				tempData[PixelData.PIXEL_SIZE*(j*mTempWidth+i)] = mRbeg * coef + mRend * (1.0f-coef);
+				tempData[PixelData.PIXEL_SIZE*(j*mTempWidth+i)+1] = mGbeg * coef + mGend * (1.0f-coef);
+				tempData[PixelData.PIXEL_SIZE*(j*mTempWidth+i)+2] = mBbeg * coef + mBend * (1.0f-coef);
 			}
+		}
 	}
 	/**
 	 * Odwrotnie niż w przypadku zwykłych filtrów zwraca obraz zmodyfikowany, 
@@ -60,9 +63,12 @@ public class FilterImageResizeBilinear implements IFilter{
 	 */
 	@Override
 	public PixelData apply(PixelData image) {
-		if(image == null) return null;
+		if(image == null) {return null;}
 		PixelData ret = new PixelData(mWidth, mHeight);
 		apply(image, ret);
 		return ret;
 	}
+	
+	@Override
+	public void reset() {}
 }

@@ -14,7 +14,7 @@ public interface IFilter {
      * @param temp - obraz tymczasowy
      * @throws IllegalArgumentException - gdy rozmiar temp jest niezgodny z rozmiarem original
      */
-    public void apply(PixelData original, PixelData temp) throws IllegalArgumentException;
+    void apply(PixelData original, PixelData temp);
 
     /**
      * Aplikuje filtr na obraz i wynik zapisuje w nim samym, ale zwraca kopię przed wprowadzeniem zmian
@@ -23,5 +23,10 @@ public interface IFilter {
      * @param image - obraz na którym aplikujemy filtr
      * @return kopia obrazu przed zastosowaniem filtru lub null gdy <b>image</b> jest null
      */
-    public PixelData apply(PixelData image);
+    PixelData apply(PixelData image);
+    
+    /**
+     * Resetuje ustawienia filtru do wartości podstawoaych
+     */
+    void reset();
 }

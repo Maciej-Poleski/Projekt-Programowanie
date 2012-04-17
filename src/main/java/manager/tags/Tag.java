@@ -1,6 +1,7 @@
 package manager.tags;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,9 +13,13 @@ import java.util.List;
  * @author Zygmunt Łenyk
  */
 public abstract class Tag<T extends Tag<T>> implements Serializable {
-    private List<T> childrenList;
+    final List<T> childrenList = new ArrayList<>();
+    private final List<T> descendantsList = new ArrayList<>();
+    private final Tags creator;
+    private static final long serialVersionUID = 1;
 
-    protected Tag() {
+    Tag(Tags creator) {
+        this.creator = creator;
     }
 
     /**
@@ -30,7 +35,7 @@ public abstract class Tag<T extends Tag<T>> implements Serializable {
      * @return Lista dzieci (może być pusta)
      */
     public List<T> getChildren() {
-        return null;
+        return new ArrayList<>(childrenList);
     }
 
     /**
@@ -46,7 +51,20 @@ public abstract class Tag<T extends Tag<T>> implements Serializable {
      * @return Kolekcja potomków (może być pusta)
      */
     public Collection<T> getDescendants() {
-        return null;
+        List<T> kolejkaDoWczytania = new ArrayList<>();
+        for (T child : childrenList) {
+            kolejkaDoWczytania.add(child);
+        }
+        while (!kolejkaDoWczytania.isEmpty()) {
+            descendantsList.add(kolejkaDoWczytania.get(0));
+            for (T child : kolejkaDoWczytania.get(0).childrenList) {
+                kolejkaDoWczytania.add(child);
+            }
+            kolejkaDoWczytania.remove(0);
+        }
+        List<T> descendantsListCopy = new ArrayList<>(descendantsList);
+        descendantsList.clear();
+        return descendantsListCopy;
     }
 
     /**
@@ -54,16 +72,14 @@ public abstract class Tag<T extends Tag<T>> implements Serializable {
      *
      * @param child Tag który zostanie dzieckiem tego tagu
      */
-    void addChild(T child) {
-    }
+    abstract void addChild(T child);
 
     /**
      * Usuwa wskazany tag z listy dzieci tego tagu.
      *
      * @param child Tag do usunięcia
      */
-    void removeChild(T child) {
-    }
+    abstract void removeChild(T child);
 
     /**
      * Ustawia ten tag jako dziecko wskazanego tagu.
@@ -78,4 +94,13 @@ public abstract class Tag<T extends Tag<T>> implements Serializable {
      * @param parent Tag który przestaje być rodzicem tego tagu
      */
     abstract void removeParent(T parent);
+
+    Tags getCreator() {
+        return creator;
+    }
+
+    @Override
+    public String toString() {
+        return getCreator().getNameOfTag(this);
+    }
 }

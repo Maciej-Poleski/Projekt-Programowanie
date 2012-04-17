@@ -16,41 +16,52 @@ public class FilterGrayScale implements IFilter{
 		mType = type;
 	}
 	@Override
-	public void apply(PixelData original, PixelData temp)
-			throws IllegalArgumentException {
-		if(original == null || temp == null) throw new NullPointerException();
-		if(original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
+	public void apply(PixelData original, PixelData temp){
+		int mWidth = original.getWidth(), mHeight = original.getHeight();
+		if(mWidth != temp.getWidth() || mHeight != temp.getHeight()){
 			throw new IllegalArgumentException();
+		}
+		float[] origData = original.getData();
+		float[] tempData = temp.getData();
 		original.toRGB(); temp.toRGB();
-		float gray=0.0f,R,G,B;
-		for(int i=0;i<original.mWidth;i++)
-			for(int j=0;j<original.mHeight;j++){
-				R = original.mData[3*(i*original.mHeight+j)];
-				G = original.mData[3*(i*original.mHeight+j)+1];
-				B = original.mData[3*(i*original.mHeight+j)+2];
+		float gray=0.0f,mR,mG,mB;
+		for(int i=0;i<mWidth;i++){
+			for(int j=0;j<mHeight;j++){
+				mR = origData[PixelData.PIXEL_SIZE*(i*mHeight+j)];
+				mG = origData[PixelData.PIXEL_SIZE*(i*mHeight+j)+1];
+				mB = origData[PixelData.PIXEL_SIZE*(i*mHeight+j)+2];
 				switch(mType){
 				case LIGHTNESS:
-					gray = (Math.max(R, Math.max(G, B)) + Math.min(R, Math.min(G, B)))/2.0f;
+					gray = (Math.max(mR, Math.max(mG, mB)) + Math.min(mR, Math.min(mG, mB)))/2.0f;
 					break;
 				case AVERAGE:
-					gray = (R+G+B)/3.0f;
+					gray = (mR+mG+mB)/(float)PixelData.PIXEL_SIZE;
 					break;
 				case LUMINOSITY:
-					gray = 0.21f*R + 0.71f*G + 0.07f*B;
+					gray = ColorConverter.RED_LUMINOSITY * mR + 
+					ColorConverter.GREEN_LUMINOSITY * mG + 
+					ColorConverter.BLUE_LUMINOSITY * mB;
+					break;
+				default:
+					gray = 0.0f;
 					break;
 				}
-				temp.mData[3*(i*original.mHeight+j)] = gray;
-				temp.mData[3*(i*original.mHeight+j)+1] = gray;
-				temp.mData[3*(i*original.mHeight+j)+2] = gray;
+				tempData[PixelData.PIXEL_SIZE*(i*mHeight+j)] = gray;
+				tempData[PixelData.PIXEL_SIZE*(i*mHeight+j)+1] = gray;
+				tempData[PixelData.PIXEL_SIZE*(i*mHeight+j)+2] = gray;
 			}
+		}
 	}
 
 	@Override
 	public PixelData apply(PixelData image) {
-		if(image == null) return null;
+		if(image == null) {return null;}
 		PixelData ret = (PixelData)image.clone();
 		apply(image, image);
 		return ret;
 	}
+	
+	@Override
+	public void reset() {}
 
 }

@@ -6,26 +6,30 @@ package manager.editor;
  */
 public class FilterGamma implements IFilterRange{
 	private final Range[] mRange = new Range[]{
-		new Range(0.2f, 5.0f, 1.0f)	
+		new Range(0.2f, 5.0f, 1.0f, "Gamma")	
 	};
 	
 	@Override
-	public void apply(PixelData original, PixelData temp)
-			throws IllegalArgumentException {
-		if(original == null || temp == null) throw new NullPointerException();
-		if(original.mWidth != temp.mWidth || original.mHeight != temp.mHeight) 
+	public void apply(PixelData original, PixelData temp) {
+		if(original.getWidth() != temp.getWidth() || original.getHeight() != temp.getHeight()){
 			throw new IllegalArgumentException();
-		float mLUT[] = new float[256];
-		float gamma = 1 / mRange[0].getValue();
-		for(int i=0;i<256;i++) mLUT[i] = 255.0f * (float)Math.pow((float)i/255.0f, gamma);
+		}
+		float[] origData = original.getData();
+		float[] tempData = temp.getData();
+		float mLUT[] = new float[PixelData.RGBCMY_CHANNEL_PRECISION];
+		float gamma = 1.0f / mRange[0].getValue();
+		for(int i=0;i<PixelData.RGBCMY_CHANNEL_PRECISION;i++) {
+			mLUT[i] = ColorConverter.RGBCMY_BYTE_MAX * (float)Math.pow((float)i/ColorConverter.RGBCMY_BYTE_MAX, gamma);
+		}
 		original.toRGB(); temp.toRGB();
-		for(int i=0;i<original.mData.length;i++)
-			temp.mData[i] = mLUT[(int)original.mData[i]];
+		for(int i=0;i<origData.length;i++){
+			tempData[i] = mLUT[(int)origData[i]];
+		}
 	}
 
 	@Override
 	public PixelData apply(PixelData image) {
-		if(image == null) return null;
+		if(image == null) {return null;}
 		PixelData ret = (PixelData)image.clone();
 		apply(image, image);
 		return ret;
@@ -33,7 +37,29 @@ public class FilterGamma implements IFilterRange{
 
 	@Override
 	public Range[] getRangeTable() {
-		return mRange;
+		return mRange.clone();
+	}
+
+	@Override
+	public void setRangeTable(Range[] table) {
+		if(table == null || table.length != mRange.length){
+			throw new IllegalArgumentException();
+		}
+		for(int i=0;i<table.length;i++){
+			if(table[i].getMin() != mRange[i].getMin() || table[i].getMax() != mRange[i].getMax()){
+				throw new IllegalArgumentException();
+			}
+		}
+		for(int i=0;i<table.length;i++){
+			mRange[i].setValue(table[i].getValue());
+		}
+	}
+	
+	@Override
+	public void reset() {
+		for(int i=0;i<mRange.length;i++){
+			mRange[i].reset();
+		}
 	}
 
 }

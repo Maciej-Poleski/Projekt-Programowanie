@@ -6,13 +6,17 @@ package manager.editor;
  */
 public interface IFilterLUT extends IFilter {
     /**
+     * Zwraca tablice funckji LUT (filtr może pracować wielokanałowo)
      * @return tablica funkcji LUT
      */
-    public LUTTable getConversionTable();
+    LUTTable[] getConversionTable();
 
     /**
-     * Ustawia funkcję LUT która będzie parametrem pracy filtru
+     * Ustawia tablicę funkcji LUT które będą parametrami pracy filtru.
+     * Gdy rozmiar tablicy podanej jako argument się nie zgadza lub któryś jej element jest nullem
+     * wyrzuca wyjątek
      * @param table - nowa tablica
+     * @throws IllegalArgumentException - gdy tablica jest nieodpowiednia
      */
-    public void setConversionTable(LUTTable table);
+    void setConversionTable(LUTTable[] table);
 }

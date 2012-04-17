@@ -1,47 +1,36 @@
 package manager.files.backup;
 
 import java.io.File;
-import java.util.Date;
-import java.util.List;
+import java.io.Serializable;
+import java.util.Set;
 
 import manager.files.FileID;
+import manager.files.FileNotAvailableException;
 import manager.files.OperationInterruptedException;
 
-public interface Backup {
+/**
+ * Basic class for backup implementations.
+ * 
+ * @author Piotr Kolacz
+ * 
+ */
+public interface Backup extends Serializable {
 
 	/**
-	 * Tworzy nową lokalizację dla backupu
-	 * @param backupLocation
-	 */
-	void createNewBackup(File backupLocation);
-
-	/**
-	 * aktualizuje kopie zapasowa z wszystkimi zmianami dokonanymi od czasu
-	 * ostatniej synchronizacji.
+	 * Retrieves a file with specified <code>fileId</code> from backup.
 	 * 
-	 * @ param sciezka do katalogu @ author
+	 * @param fileId
+	 *            id of file to be returned
+	 * @return File handler for requested file
 	 */
-	void synchronizeBackup(File backupLocation)
-			throws OperationInterruptedException;
+	File getFile(FileID fileId) throws FileNotAvailableException, OperationInterruptedException;
 
 	/**
-	 * Pozwala odzyskać plik przypadkiem usunięty
+	 * Returns list of FileID's currently managed by this backup. This list can
+	 * by used to check backup state.
 	 * 
-	 * @ param ID pliku @ author
+	 * @return list of FileID's currently managed by this backup
 	 */
-	void retrieveFile(FileID file) throws OperationInterruptedException;
+	Set<FileID> getListOfAvailableFiles() throws OperationInterruptedException;
 
-	/**
-	 * 
-	 * @ return @ param @ author
-	 */
-	List<Change> getListOfChanges(File backupLocation)
-			throws OperationInterruptedException;
-
-	/**
-	 * 
-	 * @ return @ param @ author
-	 */
-	Date getLastBackupDate(File backupLocation)
-			throws OperationInterruptedException;
 }
