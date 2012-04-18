@@ -55,7 +55,8 @@ public final class PrimaryBackupImplementation implements PrimaryBackup {
 	private final Tags tempTags;
 	private final String backupPath;
 
-	public PrimaryBackupImplementation(String path, Tags tags, File info, File history) throws IOException {
+	public PrimaryBackupImplementation(String path, Tags tags, File info,
+			File history) throws IOException {
 		backupPath = path;
 		tempTags = tags;
 		readInput(info, history);
@@ -199,6 +200,8 @@ public final class PrimaryBackupImplementation implements PrimaryBackup {
 	 * 
 	 * @throws IOException
 	 *             Nieudane skopiowanie pliku.
+	 * @throws FileNotFoundException
+	 *             Plik do skopiowania nie odnaleziony.
 	 * @param tag
 	 *            MasterTag utożsamiany z katalogiem, do którego ma zostać
 	 *            dodany nowy plik.
