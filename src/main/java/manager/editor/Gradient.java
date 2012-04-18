@@ -85,6 +85,36 @@ public class Gradient {
 	}
 	
 	/**
+	 * Usuwa kolor z gradientu o ile znajduje się w przedziale podanym jako argumenty
+	 * Usunięte zostana wszystkie kolory z tego przedziału
+	 * @param pos - pozycja w gradiencie [0,1]
+	 * @param precision - precyzja szukania
+	 */
+	public void delete(float pos, float precision){
+		if(lista.size() == 0) return;
+		Iterator<ColorPos> iter = lista.iterator();
+		while(iter.hasNext()){
+			if(Math.abs(iter.next().mPos - pos) < precision){
+				iter.remove();
+			}
+		}
+	}
+	
+	/**
+	 * Zwraca tablice pozycji z przedzialu [0,1] kolorów w gradiencie
+	 * Metoda współpracuje z kontrolka GradientColor
+	 * @return tablica pozycji kolorów w gradiencie
+	 */
+	public float[] getPositions(){
+		float[] ret = new float[lista.size()];
+		int i=0; Iterator<ColorPos> iter = lista.iterator();
+		while(iter.hasNext()){
+			ret[i++] = iter.next().mPos;
+		}
+		return ret;
+	}
+	
+	/**
 	 * Zwraca pod wskazaną referencję interpolowaną wartość gradientu z pozycji pos
 	 * podczas interpolacji tworzone jest przejście tonalne pomiędzy najbliższymi pełnymi kolorami
 	 * @param pos - pozycja w gradiencie [0,1]
@@ -137,5 +167,26 @@ public class Gradient {
 		ColorRGB ret = new ColorRGB(0,0,0);
 		interpolate(pos, ret);
 		return ret;
+	}
+	
+	/**
+	 * Tworzy graficzną wizualizacje gradientu i zapisuje pod wskazana referencję
+	 * @param data - docelowe miejsce zapisu wyniku pracy
+	 * @throws NullPointerException - gdy data = null
+	 */
+	public void getPixelData(PixelData data){
+		float[] mData = data.getData();
+		int mHeight = data.getHeight();
+		int mWidth = data.getWidth();
+		data.toRGB();
+		ColorRGB color = new ColorRGB(0,0,0);
+		for(int j=0;j<mWidth;j++) {
+			this.interpolate((float)j/(float)mWidth, color);
+			for(int i=0;i<mHeight;i++) {
+				mData[PixelData.PIXEL_SIZE*(i*mWidth+j)] = color.getR() * ColorConverter.RGBCMY_BYTE_MAX;
+				mData[PixelData.PIXEL_SIZE*(i*mWidth+j)+1] = color.getG() * ColorConverter.RGBCMY_BYTE_MAX;
+				mData[PixelData.PIXEL_SIZE*(i*mWidth+j)+2] = color.getB() * ColorConverter.RGBCMY_BYTE_MAX;
+			}
+		}
 	}
 }
