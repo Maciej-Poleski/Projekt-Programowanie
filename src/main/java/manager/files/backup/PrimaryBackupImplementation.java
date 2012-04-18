@@ -7,12 +7,15 @@ import manager.files.backup.PrimaryBackup;
 import manager.tags.MasterTag;
 import manager.tags.Tags;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
+
+import javax.imageio.ImageIO;
 
 class Info implements Serializable {
 
@@ -247,11 +250,11 @@ public final class PrimaryBackupImplementation implements PrimaryBackup {
 	 * się pusty to ona automatycznie go usuwa.
 	 * 
 	 * @throws FileNotAvailableException
-	 *             Jeśli wystąpił błąd związany z dostępem do pliku.
+	 *             Błąd związany z dostępem do pliku.
 	 * @param fileID
 	 *            FileID, które reprezentuje plik do usunięcia.
-	 * @throws IOException
-	 *             Przerzuca wyjątek z removePath.
+	 * @throws OperationInterruptedException
+	 *             Błąd wykonania operacji.
 	 */
 	@Override
 	public void removeFile(FileID fileId) throws FileNotAvailableException,
@@ -260,8 +263,10 @@ public final class PrimaryBackupImplementation implements PrimaryBackup {
 		try {
 			File file = getFile(fileId);
 			removePath(fileId);
+			
 			File temp = file;
 			temp.delete();
+			
 			file = file.getParentFile();
 
 			while (file != null) {
@@ -271,6 +276,71 @@ public final class PrimaryBackupImplementation implements PrimaryBackup {
 					break;
 				temp.delete();
 			}
+
+		} catch (IOException e) {
+			throw new OperationInterruptedException(e);
+		}
+	}
+
+	/**
+	 * Funkcja niesłychanie przydatna do pracy na plikach w edytorze. Pobiera z
+	 * FileId uchyw do pliku (ImageHolder), z wczytanym już obrazem jako
+	 * BufferedImage.
+	 * 
+	 * @param fileId
+	 *            ID pliku, na którym chce się pracować w edytorze.
+	 * @return ImageHolder, na którym można pracować w edytorze.
+	 * 
+	 * @throws FileNotAvailableException
+	 *             Błąd związany z dostępem do pliku.
+	 * @throws OperationInterruptedException
+	 *             Błąd wykonania operacji.
+	 */
+	public ImageHolder getImageToEdition(FileID fileId)
+			throws FileNotAvailableException, OperationInterruptedException {
+		try {
+			File file = getFile(fileId);
+			String name = file.getName();
+			BufferedImage im = ImageIO.read(file);
+
+			StringBuilder temp = new StringBuilder();
+
+			// pobranie typy pliku
+			for (int i = name.length() - 1; name.charAt(i) != '.'; i--)
+				temp.append(name.charAt(i));
+			temp.reverse();
+
+			return new ImageHolder(im, fileId, temp.toString());
+		} catch (IOException e) {
+			throw new OperationInterruptedException(e);
+		}
+	}
+
+	/**
+	 * Druga z fukcji konieczna do używania edytora. Zapisuje ona (w zasadzie
+	 * usuwa stary i tworzy nowy) plik po edycji w edytorze.
+	 * 
+	 * @param image
+	 *            Uchwyt (ImageHolder), na którym pracował edytor.
+	 * @throws FileNotAvailableException
+	 *             Błąd związany z dostępem do pliku.
+	 * @throws OperationInterruptedException
+	 *             Błąd wykonania operacji.
+	 */
+	public void saveEditedImage(ImageHolder image)
+			throws FileNotAvailableException, OperationInterruptedException {
+		try {
+			File file = getFile(image.getFileId());
+			BufferedImage im = image.getBufferedImage();
+			String type = image.getType();
+
+			// usuwanie pliku z przed edycji
+			file.delete();
+			removePath(image.getFileId());
+
+			// dodanie zedytowanego pliku
+			ImageIO.write(im, type, new File(file.getCanonicalPath()));
+			addPath(new FileID(), file);
 
 		} catch (IOException e) {
 			throw new OperationInterruptedException(e);
