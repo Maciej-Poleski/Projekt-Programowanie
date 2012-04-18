@@ -5,7 +5,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
@@ -212,7 +211,7 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
     private void applyMousePressed(MouseEvent evt) {
         try{
             IFilter filter = new FilterMatrixAdapter(createMatrix());
-            inputData = filter.apply(inputData);
+            filter.apply(inputData);
             returnData = inputData;
             imagePanel.setImage(tempData.toBufferedImage());
             imagePanel.revalidate();
@@ -220,12 +219,14 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
         } catch(IllegalArgumentException e){
        //     throw e;
         }
+        this.setVisible(false);
     }
 
     private void previewMousePressed(MouseEvent evt) {
         try{
             IFilter filter = new FilterMatrixAdapter(createMatrix());
-            tempData = filter.apply(inputData);
+            tempData=inputData;
+            inputData = filter.apply(tempData);
             imagePanel.setImage(tempData.toBufferedImage());
             imagePanel.revalidate();
         } catch(IllegalArgumentException e){
