@@ -18,10 +18,9 @@ import javax.swing.event.ChangeListener;
 public class ImageViewer extends JPanel implements ChangeListener{
 	private static final long serialVersionUID = 1L;
 	private ImagePanel iPanel;
-	private JPanel topPanel;
-	private JScrollPane scrollPane;
 	private JSpinner zoomSpinner;
 	private int height, width;
+	private static final int maxZoom=1000, defZoom=100, minZoom=10;
 	/**
      * Zostanie utworzona nowa kontrolka
      * @param image  wyswietlany obraz
@@ -32,14 +31,12 @@ public class ImageViewer extends JPanel implements ChangeListener{
 		this.height=height;
 		this.width=width;
 		iPanel=new ImagePanel(image);
-		zoomSpinner =new JSpinner (new SpinnerNumberModel(100, 10,1000,10)); 
+		zoomSpinner =new JSpinner (new SpinnerNumberModel(defZoom, minZoom,maxZoom,minZoom)); 
 		zoomSpinner.addChangeListener(this);
-		
-		topPanel=new JPanel();
+		JPanel topPanel=new JPanel();
 		topPanel.add(new JLabel ("Zoom"));
 		topPanel.add(zoomSpinner);
-		
-		scrollPane = new JScrollPane(iPanel);
+		JScrollPane scrollPane = new JScrollPane(iPanel);
 		scrollPane.setViewportBorder(BorderFactory.createLineBorder(Color.BLACK));
 		scrollPane.setWheelScrollingEnabled(true);
 		scrollPane.setColumnHeaderView(topPanel);

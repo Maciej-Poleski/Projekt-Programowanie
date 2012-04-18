@@ -8,13 +8,13 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
-import javax.swing.LayoutStyle;
 
 /**
  * Klasa reprezentująca okienko do własnoręcznego zdefiniowania macierzy
  * do filtru macierzowego aplikowanego dla obrazu
  * @author Mikołaj Bińkowski
  */
+
 public class WindowMatrix extends JDialog implements IWindowFilter{
     private int mode;
     PixelData inputData;
@@ -26,26 +26,26 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
     private JButton previewButton;
     private JButton abortButton;
     private JToggleButton modeButton[];
-    private JPanel imagePanel;
+    private ImageViewer imagePanel;
 
     /**
      * Konstruktor wymaga podania obrazu na którym pracujemy
      * @param image - obraz
      */
     WindowMatrix(PixelData image){
-        this.setTitle("title");
+        this.setTitle("Macierz Użytkownika");
         this.setModal(true);
-        //    this.setSize(new Dimension(200,150));
-            this.setLocation(100,100);
-            this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            inputData=image;
-            tempData=null;
-            returnData=null;
-            imagePanel=new ImageViewer(image.toBufferedImage(), 320, 240);
-            initComponents();
-            mode=-1;
-            enableTextSpaces();
-	}
+        this.setResizable(false);
+        this.setLocation(100,100);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        inputData=image;
+        tempData=null;
+        returnData=null;
+        imagePanel=new ImageViewer(image.toBufferedImage(), 320, 240);
+        initComponents();
+        mode=-1;
+        enableTextSpaces();
+    }
 
         @SuppressWarnings("unchecked")
     private void initComponents() {
@@ -60,8 +60,9 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
         }
         for(int i=0;i<49;i++){
             fields[i/7][i%7]=new JTextField();
+            fields[i/7][i%7].setText("0");
         }
-
+        fields[3][3].setText("1");
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         applyButton.setText("Wykonaj");
@@ -110,61 +111,58 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
 
         GroupLayout layout = new GroupLayout(getContentPane());
 
-        GroupLayout.ParallelGroup x = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        GroupLayout.ParallelGroup x = layout.createParallelGroup(GroupLayout.Alignment.TRAILING);
         GroupLayout.SequentialGroup y = layout.createSequentialGroup();
 
         GroupLayout.SequentialGroup xSeq[]=new GroupLayout.SequentialGroup[7];
         GroupLayout.ParallelGroup yPar[]=new GroupLayout.ParallelGroup[7];
 
-   //     x.addComponent(imagePanel);
-        y.addGap(20,20,20);
-
         for(int i=0;i<7;i++){
             xSeq[i]= layout.createSequentialGroup();
-            xSeq[i].addGap(400,400,400);
             yPar[i]= layout.createParallelGroup();
             for(int j=0;j<7;j++){
                 xSeq[i].addComponent(fields[i][j], GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE);
                 yPar[i].addComponent(fields[i][j], GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE);
             }
-            xSeq[i].addContainerGap(20, Short.MAX_VALUE);
-
             x.addGroup(xSeq[i]);
             y.addGroup(yPar[i]);
-      }
+        }
+        y.addGap(75,75,75);
 
         getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(x
-             .addGroup(layout.createSequentialGroup()
+        layout.setHorizontalGroup(layout.createParallelGroup()
+             .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                 .addGap(20,20,20)
                 .addComponent(imagePanel)
                 .addContainerGap(20, Short.MAX_VALUE)
+                .addGroup(x)
+                .addGap(20,20,20)
                 )
-             .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addComponent(modeButton[0])
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(modeButton[1])
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(modeButton[2])
-                .addGap(110, 110, 110)
+             .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(20, 20, 20)
                 .addComponent(applyButton)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(10, 10, 10)
                 .addComponent(previewButton)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(10, 10, 10)
                 .addComponent(abortButton)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addGap(50, 50, 50)
+                .addComponent(modeButton[0])
+                .addGap(10, 10, 10)
+                .addComponent(modeButton[1])
+                .addGap(10, 10, 10)
+                .addComponent(modeButton[2])
+                .addGap(20, 20, 20)
+                )
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+            layout.createSequentialGroup()
                 .addGap(20,20,20)
-                .addComponent(imagePanel)
-                )
-            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(y)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(y)
+                    .addComponent(imagePanel)
+                    )
+                .addGap(20,20,20)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                     .addComponent(applyButton)
                     .addComponent(previewButton)
                     .addComponent(abortButton)
@@ -172,9 +170,10 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
                     .addComponent(modeButton[1])
                     .addComponent(modeButton[2])
                     )
-                .addContainerGap()
-                )
-        );
+                .addGap(20,20,20)
+            );
+
+
         pack();
     }
 
@@ -203,9 +202,8 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
                 try{
                     tab[i-v+mode*(j-v)]=Float.parseFloat(fields[i][j].getText());
                 } catch(NumberFormatException e){
-                    throw e;
+                    tab[i-v+mode*(j-v)]=0;
                 }
-                System.out.println(tab[i-v+mode*(j-v)]=Float.parseFloat(fields[i][j].getText()));
             }
         }
         return new Matrix(tab);
@@ -215,10 +213,12 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
         try{
             IFilter filter = new FilterMatrixAdapter(createMatrix());
             inputData = filter.apply(inputData);
-            imagePanel=new ImageViewer(inputData.toBufferedImage(), 320, 240);
             returnData = inputData;
-        } catch(NumberFormatException e){
-            throw e;
+            imagePanel.setImage(tempData.toBufferedImage());
+            imagePanel.revalidate();
+
+        } catch(IllegalArgumentException e){
+       //     throw e;
         }
     }
 
@@ -226,16 +226,11 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
         try{
             IFilter filter = new FilterMatrixAdapter(createMatrix());
             tempData = filter.apply(inputData);
-            imagePanel=new ImageViewer(tempData.toBufferedImage(), 320, 240);
-        } catch(NumberFormatException e){
-            throw e;
+            imagePanel.setImage(tempData.toBufferedImage());
+            imagePanel.revalidate();
+        } catch(IllegalArgumentException e){
+         //   throw e;
         }
-    }
-
-    private void abortMousePressed(MouseEvent evt) {
-        this.setVisible(false);
-        returnData=null;
-        //   throw new UnsupportedOperationException("Not yet implemented");
     }
 
     private void modeMousePressed(MouseEvent evt, int i){
@@ -254,6 +249,10 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
         }
     }
 
+    private void abortMousePressed(MouseEvent evt) {
+        this.setVisible(false);
+        returnData=null;
+    }
 	/**
 	 * Zwraca obraz po edycji
 	 * @return obraz po edycji

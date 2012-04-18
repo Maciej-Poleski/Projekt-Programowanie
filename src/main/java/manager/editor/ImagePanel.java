@@ -15,9 +15,10 @@ class ImagePanel extends JPanel  {
 	private static final long serialVersionUID = 1L;
 	private Image image; //? BufferedImage
 	private int zoom;
+	private static final int defaultzoom=100;
 	public ImagePanel (Image image){
 		this.image=image;
-		zoom=100;
+		zoom=defaultzoom;
 	}
 	/**
      * Zmiana obrazu
@@ -27,6 +28,9 @@ class ImagePanel extends JPanel  {
 		this.image=image;
 		this.repaint();
 	}
+	/**
+     * Zmiana powiększenia obrazu
+     */
 	void changeZoom (int zoom){
 		this.zoom=zoom;
 		this.repaint();
@@ -37,14 +41,18 @@ class ImagePanel extends JPanel  {
 		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		if (image!=null){
-			g.drawImage(image, 0, 0, image.getWidth(null)*zoom/100,  image.getHeight(null)*zoom/100, null);
+			g.drawImage(image, 0, 0, image.getWidth(null)*zoom/defaultzoom,  image.getHeight(null)*zoom/defaultzoom, null);
 		}
 	}
+	/**
+	 * Na potrzeby WindowViewer
+	 * @return - wymiary kontrolki
+	 */
 	public Dimension getPreferredSize() {
         if (image==null) {
             return new Dimension(1, 1);
         } else {
-            return new java.awt.Dimension(image.getWidth(null)*zoom/100, image.getHeight(null)*zoom/100);
+            return new java.awt.Dimension(image.getWidth(null)*zoom/defaultzoom, image.getHeight(null)*zoom/defaultzoom);
         }
     }
 }

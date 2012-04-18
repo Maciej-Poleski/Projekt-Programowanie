@@ -13,41 +13,37 @@ import java.util.LinkedList;
  * Klasa reprezentuje okno dialogowe w którym dokonywana jest edycja obrazu
  * @author Marcin Regdos
  */
-public class EditWindow extends JFrame implements ActionListener  {
-	private JPanel contentPane;
-	private PixelData PDImage;
-	private LinkedList<PixelData> history;
+public class EditWindow extends JFrame implements ActionListener  {	
+	transient private PixelData pdImage;
+	transient private LinkedList<PixelData> history;
 	private ImageViewer mainImageViewer;
-	private String [] filterNamesGUI;
 	private String [] filterCategoryNamesGUI;
-	//private IFilter [] filters;
-	private int [] filterType;
-	private JMenuItem [] JMenuFilterButtons;
-	private JMenu [] JMenuFilterCategories;
-	private FilterGUI [] filters;
-	private int nFilters=17;
-	private int nCategories=6;
-	private static class FilterGUI{
+	private JMenuItem [] jMenuFilterButtons;
+	private JMenu [] jMenuFilterCategories;
+	transient private FilterGUI [] filters;;
+	private static final int dWidth=600, dHeight=600, dLocation=600, dBorderSize=5;
+	private int mainImageViewerHeight=400, mainImageViewerWidth=400;
+	static class FilterGUI{
 		String name, nameGUI;
 		FWindowType window;
 		IFilter filter;
-		FilterGUI(String name, String nameGUI, FWindowType window, IFilter Filter){
+		FilterGUI(String name, String nameGUI, FWindowType window, IFilter filter){
 			this.name=name;
 			this.nameGUI=nameGUI;
 			this.window=window;
-			this.filter=Filter;
+			this.filter=filter;
 		}
 	}
 	private enum FWindowType{
 		WindowRange, WindowResize, WindowMatrix, WindowLUT, WindowHistogram, NoWindow, WindowGallery
 	}
-	private void InitGui(){
+	private void initGui(){
 		setTitle("Edytor plików graficznych");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 600);
-		InitMenu();
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setBounds(dLocation, dLocation, dWidth, dHeight);
+		initMenu();
+		JPanel contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(dBorderSize, dBorderSize, dBorderSize, dBorderSize));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 
@@ -68,10 +64,7 @@ public class EditWindow extends JFrame implements ActionListener  {
 		bsClose.addActionListener(this);
 
 	}
-	private void InitFiltersToGUI(){
-		filterNamesGUI =new String[]{
-				"Detekcja krawędzi", "Filtr LUT", "Filtr matrycowy", "Histogram", "Obrót w lewo", "Obrót w prawo", "Symetria", "Uwypuklenie", "Wygładzenie", "Wyostrzanie", "Zmiana rozmiaru"
-		};
+	private void initFiltersToGUI(){
 		filterCategoryNamesGUI=new String[]{
 				"Edycja", "Filtry podstawowe", "Filtry kolorystyczne","Inne", "Filtry kanałowe", "Własne filtry", 
 		};
@@ -94,38 +87,38 @@ public class EditWindow extends JFrame implements ActionListener  {
 				new FilterGUI("LUTFilter", "Filtr LUT", FWindowType.WindowLUT, null),
 				new FilterGUI("Resize", "Zmień rozmiar", FWindowType.WindowResize, null),
 		};
-		JMenuFilterButtons=new JMenuItem[nFilters];
-		JMenuFilterCategories=new JMenu[nCategories];
+		jMenuFilterButtons=new JMenuItem[filters.length];
+		jMenuFilterCategories=new JMenu[filterCategoryNamesGUI.length];
 
 	}
-	private void InitMenu(){
+	private void initMenu(){
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		for (int i=0; i<nCategories; ++i){
-			JMenuFilterCategories[i]=new JMenu(filterCategoryNamesGUI[i]);
-			menuBar.add(JMenuFilterCategories[i]);
+		for (int i=0; i<jMenuFilterCategories.length; ++i){
+			jMenuFilterCategories[i]=new JMenu(filterCategoryNamesGUI[i]);
+			menuBar.add(jMenuFilterCategories[i]);
 		}
-		for (int i=0; i<nFilters; ++i){
-			JMenuFilterButtons[i]=new JMenuItem(filters[i].nameGUI);
-			JMenuFilterButtons[i].setActionCommand(filters[i].name);
-			JMenuFilterButtons[i].addActionListener(this);
+		for (int i=0; i<jMenuFilterButtons.length; ++i){
+			jMenuFilterButtons[i]=new JMenuItem(filters[i].nameGUI);
+			jMenuFilterButtons[i].setActionCommand(filters[i].name);
+			jMenuFilterButtons[i].addActionListener(this);
 		}
-		JMenuFilterCategories[1].add(JMenuFilterButtons[0]);
-		JMenuFilterCategories[1].add(JMenuFilterButtons[1]);
-		JMenuFilterCategories[1].add(JMenuFilterButtons[2]);
-		JMenuFilterCategories[1].add(JMenuFilterButtons[3]);
-		JMenuFilterCategories[2].add(JMenuFilterButtons[4]);
-		JMenuFilterCategories[2].add(JMenuFilterButtons[5]);
-		JMenuFilterCategories[2].add(JMenuFilterButtons[11]);
-		JMenuFilterCategories[2].add(JMenuFilterButtons[12]);
-		JMenuFilterCategories[2].add(JMenuFilterButtons[13]);
-		JMenuFilterCategories[3].add(JMenuFilterButtons[6]);
-		JMenuFilterCategories[3].add(JMenuFilterButtons[7]);
-		JMenuFilterCategories[4].add(JMenuFilterButtons[8]);
-		JMenuFilterCategories[4].add(JMenuFilterButtons[9]);
-		JMenuFilterCategories[4].add(JMenuFilterButtons[10]);
-		JMenuFilterCategories[5].add(JMenuFilterButtons[14]);
-		JMenuFilterCategories[5].add(JMenuFilterButtons[15]);
+		jMenuFilterCategories[1].add(jMenuFilterButtons[0]);
+		jMenuFilterCategories[1].add(jMenuFilterButtons[1]);
+		jMenuFilterCategories[1].add(jMenuFilterButtons[2]);
+		jMenuFilterCategories[1].add(jMenuFilterButtons[3]);
+		jMenuFilterCategories[2].add(jMenuFilterButtons[4]);
+		jMenuFilterCategories[2].add(jMenuFilterButtons[5]);
+		jMenuFilterCategories[2].add(jMenuFilterButtons[11]);
+		jMenuFilterCategories[2].add(jMenuFilterButtons[12]);
+		jMenuFilterCategories[2].add(jMenuFilterButtons[13]);
+		jMenuFilterCategories[3].add(jMenuFilterButtons[6]);
+		jMenuFilterCategories[3].add(jMenuFilterButtons[7]);
+		jMenuFilterCategories[4].add(jMenuFilterButtons[8]);
+		jMenuFilterCategories[4].add(jMenuFilterButtons[9]);
+		jMenuFilterCategories[4].add(jMenuFilterButtons[10]);
+		jMenuFilterCategories[5].add(jMenuFilterButtons[14]);
+		jMenuFilterCategories[5].add(jMenuFilterButtons[15]);
 		JMenuItem mHistogram = new JMenuItem("Histogram");
 		mHistogram.setActionCommand("mHistogram");
 		mHistogram.addActionListener(this);
@@ -134,8 +127,8 @@ public class EditWindow extends JFrame implements ActionListener  {
 		JMenuItem mUndo = new JMenuItem("Cofnij");
 		mUndo.setActionCommand("undo");
 		mUndo.addActionListener(this);
-		JMenuFilterCategories[0].add(mUndo);
-		JMenuFilterCategories[0].add(JMenuFilterButtons[16]);
+		jMenuFilterCategories[0].add(mUndo);
+		jMenuFilterCategories[0].add(jMenuFilterButtons[16]);
 		//mEdycja.add(mUndo);
 	}
 
@@ -147,11 +140,11 @@ public class EditWindow extends JFrame implements ActionListener  {
 		if (image==null){
 			return;
 		}
-		InitFiltersToGUI();
-		mainImageViewer=new ImageViewer(image, 400, 400);
-		PDImage=new PixelData(image);
+		initFiltersToGUI();
+		mainImageViewer=new ImageViewer(image, mainImageViewerWidth, mainImageViewerHeight);
+		pdImage=new PixelData(image);
 		history=new LinkedList<PixelData>();
-		InitGui();
+		initGui();
 		getContentPane().add(mainImageViewer);
 		this.setVisible(true);
 	}
@@ -162,24 +155,24 @@ public class EditWindow extends JFrame implements ActionListener  {
 	 */
 	public BufferedImage getTransformedImage() {
 		this.setVisible(true);
-		if (PDImage==null){
+		if (pdImage==null){
 			return null;
 		}
-		return PDImage.toBufferedImage();
+		return pdImage.toBufferedImage();
 	}
 	private void undo (){
-		if (history.isEmpty()==false){
-			PDImage=history.pollLast();
-			mainImageViewer.setImage(PDImage.toBufferedImage());
+		if (!history.isEmpty()){
+			pdImage=history.pollLast();
+			mainImageViewer.setImage(pdImage.toBufferedImage());
 		}else{
 			JOptionPane.showMessageDialog(this,"Brak wcześniejszej wersji","error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	private void apply (PixelData newPixelData){
-		if (newPixelData==null)return;
-		history.add(PDImage);
-		PDImage=newPixelData;	
-		mainImageViewer.setImage(PDImage.toBufferedImage());
+		if (newPixelData==null){return;}
+		history.add(pdImage);
+		pdImage=newPixelData;	
+		mainImageViewer.setImage(pdImage.toBufferedImage());
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -188,7 +181,7 @@ public class EditWindow extends JFrame implements ActionListener  {
 			return;
 		} 
 		if (e.getActionCommand().equals("close")) {
-			PDImage=null;
+			pdImage=null;
 			this.setVisible(false);
 			this.dispose();
 			return;
@@ -206,21 +199,21 @@ public class EditWindow extends JFrame implements ActionListener  {
 			if (e.getActionCommand().equals(filters[i].name)) {
 				switch(filters[i].window){
 				case WindowRange: 
-					apply (new WindowRange(PDImage, (IFilterRange)filters[i].filter, filters[i].nameGUI).showDialog()); 
+					apply (new WindowRange(pdImage, (IFilterRange)filters[i].filter, filters[i].nameGUI).showDialog()); 
 					filters[i].filter.reset();
 					break;
 				case WindowMatrix: 
-					apply (new WindowMatrix(PDImage).showDialog()); 
+					apply (new WindowMatrix(pdImage).showDialog()); 
 					break;	
 				case WindowLUT: 
-					apply (new WindowLUT(PDImage).showDialog()); 
+					apply (new WindowLUT(pdImage).showDialog()); 
 					break;
 				case WindowResize: 
-					apply (new WindowResize(PDImage).showDialog()); 
+					apply (new WindowResize(pdImage).showDialog()); 
 					break;	
 				case NoWindow:
-					PixelData tdata= (PixelData)PDImage.clone();
-					filters[i].filter.apply(PDImage, tdata);
+					PixelData tdata= (PixelData)pdImage.clone();
+					filters[i].filter.apply(pdImage, tdata);
 					apply (tdata); 
 					break;		
 				case WindowGallery:
