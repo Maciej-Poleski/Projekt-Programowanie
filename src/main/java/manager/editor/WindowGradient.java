@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 
+import manager.editor.FilterTexturer.TexturingMode;
+
 /**
  * Okienko do filtrów gradientowych
  * @author Patryk
@@ -14,10 +16,13 @@ import javax.swing.JDialog;
 public class WindowGradient extends JDialog implements IWindowFilter, ActionListener {
 	private GradientControl mGradientSetter;
 	private PixelData mOriginal;
+	private PixelData mAfterFilter;
+	private FilterTexturer mFilter;
 	private JButton mButtonOK;
 	
 	WindowGradient(PixelData image){
 		mOriginal = image;
+		mAfterFilter = (PixelData)mOriginal.clone();
 		this.setModalityType(JDialog.DEFAULT_MODALITY_TYPE);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setSize(800, 600);
@@ -35,7 +40,10 @@ public class WindowGradient extends JDialog implements IWindowFilter, ActionList
 	@Override
 	public PixelData showDialog() {
 		this.setVisible(true);
-		return TexturerFactory.gradientLinearHorizontal(mGradientSetter.getGradient()).apply(mOriginal);
+		mFilter = TexturerFactory.gradientLinearHorizontal(mGradientSetter.getGradient());
+		mFilter.setMode(TexturingMode.MULTIPLY);
+		mFilter.apply(mOriginal, mAfterFilter);
+		return mAfterFilter;
 	}
 
 	@Override

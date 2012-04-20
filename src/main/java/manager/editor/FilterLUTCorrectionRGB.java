@@ -1,11 +1,14 @@
 package manager.editor;
 
+import java.util.Arrays;
+
 /**
  * Filtr umożliwiający kanałową korektę RGB przy pomocy tablicy LUT
  * @author Patryk
  */
 public class FilterLUTCorrectionRGB implements IFilterLUT{
-	private LUTTable[] mTable = new LUTTable[3];
+	private static final int CHANNELS = 3;
+	private LUTTable[] mTable = new LUTTable[CHANNELS];
 	
 	public FilterLUTCorrectionRGB(){
 		for(int i=0;i<mTable.length;i++){
@@ -58,9 +61,7 @@ public class FilterLUTCorrectionRGB implements IFilterLUT{
 				throw new IllegalArgumentException();
 			}
 		}
-		for(int i=0;i<table.length;i++){
-			mTable[i] = table[i];
-		}
+		mTable = Arrays.copyOf(table, table.length);
 	}
 	
 	@Override

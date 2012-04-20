@@ -44,7 +44,7 @@ public class Matrix {
      * @return wartości pól macierzy
      */
     public float[] getTable() {
-        return mData;
+        return mData.clone();
     }
 
     /**
