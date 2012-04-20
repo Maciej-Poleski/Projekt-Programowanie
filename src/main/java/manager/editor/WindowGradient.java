@@ -14,6 +14,7 @@ import manager.editor.FilterTexturer.TexturingMode;
  * @author Patryk
  */
 public class WindowGradient extends JDialog implements IWindowFilter, ActionListener {
+	private static final long serialVersionUID = 1L;
 	private GradientControl mGradientSetter;
 	private PixelData mOriginal;
 	private PixelData mAfterFilter;
@@ -26,7 +27,7 @@ public class WindowGradient extends JDialog implements IWindowFilter, ActionList
 		this.setModalityType(JDialog.DEFAULT_MODALITY_TYPE);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setSize(800, 600);
-		this.setLayout(new BorderLayout());
+		this.getContentPane().setLayout(new BorderLayout());
 		
 		mGradientSetter = new GradientControl();
 		this.add(mGradientSetter, BorderLayout.CENTER);
@@ -51,7 +52,6 @@ public class WindowGradient extends JDialog implements IWindowFilter, ActionList
 		if("OK".compareTo(e.getActionCommand()) == 0){
 			this.setVisible(false);
 			this.dispose();
-			return;
 		}
 	}
 }

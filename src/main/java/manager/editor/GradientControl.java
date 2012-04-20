@@ -5,12 +5,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.JColorChooser;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import manager.editor.Gradient.ColorPos;
 
@@ -19,10 +16,13 @@ import manager.editor.Gradient.ColorPos;
  * @author Patryk
  */
 public class GradientControl extends JPanel{
+	private static final long serialVersionUID = 1L;
 	private static final int SET_PRECISION_PIXELS = 3;
 	private JPanel mSetPanel;
 	private JPanel mGradientPanel;
 	private Gradient mGradient;
+	private JDialog mColorDialog;
+	private JColorChooser mColorChooser;
 	
 	private float mGradientPosMouseDown;
 	private float mGradientPosMouseUp;
@@ -31,10 +31,15 @@ public class GradientControl extends JPanel{
 	private int mColorNextIndex;
 	
 	GradientControl(){
+		mColorChooser = new JColorChooser();
+		mColorDialog = JColorChooser.createDialog(null, "Wybierz kolor", true, mColorChooser, null, null);
+		
 		mGradient = new Gradient();
 		this.setLayout(new BorderLayout());
 		
 		mSetPanel = new JPanel(){
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void paintComponent(Graphics g){
 				super.paintComponents(g);
@@ -74,8 +79,9 @@ public class GradientControl extends JPanel{
 					}
 				}
 				if(mColorPrevIndex == mColorNextIndex || mColorPrevIndex == -1){
-					JColorChooser dialog = new JColorChooser();
-					Color col = dialog.showDialog(new JFrame(), "Wybierz kolor", Color.BLACK);
+					mColorChooser.setColor(Color.BLACK);
+					mColorDialog.setVisible(true);
+					Color col = mColorChooser.getColor();
 					if(col != null){
 						if(mColorPrevIndex == -1) {
 							mGradient.add(new ColorPos(new ColorRGB(col.getRed(), col.getGreen(), col.getBlue()), mGradientPosMouseUp));
@@ -96,6 +102,7 @@ public class GradientControl extends JPanel{
 		this.add(mSetPanel, BorderLayout.NORTH);
 		
 		mGradientPanel = new JPanel(){
+			private static final long serialVersionUID = 1L;
 			private PixelData img = new PixelData(800, 32);
 			@Override
 			public void paintComponent(Graphics g){
