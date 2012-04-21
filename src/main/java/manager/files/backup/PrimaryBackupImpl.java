@@ -46,7 +46,7 @@ class History implements Serializable {
  * @author Jakub Cieśla, Marcin Ziemiński
  * 
  */
-public final class PrimaryBackupImplementation implements PrimaryBackup {
+public final class PrimaryBackupImpl implements PrimaryBackup {
 
 	private static final long serialVersionUID = 1L;
 
@@ -58,7 +58,7 @@ public final class PrimaryBackupImplementation implements PrimaryBackup {
 	private final Tags tempTags;
 	private final String backupPath;
 
-	public PrimaryBackupImplementation(String path, Tags tags, File info,
+	public PrimaryBackupImpl(String path, Tags tags, File info,
 			File history) throws IOException {
 		backupPath = path;
 		tempTags = tags;

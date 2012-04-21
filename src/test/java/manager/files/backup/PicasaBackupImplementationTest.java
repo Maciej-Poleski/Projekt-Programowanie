@@ -8,7 +8,7 @@ import java.util.Set;
 import manager.files.FileID;
 import manager.files.FileNotAvailableException;
 import manager.files.OperationInterruptedException;
-import manager.files.backup.PicasaBackupImplementation;
+import manager.files.backup.PicasaBackupImpl;
 import manager.files.backup.PrimaryBackup;
 
 import org.junit.Ignore;
@@ -29,7 +29,7 @@ public class PicasaBackupImplementationTest {
 		when(original.getListOfAvailableFiles()).thenReturn(ids);
 		when(original.getFile(id)).thenReturn(new File("src/test/java/manager/files/picasa/dj2.jpg"));
 
-		PicasaBackupImplementation bi = new PicasaBackupImplementation(
+		PicasaBackupImpl bi = new PicasaBackupImpl(
 				original, "projekt.programowanie", "projekt1234", "src/test/java/manager/files/picasa/downloaded");
 		
 		bi.updateBackup();
@@ -50,7 +50,7 @@ public class PicasaBackupImplementationTest {
 		when(original.getListOfAvailableFiles()).thenReturn(ids);
 		when(original.getFile(id)).thenReturn(new File("src/test/java/manager/files/picasa/dj2.jpg"));
 
-		PicasaBackupImplementation bi = new PicasaBackupImplementation(
+		PicasaBackupImpl bi = new PicasaBackupImpl(
 				original, "projekt.programowanie", "projekt1234", "src/test/java/manager/files/picasa/downloaded");
 		
 		bi.updateBackup();

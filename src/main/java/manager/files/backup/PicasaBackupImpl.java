@@ -27,16 +27,17 @@ import manager.files.picasa.PicasaService;
  * @author Piotr Kolacz
  * 
  */
-public final class PicasaBackupImplementation extends SecondaryBackup {
+final class PicasaBackupImpl extends SecondaryBackup {
 
 	private static final long serialVersionUID = 1L;
+	
 	private Date lastBackup;
 	private String userName;
 	private String password;
 	private String downloadLocation;
 	private final Map<FileID, PicasaPhoto> backupedFiles = new HashMap<>();
 
-	public PicasaBackupImplementation(PrimaryBackup originalBackup,
+	PicasaBackupImpl(PrimaryBackup originalBackup,
 			String picasaLogin, String picasaPassword, String downloadLocation) {
 		super(originalBackup);
 
@@ -110,6 +111,12 @@ public final class PicasaBackupImplementation extends SecondaryBackup {
 			throw new OperationInterruptedException(ex);
 		}
 
+	}
+
+	@Override
+	public Map<String, FileID> getListOfAdditionalFiles() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

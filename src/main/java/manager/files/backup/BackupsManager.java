@@ -1,52 +1,84 @@
 package manager.files.backup;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import manager.files.FileID;
+import manager.files.FileNotAvailableException;
+import manager.files.OperationInterruptedException;
+import manager.tags.MasterTag;
+import manager.tags.Tags;
 
 /**
- * Class responsible for serializing all informations about backups in the
- * system.
- * 
  * @author Piotr Kolacz
  * 
  */
-public class BackupsManager implements Serializable {
+public class BackupsManager {
 
-	private static final long serialVersionUID = 1L;
+	private final Tags tags;
 
-	private final PrimaryBackup primaryBackup;
-	private final Set<SecondaryBackup> backups;
-
-	public BackupsManager(PrimaryBackup primaryBackup) {
-		this.primaryBackup = primaryBackup;
-		this.backups = new HashSet<>();
-	}
+	private Map<MasterTag, BackupManager> backupManagers;
 
 	/**
-	 * Allow registration of additional backup. You can provide any backup
-	 * implementation extending SecondaryBackup abstract class.
+	 * Default constructor.
 	 * 
-	 * @param backup
+	 * @param tags Tags object used in application
 	 */
-	public void registerBackup(SecondaryBackup backup) {
-		backups.add(backup);
+	public BackupsManager(Tags tags) {
+		this.tags = tags;
+		backupManagers = new HashMap<>();
 	}
 
 	/**
-	 * Returns primary backup associated with that BackupsManager
+	 * Returns file associated with given FileId
 	 * 
+	 * @param fileId
+	 * @return file associated with given FileId
+	 * @throws OperationInterruptedException
+	 * @throws FileNotAvailableException
 	 */
-	public PrimaryBackup getPrimaryBackup() {
-		return primaryBackup;
+	public File getFile(FileID fileId) throws OperationInterruptedException,
+			FileNotAvailableException {
+
+		for (BackupManager bm : backupManagers.values()) {
+			if (bm.getPrimaryBackup().getListOfAvailableFiles()
+					.contains(fileId)) {
+				return bm.getPrimaryBackup().getFile(fileId);
+			}
+		}
+
+		throw new FileNotAvailableException();
 	}
 
 	/**
-	 * Returns immutable view of available safetyBackups. It can be used to
-	 * retrieve lost file.
+	 * Returns BackupManager associated with provided MasterTag
+	 * 
+	 * @param tag
+	 * @return BackupManager associated with provided MasterTag
 	 */
-	public Set<SecondaryBackup> getSecondaryBackups() {
-		return Collections.unmodifiableSet(backups);
+	public BackupManager getBackupManagerAssociatedWithMasterTag(MasterTag tag) {
+		MasterTag tmp = tags.getOldestAncestor(tag);
+		return backupManagers.get(tmp);
+	}
+
+	/**
+	 * Register new BackupManager associated with provided MasterTag. MasterTag
+	 * should be as general as possible, e.g. Family, Mountains etc.
+	 * 
+	 * @param tag
+	 * @param manager
+	 */
+	public void registerBackupManager(MasterTag tag, BackupManager manager) {
+		backupManagers.put(tag, manager);
+	}
+
+	/**
+	 * Returns all registered backups.  
+	 * 
+	 * @return all registered backups.
+	 */
+	public Map<MasterTag, BackupManager> getAllBackupManagers() {
+		return backupManagers;
 	}
 }

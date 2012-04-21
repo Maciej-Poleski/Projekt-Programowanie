@@ -1,7 +1,7 @@
 package manager.files.backup;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Set;
@@ -19,8 +19,9 @@ import static org.mockito.Mockito.*;
 public class PrimaryBackupImplementationTest {
 
 	@Test
-    @Ignore
-	public void test() throws OperationInterruptedException, FileNotAvailableException, IOException {
+	@Ignore
+	public void test() throws OperationInterruptedException,
+			FileNotAvailableException, IOException {
 
 		MasterTag mt = mock(MasterTag.class);
 		Tags tags = mock(Tags.class);
@@ -30,8 +31,8 @@ public class PrimaryBackupImplementationTest {
 		String backupLoc = "src/test/java/manager/files/picasa/downloaded";
 		File info = new File(backupLoc + "/info.dat");
 		File history = new File(backupLoc + "/history.dat");
-		
-		PrimaryBackupImplementation pbi = new PrimaryBackupImplementation(
+
+		PrimaryBackupImpl pbi = new PrimaryBackupImpl(
 				backupLoc, tags, info, history);
 
 		File file = new File("src/test/java/manager/files/picasa/dj2.jpg");
