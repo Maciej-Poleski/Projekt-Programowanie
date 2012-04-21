@@ -8,9 +8,12 @@ import java.awt.event.MouseListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeSelectionModel;
 
 /**
  *
@@ -289,6 +292,35 @@ public class MainWindow extends javax.swing.JFrame {
     void displayMasterTagsTree(TreeModel mtt){
         this.masterTagsTree.setModel(mtt);
     }
+    static class MasterTagsTreeSelectionListener implements TreeSelectionListener{
+        MainWindow window;
+        MasterTagsTreeSelectionListener(MainWindow w){
+            window=w;
+            window.masterTagsTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);;
+            window.masterTagsTree.addTreeSelectionListener(this);      
+        }
+        @Override
+        public void valueChanged(TreeSelectionEvent e) {
+            MasterTag x = (MasterTag)window.masterTagsTree.getLastSelectedPathComponent();
+            window.middleEditorPane.setText("** FILES FROM "+x.toString()+" **\n");
+            //Set<FileID>
+            
+        }  
+    }
+    static class UserTagsTreeSelectionListener implements TreeSelectionListener{
+        MainWindow window;
+        UserTagsTreeSelectionListener(MainWindow w){
+            window=w;
+            window.masterTagsTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);;
+            window.masterTagsTree.addTreeSelectionListener(this);      
+        }
+        @Override
+        public void valueChanged(TreeSelectionEvent e) {
+            UserTag x = (UserTag)window.masterTagsTree.getLastSelectedPathComponent();
+            window.middleEditorPane.setText("** FILES FROM "+x.toString()+" **\n");
+        }  
+    } 
+    
     public static void main(String args[]) {
         /*
          * Set the Nimbus look and feel
@@ -317,39 +349,21 @@ public class MainWindow extends javax.swing.JFrame {
         }
         //</editor-fold>
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+        public void run() {
                 
-                Tags test = new Tags();  
-                MasterTag zdjecia = test.newMasterTag("Zdjęcia");
-                MasterTag wakacje = test.newMasterTag("Wakacje 2011");
-                wakacje.setParent(zdjecia);
-                MasterTag urodziny = test.newMasterTag("Urodziny Wujka Adolfa 2012");
-                urodziny.setParent(zdjecia);
-                
-                MasterTag filmy = test.newMasterTag("Filmy");
-                MasterTag przyrodnicze = test.newMasterTag("Przyrodnicze");
-                przyrodnicze.setParent(filmy);
-                MasterTag sensacyjne = test.newMasterTag("sensacyjne");
-                sensacyjne.setParent(filmy);
-                
-                //UserTag ziom = test.newUserTag("Test1");
-                
-                
-                final MainWindow F = new MainWindow();
-                F.setVisible(true);
-               
-                F.displayUserTagsTree(test.getModelOfUserTags());
-                F.displayMasterTagsTree(test.getModelOfMasterTags());
-                
-                
-                MouseListener ml = new MouseAdapter() {
-                    public void actionPerformed(MouseEvent e) {
-                        MasterTag t = (MasterTag)e.getSource();
+            final MainWindow F = new MainWindow();
+            F.setVisible(true);       
+            MasterTag parent1 = Tags.getDefaultInstance().newMasterTag("parent1");
+            MasterTag child1 = Tags.getDefaultInstance().newMasterTag(parent1, "child1");
+            MasterTag child2 = Tags.getDefaultInstance().newMasterTag(parent1, "child2");
+            MasterTag childOfChild = Tags.getDefaultInstance().newMasterTag(child2, "child of child");
+            MasterTag parent2 = Tags.getDefaultInstance().newMasterTag("parent2");
+            F.displayMasterTagsTree(Tags.getDefaultInstance().getModelOfMasterTags());
+            F.masterTagsTree.setRootVisible(false);
+
+            new MasterTagsTreeSelectionListener(F);
   
-                    }
-                };
-                F.userTagsTree.addMouseListener(ml);                
-                
+                               
             }
         });
     }
