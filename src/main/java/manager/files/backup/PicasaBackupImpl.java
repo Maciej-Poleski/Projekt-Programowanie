@@ -14,7 +14,7 @@ import manager.files.FileID;
 import manager.files.FileNotAvailableException;
 import manager.files.OperationInterruptedException;
 import manager.files.picasa.PicasaAlbum;
-import manager.files.picasa.PicasaAlbum.PicasaAlbumMediaType;
+import manager.files.picasa.PicasaAlbumMediaType;
 import manager.files.picasa.PicasaAuthenticationException;
 import manager.files.picasa.PicasaDataModificationException;
 import manager.files.picasa.PicasaInformationCollectionException;
@@ -30,15 +30,15 @@ import manager.files.picasa.PicasaService;
 final class PicasaBackupImpl extends SecondaryBackup {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Date lastBackup;
 	private String userName;
 	private String password;
 	private String downloadLocation;
 	private final Map<FileID, PicasaPhoto> backupedFiles = new HashMap<>();
 
-	PicasaBackupImpl(PrimaryBackup originalBackup,
-			String picasaLogin, String picasaPassword, String downloadLocation) {
+	PicasaBackupImpl(PrimaryBackup originalBackup, String picasaLogin,
+			String picasaPassword, String downloadLocation) {
 		super(originalBackup);
 
 		userName = picasaLogin;
@@ -60,7 +60,7 @@ final class PicasaBackupImpl extends SecondaryBackup {
 			File downlaoded = PicasaPhoto
 					.downloadPhoto(downloadLocation, photo);
 			return downlaoded;
-			
+
 		} catch (PicasaMediaDownloadException e) {
 			throw new OperationInterruptedException(e);
 		}

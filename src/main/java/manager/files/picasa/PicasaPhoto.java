@@ -20,22 +20,44 @@ public final class PicasaPhoto {
 
 	private PhotoEntry photoEntry;
 
+	/**
+	 * Default constructor
+	 * 
+	 * @param photoEntry
+	 */
 	public PicasaPhoto(PhotoEntry photoEntry) {
 		this.photoEntry = photoEntry;
 	}
 
+	/**
+	 * @return title of this photo
+	 */
 	public String getTitle() {
 		return photoEntry.getTitle().getPlainText();
 	}
 
+	/**
+	 * @return description of this photo
+	 */
 	public String getDescription() {
 		return photoEntry.getDescription().getPlainText();
 	}
 
+	/**
+	 * @return id of album this photo is associated with
+	 */
 	public String getAlbumId() {
 		return photoEntry.getAlbumId();
 	}
 
+	/**
+	 * Downloads this photo from picasaWeb service.
+	 * 
+	 * @param downloadDirectory
+	 *            if not specified default system temp directory is used
+	 * @return handler to downloaded File
+	 * @throws PicasaMediaDownloadException
+	 */
 	public File downloadPhoto(String downloadDirectory)
 			throws PicasaMediaDownloadException {
 
@@ -71,8 +93,17 @@ public final class PicasaPhoto {
 		}
 	}
 
-	public static File downloadPhoto(String downloadDirectory,
-			PicasaPhoto photo) throws PicasaMediaDownloadException {
+	/**
+	 * Downloads photo provided by photo parameter
+	 * 
+	 * @param downloadDirectory
+	 * @param photo
+	 *            to be downloaded
+	 * @return handler to downloaded File
+	 * @throws PicasaMediaDownloadException
+	 */
+	public static File downloadPhoto(String downloadDirectory, PicasaPhoto photo)
+			throws PicasaMediaDownloadException {
 		try {
 			String photoUrl = photo.photoEntry.getMediaContents().get(0)
 					.getUrl();
@@ -107,6 +138,10 @@ public final class PicasaPhoto {
 
 	}
 
+	/**
+	 * @return tags associated with this photo
+	 * @throws PicasaInformationCollectionException
+	 */
 	public List<String> getListOfTags()
 			throws PicasaInformationCollectionException {
 
@@ -132,6 +167,11 @@ public final class PicasaPhoto {
 
 	}
 
+	/**
+	 * Deletes this photo
+	 * 
+	 * @throws PicasaDataModificationException
+	 */
 	public void delete() throws PicasaDataModificationException {
 		try {
 			photoEntry.delete();
