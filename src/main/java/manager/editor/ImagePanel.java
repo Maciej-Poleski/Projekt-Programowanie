@@ -30,10 +30,18 @@ class ImagePanel extends JPanel  {
 	}
 	/**
      * Zmiana powiększenia obrazu
+     * @param zoom - nowe powiększenie (w procentach, 100 - rozmiar oryginalny)
      */
 	void changeZoom (int zoom){
 		this.zoom=zoom;
 		updateImagePanel();
+	}
+	
+	void changeImageSize (int maxWidth, int maxHeight){
+		int nzoom= maxWidth*defaultzoom/ image.getWidth(null);
+		int nzoom2= maxHeight*defaultzoom/ image.getHeight(null);
+		if (nzoom>nzoom2)nzoom=nzoom2;
+		changeZoom(nzoom);
 	}
 	private void updateImagePanel(){
 		this.setPreferredSize(getPreferredSize());

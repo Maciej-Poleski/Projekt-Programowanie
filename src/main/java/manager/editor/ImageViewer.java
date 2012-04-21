@@ -23,7 +23,7 @@ public class ImageViewer extends JPanel implements ChangeListener{
 	private int height, width;
 	private static final int maxZoom=1000, defZoom=100, minZoom=10;
 	/**
-     * Zostanie utworzona nowa kontrolka
+     * Nowy Image Viewer
      * @param image  wyswietlany obraz
      * @param width szerokosc kontrolki
      * @param height wysokosc kontrolki

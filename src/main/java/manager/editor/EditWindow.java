@@ -23,9 +23,9 @@ public class EditWindow extends JFrame implements ActionListener  {
 	private JMenuItem [] jMenuFilterButtons;
 	private JMenu [] jMenuFilterCategories;
 	transient private FilterGUI [] filters;;
-	private static final int dWidth=600, dHeight=600, dLocation=600, dBorderSize=5;
+	private static final int dWidth=800, dHeight=800, dLocation=100, dBorderSize=5;
 	private int mainImageViewerHeight=400, mainImageViewerWidth=400;
-	static class FilterGUI{
+	private static class FilterGUI{
 		String name, nameGUI;
 		FWindowType window;
 		IFilter filter;
@@ -37,7 +37,7 @@ public class EditWindow extends JFrame implements ActionListener  {
 		}
 	}
 	private enum FWindowType{
-		WindowRange, WindowResize, WindowMatrix, WindowLUT, WindowHistogram, NoWindow, WindowGallery
+		WindowRange, WindowResize, WindowMatrix, WindowLUT, WindowHistogram, NoWindow, WindowGallery, WindowGradient
 	}
 	private void initGui(){
 		setTitle("Edytor plików graficznych");
@@ -73,20 +73,21 @@ public class EditWindow extends JFrame implements ActionListener  {
 		filters=new FilterGUI[]{
 				new FilterGUI("FilterBrightness","Jasność", FWindowType.WindowRange, new FilterBrightness() ),
 				new FilterGUI("FilterContrast","Kontrast", FWindowType.WindowRange, new FilterContrast() ),
-				new FilterGUI("FilterGamma","Korekta gamma", FWindowType.WindowRange, new FilterGamma() ),
 				new FilterGUI("FilterExposure","Korekta ekspozycji", FWindowType.WindowRange, new FilterExposure() ),
-				new FilterGUI("FilterSepia","Sepia", FWindowType.WindowRange, new FilterSepia() ),
+				new FilterGUI("FilterGamma","Korekta gamma", FWindowType.WindowRange, new FilterGamma() ),
 				new FilterGUI("FilterColorAccent","Akcent kolorystyczny", FWindowType.WindowRange, new FilterColorAccent() ),
+				new FilterGUI("FilterSepia","Sepia", FWindowType.WindowRange, new FilterSepia() ),
 				new FilterGUI("FilterBinaryzation","Binaryzacja", FWindowType.WindowRange, new FilterBinaryzation() ),
 				new FilterGUI("FilterSolarize","Solaryzacja", FWindowType.WindowRange, new FilterSolarize() ),
 				new FilterGUI("FilterRGBCorrection","Korekta RGB", FWindowType.WindowRange, new FilterRGBCorrection() ),
 				new FilterGUI("FilterCMYCorrection","Korekta CMY", FWindowType.WindowRange, new FilterCMYCorrection() ),
 				new FilterGUI("FilterHSBCorrection", "Korekta HSV", FWindowType.WindowRange, new FilterHSVCorrection() ),
 				new FilterGUI("grayScaleLightness", "Skala szarości (jasność)", FWindowType.NoWindow, FilterFactory.grayScaleLightness()),
-				new FilterGUI("grayScaleAverage", "Skala szarości (średnia)", FWindowType.NoWindow, FilterFactory.grayScaleAverage()),
 				new FilterGUI("grayScaleLuminosity", "Skala szarości (nasycenie)", FWindowType.NoWindow, FilterFactory.grayScaleLuminosity()),
+				new FilterGUI("grayScaleAverage", "Skala szarości (średnia)", FWindowType.NoWindow, FilterFactory.grayScaleAverage()),
 				new FilterGUI("MatrixFilter", "Filtr macierzowy", FWindowType.WindowMatrix, null),
 				new FilterGUI("LUTFilter", "Filtr LUT", FWindowType.WindowLUT, null),
+				new FilterGUI("Gradient", "Gradient", FWindowType.WindowGradient, null),
 				new FilterGUI("Resize", "Zmień rozmiar", FWindowType.WindowResize, null),
 		};
 		jMenuFilterButtons=new JMenuItem[filters.length];
@@ -121,6 +122,7 @@ public class EditWindow extends JFrame implements ActionListener  {
 		jMenuFilterCategories[4].add(jMenuFilterButtons[10]);
 		jMenuFilterCategories[5].add(jMenuFilterButtons[14]);
 		jMenuFilterCategories[5].add(jMenuFilterButtons[15]);
+		jMenuFilterCategories[5].add(jMenuFilterButtons[16]);
 		JMenuItem mHistogram = new JMenuItem("Histogram");
 		mHistogram.setActionCommand("mHistogram");
 		mHistogram.addActionListener(this);
@@ -131,7 +133,7 @@ public class EditWindow extends JFrame implements ActionListener  {
 		mUndo.addActionListener(this);
 		mUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK));
 		jMenuFilterCategories[0].add(mUndo);
-		jMenuFilterCategories[0].add(jMenuFilterButtons[16]);
+		jMenuFilterCategories[0].add(jMenuFilterButtons[17]);
 		//mEdycja.add(mUndo);
 	}
 
@@ -211,6 +213,9 @@ public class EditWindow extends JFrame implements ActionListener  {
 				case WindowLUT: 
 					apply (new WindowLUT(pdImage).showDialog()); 
 					break;
+				case WindowGradient: 
+					apply (new WindowGradient(pdImage).showDialog()); 
+					break;	
 				case WindowResize: 
 					apply (new WindowResize(pdImage).showDialog()); 
 					break;	
