@@ -4,8 +4,11 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
@@ -15,7 +18,7 @@ import java.util.LinkedList;
  * Klasa reprezentuje okno dialogowe w którym dokonywana jest edycja obrazu
  * @author Marcin Regdos
  */
-public class EditWindow extends JFrame implements ActionListener  {	
+public class EditWindow extends JFrame implements ActionListener, ComponentListener  {	
 	transient private PixelData pdImage;
 	transient private LinkedList<PixelData> history;
 	private ImageViewer mainImageViewer;
@@ -23,8 +26,8 @@ public class EditWindow extends JFrame implements ActionListener  {
 	private JMenuItem [] jMenuFilterButtons;
 	private JMenu [] jMenuFilterCategories;
 	transient private FilterGUI [] filters;;
-	private static final int dWidth=800, dHeight=800, dLocation=100, dBorderSize=5;
-	private int mainImageViewerHeight=400, mainImageViewerWidth=400;
+	private static final int dWidth=650, dHeight=550, dLocation=100, dBorderSize=5;
+	private int mainImageViewerHeight=420, mainImageViewerWidth=560;
 	private static class FilterGUI{
 		String name, nameGUI;
 		FWindowType window;
@@ -43,6 +46,7 @@ public class EditWindow extends JFrame implements ActionListener  {
 		setTitle("Edytor plików graficznych");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(dLocation, dLocation, dWidth, dHeight);
+		setMinimumSize(new Dimension(dWidth, dHeight));
 		initMenu();
 		JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(dBorderSize, dBorderSize, dBorderSize, dBorderSize));
@@ -138,6 +142,7 @@ public class EditWindow extends JFrame implements ActionListener  {
 		jMenuFilterCategories[0].add(jMenuFilterButtons[17]);
 		menuBar.add(jMenuFilterButtons[18]);
 		jMenuFilterButtons[18].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK));
+		jMenuFilterButtons[17].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
 		//mEdycja.add(mUndo);
 	}
 
@@ -154,7 +159,9 @@ public class EditWindow extends JFrame implements ActionListener  {
 		pdImage=new PixelData(image);
 		history=new LinkedList<PixelData>();
 		initGui();
+		
 		getContentPane().add(mainImageViewer);
+		this.addComponentListener(this);
 		this.setVisible(true);
 	}
 	/**
@@ -235,5 +242,16 @@ public class EditWindow extends JFrame implements ActionListener  {
 				return;
 			}
 		}	
-	} 
+	}
+	@Override
+	public void componentHidden(ComponentEvent e) {}
+	@Override
+	public void componentMoved(ComponentEvent e) {}
+	@Override
+	public void componentResized(ComponentEvent e) {
+		mainImageViewer.changeSize(this.getWidth()-75, this.getHeight()-150);
+		
+	}
+	@Override
+	public void componentShown(ComponentEvent e) {} 
 }

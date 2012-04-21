@@ -2,6 +2,7 @@ package manager.editor;
 
 import java.awt.Color;
 import java.awt.Image;
+
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,7 +16,7 @@ import javax.swing.event.ChangeListener;
  * Kontrolka do wyswietlania obrazu (scroll)
  * @author Marcin Regdos
  */
-public class ImageViewer extends JPanel implements ChangeListener{
+public class ImageViewer extends JPanel implements ChangeListener {
 	private static final long serialVersionUID = 1L;
 	private ImagePanel iPanel;
 	private JSpinner zoomSpinner;
@@ -53,6 +54,14 @@ public class ImageViewer extends JPanel implements ChangeListener{
      */
 	public void setImage (Image image){
 		iPanel.changeImage(image);
+	}
+	void changeSize (int width, int height){
+		this.height=height;
+		this.width=width;
+		scrollPane.setPreferredSize(new  java.awt.Dimension(this.width, this.height));
+		this.setPreferredSize(scrollPane.getPreferredSize());
+		this.repaint();
+		
 	}
 	@Override
 	public void stateChanged(ChangeEvent arg0) {
