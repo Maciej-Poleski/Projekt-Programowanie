@@ -42,7 +42,7 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
         returnData=null;
         imagePanel=new ImageViewer(image.toBufferedImage(), 320, 240);
         initComponents();
-        mode=-1;
+        mode=3;
         enableTextSpaces();
     }
 
@@ -213,7 +213,7 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
             IFilter filter = new FilterMatrixAdapter(createMatrix());
             filter.apply(inputData);
             returnData = inputData;
-            imagePanel.setImage(tempData.toBufferedImage());
+            imagePanel.setImage(inputData.toBufferedImage());
             imagePanel.revalidate();
 
         } catch(IllegalArgumentException e){
