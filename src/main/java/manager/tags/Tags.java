@@ -26,6 +26,19 @@ public class Tags implements Serializable {
     private static final long serialVersionUID = 1;
 
     /**
+     * Wszystkie węzły w modelu drzewa tagów użytkownika implementują ten interfejs. Pozwala on na wyłuskanie
+     * tagu mając do dyspozycji jedynie węzeł z drzewa.
+     */
+    public interface IUserTagNode {
+        /**
+         * Zwraca tag użytkownika reprezentowany przez dany węzeł.
+         *
+         * @return Tag użytkownika
+         */
+        UserTag getTag();
+    }
+
+    /**
      * Konstruuje nowy obiekt z pustą rodziną tagów.
      */
     public Tags() {
@@ -645,7 +658,7 @@ public class Tags implements Serializable {
     private class UserTagsTreeModel implements TreeModel {
         private final List<UserTag> heads = new ArrayList<>(getUserTagHeads());
 
-        private class Node {
+        private class Node implements IUserTagNode {
             private final UserTag tag;
 
             Node(UserTag tag) {
@@ -656,7 +669,8 @@ public class Tags implements Serializable {
                 tag = null;
             }
 
-            final UserTag getTag() {
+            @Override
+            public UserTag getTag() {
                 return tag;
             }
 
@@ -703,6 +717,10 @@ public class Tags implements Serializable {
                 }
             }
 
+            final List<UserTag> getHeads() {
+                return heads;
+            }
+
             @Override
             public String toString() {
                 return getNameOfTag(tag);
@@ -733,13 +751,20 @@ public class Tags implements Serializable {
 
             @Override
             int getIndexOfChild(Object child) {
-                //noinspection SuspiciousMethodCalls
-                return getTag().getChildren().indexOf(child);
+                if (getTag() != null) {
+                    return getTag().getChildren().indexOf(((Node) child).getTag());
+                } else {
+                    return getHeads().indexOf(((Node) child).getTag());
+                }
             }
 
             @Override
             int getChildCount() {
-                return getTag().getChildren().size();
+                if (getTag() != null) {
+                    return getTag().getChildren().size();
+                } else {
+                    return getHeads().size();
+                }
             }
         }
 
@@ -761,19 +786,26 @@ public class Tags implements Serializable {
 
             @Override
             int getIndexOfChild(Object child) {
-                //noinspection SuspiciousMethodCalls
-                return getTag().getParents().indexOf(child);
+                if (getTag() != null) {
+                    return getTag().getParents().indexOf(((Node) child).getTag());
+                } else {
+                    return getHeads().indexOf(((Node) child).getTag());
+                }
             }
 
             @Override
             int getChildCount() {
-                return getTag().getParents().size();
+                if (getTag() != null) {
+                    return getTag().getParents().size();
+                } else {
+                    return getHeads().size();
+                }
             }
         }
 
         @Override
         public Object getRoot() {
-            return new Node();
+            return new Children();
         }
 
         @Override
