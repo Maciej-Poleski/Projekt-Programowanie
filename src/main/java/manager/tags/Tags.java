@@ -26,6 +26,19 @@ public class Tags implements Serializable {
     private static final long serialVersionUID = 1;
 
     /**
+     * Wszystkie węzły w modelu drzewa tagów użytkownika implementują ten interfejs. Pozwala on na wyłuskanie
+     * tagu mając do dyspozycji jedynie węzeł z drzewa.
+     */
+    public interface IUserTagNode {
+        /**
+         * Zwraca tag użytkownika reprezentowany przez dany węzeł.
+         *
+         * @return Tag użytkownika
+         */
+        UserTag getTag();
+    }
+
+    /**
      * Konstruuje nowy obiekt z pustą rodziną tagów.
      */
     public Tags() {
@@ -645,7 +658,7 @@ public class Tags implements Serializable {
     private class UserTagsTreeModel implements TreeModel {
         private final List<UserTag> heads = new ArrayList<>(getUserTagHeads());
 
-        private class Node {
+        private class Node implements IUserTagNode {
             private final UserTag tag;
 
             Node(UserTag tag) {
@@ -656,7 +669,8 @@ public class Tags implements Serializable {
                 tag = null;
             }
 
-            final UserTag getTag() {
+            @Override
+            public UserTag getTag() {
                 return tag;
             }
 
