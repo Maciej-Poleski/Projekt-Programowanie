@@ -19,6 +19,7 @@ public class ImageViewer extends JPanel implements ChangeListener{
 	private static final long serialVersionUID = 1L;
 	private ImagePanel iPanel;
 	private JSpinner zoomSpinner;
+	private JScrollPane scrollPane;
 	private int height, width;
 	private static final int maxZoom=1000, defZoom=100, minZoom=10;
 	/**
@@ -36,7 +37,7 @@ public class ImageViewer extends JPanel implements ChangeListener{
 		JPanel topPanel=new JPanel();
 		topPanel.add(new JLabel ("Zoom"));
 		topPanel.add(zoomSpinner);
-		JScrollPane scrollPane = new JScrollPane(iPanel);
+		scrollPane = new JScrollPane(iPanel);
 		scrollPane.setViewportBorder(BorderFactory.createLineBorder(Color.BLACK));
 		scrollPane.setWheelScrollingEnabled(true);
 		scrollPane.setColumnHeaderView(topPanel);
@@ -56,8 +57,6 @@ public class ImageViewer extends JPanel implements ChangeListener{
 	@Override
 	public void stateChanged(ChangeEvent arg0) {
 		iPanel.changeZoom((Integer)zoomSpinner.getValue());	
-		this.revalidate();
-		//this.repaint();
 	}
 }
 

@@ -6,6 +6,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
@@ -127,6 +129,7 @@ public class EditWindow extends JFrame implements ActionListener  {
 		JMenuItem mUndo = new JMenuItem("Cofnij");
 		mUndo.setActionCommand("undo");
 		mUndo.addActionListener(this);
+		mUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK));
 		jMenuFilterCategories[0].add(mUndo);
 		jMenuFilterCategories[0].add(jMenuFilterButtons[16]);
 		//mEdycja.add(mUndo);

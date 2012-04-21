@@ -26,14 +26,19 @@ class ImagePanel extends JPanel  {
      */
 	void changeImage (Image image){
 		this.image=image;
-		this.repaint();
+		updateImagePanel();
 	}
 	/**
      * Zmiana powiększenia obrazu
      */
 	void changeZoom (int zoom){
 		this.zoom=zoom;
-		this.repaint();
+		updateImagePanel();
+	}
+	private void updateImagePanel(){
+		this.setPreferredSize(getPreferredSize());
+		this.revalidate();
+		this.repaint();		
 	}
 	@Override
 	protected void paintComponent(Graphics g){
