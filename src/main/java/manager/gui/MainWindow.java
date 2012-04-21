@@ -1,5 +1,7 @@
 package manager.gui;
 
+import manager.tags.*;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -8,6 +10,7 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
+import javax.swing.tree.TreeModel;
 
 /**
  *
@@ -124,18 +127,8 @@ public class MainWindow extends javax.swing.JFrame {
         tagsLabel.setText("Tags");
 
         allTagsButton.setText("All");
-        allTagsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                allTagsButtonActionPerformed(evt);
-            }
-        });
 
         commonTagsButton.setText("Common");
-        commonTagsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                commonTagsButtonActionPerformed(evt);
-            }
-        });
 
         jScrollPane3.setViewportView(rightEditorPane);
 
@@ -306,14 +299,13 @@ public class MainWindow extends javax.swing.JFrame {
     private void backupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backupButtonActionPerformed
         new BackupWindow().setVisible(true);
     }//GEN-LAST:event_backupButtonActionPerformed
-
-    private void allTagsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allTagsButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_allTagsButtonActionPerformed
-
-    private void commonTagsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commonTagsButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_commonTagsButtonActionPerformed
+    
+    void displayUserTagsTree(TreeModel utm){
+        this.userTagsTree.setModel(utm);
+    }
+    void displayMasterTagsTree(TreeModel mtt){
+        this.masterTagsTree.setModel(mtt);
+    }
     public static void main(String args[]) {
         /*
          * Set the Nimbus look and feel
@@ -343,12 +335,34 @@ public class MainWindow extends javax.swing.JFrame {
         //</editor-fold>
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
+                
+                Tags test = new Tags();  
+                MasterTag zdjecia = test.newMasterTag("Zdjęcia");
+                MasterTag wakacje = test.newMasterTag("Wakacje 2011");
+                wakacje.setParent(zdjecia);
+                MasterTag urodziny = test.newMasterTag("Urodziny Wujka Adolfa 2012");
+                urodziny.setParent(zdjecia);
+                
+                MasterTag filmy = test.newMasterTag("Filmy");
+                MasterTag przyrodnicze = test.newMasterTag("Przyrodnicze");
+                przyrodnicze.setParent(filmy);
+                MasterTag sensacyjne = test.newMasterTag("sensacyjne");
+                sensacyjne.setParent(filmy);
+                
+                //UserTag ziom = test.newUserTag("Test1");
+                
+                
                 final MainWindow F = new MainWindow();
                 F.setVisible(true);
-                F.middleEditorPane.setText("hej");
+               
+                F.displayUserTagsTree(test.getModelOfUserTags());
+                F.displayMasterTagsTree(test.getModelOfMasterTags());
+                
+                
                 MouseListener ml = new MouseAdapter() {
-                    public void mousePressed(MouseEvent e) {
-                        F.middleEditorPane.setText("I have just clicked...");
+                    public void actionPerformed(MouseEvent e) {
+                        MasterTag t = (MasterTag)e.getSource();
+  
                     }
                 };
                 F.userTagsTree.addMouseListener(ml);                
