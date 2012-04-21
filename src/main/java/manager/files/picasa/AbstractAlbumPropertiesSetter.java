@@ -16,6 +16,11 @@ public abstract class AbstractAlbumPropertiesSetter{
 
 	final AlbumEntry albumEntry;
 
+	/**
+	 * Default constructor
+	 * 
+	 * @param albumEntry
+	 */
 	public AbstractAlbumPropertiesSetter(AlbumEntry albumEntry) {
 		this.albumEntry = albumEntry;
 	}

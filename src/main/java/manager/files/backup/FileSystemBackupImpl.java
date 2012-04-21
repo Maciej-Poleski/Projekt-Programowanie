@@ -23,7 +23,7 @@ import manager.files.OperationInterruptedException;
  * @author Karol Banys
  * 
  */
-public final class FileSystemBackupImplementation extends SecondaryBackup {
+final class FileSystemBackupImpl extends SecondaryBackup {
 
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +40,7 @@ public final class FileSystemBackupImplementation extends SecondaryBackup {
 	 *            Katalog gdzie mamy skopiować.
 	 * @throws OperationInterruptedException
 	 */
-	public FileSystemBackupImplementation(PrimaryBackup originalBackup, File to)
+	FileSystemBackupImpl(PrimaryBackup originalBackup, File to)
 			throws OperationInterruptedException {
 
 		super(originalBackup);
@@ -48,7 +48,7 @@ public final class FileSystemBackupImplementation extends SecondaryBackup {
 		if (!location.exists())
 			location.mkdir();
 		else if (!location.isDirectory())
-			throw new OperationInterruptedException();
+			throw new OperationInterruptedException("Specified location should be a directory");
 	}
 
 	/**
@@ -164,6 +164,12 @@ public final class FileSystemBackupImplementation extends SecondaryBackup {
 			throw new OperationInterruptedException(
 					"Nie wszystkie pliki zostały skopiowane");
 		}
+	}
+
+	@Override
+	public Map<String, FileID> getListOfAdditionalFiles() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
