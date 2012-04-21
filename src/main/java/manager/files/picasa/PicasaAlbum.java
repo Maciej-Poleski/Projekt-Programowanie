@@ -38,6 +38,11 @@ public class PicasaAlbum {
 		this.feedUrl = new URL(albumEntry.getFeedLink().getHref());
 	}
 
+	/**
+	 * Returns id of this album.
+	 * 
+	 * @return id of this album.
+	 */
 	String getId() {
 		String id = albumEntry.getId();
 		id = id.substring(id.lastIndexOf("/") + 1);
@@ -84,18 +89,30 @@ public class PicasaAlbum {
 		}
 	}
 
+	/**
+	 * @return true if this album is public, false otherwise
+	 */
 	public boolean isPublic() {
 		return "public".equals(albumEntry.getAccess());
 	}
 
+	/**
+	 * @return title of this album
+	 */
 	public String getTitle() {
 		return albumEntry.getTitle().getPlainText();
 	}
 
+	/**
+	 * @return description of this album
+	 */
 	public String getDescription() {
 		return albumEntry.getDescription().getPlainText();
 	}
 
+	/**
+	 * @return date when this album was created
+	 */
 	public Date getDate() {
 		return albumEntry.getDate();
 	}
@@ -116,7 +133,6 @@ public class PicasaAlbum {
 		int result = 1;
 		result = prime * result
 				+ ((albumEntry == null) ? 0 : albumEntry.hashCode());
-		result = prime * result + ((feedUrl == null) ? 0 : feedUrl.hashCode());
 		result = prime
 				* result
 				+ ((picasawebService == null) ? 0 : picasawebService.hashCode());
@@ -140,7 +156,7 @@ public class PicasaAlbum {
 		if (feedUrl == null) {
 			if (other.feedUrl != null)
 				return false;
-		} else if (!feedUrl.equals(other.feedUrl))
+		} else if (!feedUrl.toString().equals(other.feedUrl.toString()))
 			return false;
 		if (picasawebService == null) {
 			if (other.picasawebService != null)
@@ -156,7 +172,7 @@ public class PicasaAlbum {
 		return "[name = " + albumEntry.getTitle().getPlainText() + "]";
 	}
 
-	// for test purposes
+	// for test purposes only
 	AlbumEntry getAlbumEntry() {
 		return albumEntry;
 	}
@@ -195,6 +211,13 @@ public class PicasaAlbum {
 			this.photoEntry = new PhotoEntry();
 		}
 
+		/**
+		 * Uploads given photo into Picasa web service.
+		 * 
+		 * @return handler for uploaded Photo
+		 * @throws PicasaMediaUploadException
+		 *             if there are problems with upload
+		 */
 		public PicasaPhoto upload() throws PicasaMediaUploadException {
 
 			try {
@@ -214,18 +237,36 @@ public class PicasaAlbum {
 			}
 		}
 
+		/**
+		 * Sets title of this album.
+		 * 
+		 * @param title
+		 * @return this PicasaPhotoUploader object - builder pattern
+		 */
 		public PicasaPhotoUploader setTitle(String title) {
 			photoEntry.setTitle(new PlainTextConstruct(title));
 
 			return this;
 		}
 
+		/**
+		 * Sets description of this album.
+		 * 
+		 * @param description
+		 * @return this PicasaPhotoUploader object - builder pattern
+		 */
 		public PicasaPhotoUploader setDescription(String description) {
 			photoEntry.setDescription(new PlainTextConstruct(description));
 
 			return this;
 		}
 
+		/**
+		 * Sets keywords associated with this photo.
+		 * 
+		 * @param keywords
+		 * @return this PicasaPhotoUploader object - builder pattern
+		 */
 		public PicasaPhotoUploader setKeywords(Collection<String> keywords) {
 
 			MediaKeywords myTags = new MediaKeywords();
@@ -281,41 +322,6 @@ public class PicasaAlbum {
 				throw new PicasaDataModificationException(e);
 			}
 		}
-	}
-
-	/**
-	 * Holds file formats supported by Picasaweb
-	 * 
-	 * @author Piotr Kolacz
-	 * 
-	 */
-	public static enum PicasaAlbumMediaType {
-
-		JPEG {
-			public String toString() {
-				return "image/jpeg";
-			}
-		},
-		TIFF {
-			public String toString() {
-				return "image/tiff";
-			}
-		},
-		PNG {
-			public String toString() {
-				return "image/png";
-			}
-		},
-		GIF {
-			public String toString() {
-				return "image/gif";
-			}
-		},
-		BMP {
-			public String toString() {
-				return "image/bmp";
-			}
-		};
 	}
 
 }

@@ -1,7 +1,9 @@
 package manager.files.backup;
 
 import java.util.Date;
+import java.util.Map;
 
+import manager.files.FileID;
 import manager.files.OperationInterruptedException;
 
 /**
@@ -45,5 +47,13 @@ public abstract class SecondaryBackup implements Backup {
 	 * is exactly an mirror of state of PrimaryBackup we are synchronizing with.
 	 */
 	public abstract void updateBackup() throws OperationInterruptedException;
+
+	/**
+	 * Returns list of files contained in this safety backup and not available
+	 * in application primary file System (files potentially deleted by user).
+	 * 
+	 * @return map of descriptions connected with FileID's
+	 */
+	public abstract Map<String, FileID> getListOfAdditionalFiles();
 
 }

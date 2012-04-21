@@ -1,5 +1,6 @@
 package manager.core;
 
+import manager.files.backup.BackupsManager;
 import manager.tags.TagFilesStore;
 import manager.tags.Tags;
 
@@ -14,13 +15,15 @@ import java.util.logging.Logger;
 public final class Data {
     private final Tags tags;
     private final TagFilesStore tagFilesStore;
+    private final BackupsManager backupsManager;
 
     private static final File DATABASE_FILE = new File("database");
     private static boolean loaded = false;
 
-    private Data(Tags tags, TagFilesStore tagFilesStore) {
+    private Data(Tags tags, TagFilesStore tagFilesStore, BackupsManager backupsManager) {
         this.tags = tags;
         this.tagFilesStore = tagFilesStore;
+        this.backupsManager = backupsManager;
     }
 
     /**
@@ -40,13 +43,15 @@ public final class Data {
             TagFilesStore tagFilesStore1 = (TagFilesStore) objectInputStream.readObject();
             Tags tags = (Tags) objectInputStream.readObject();
             Tags.setDefaultInstance(tags);
-            return new Data(tags, tagFilesStore1);
+            BackupsManager backupsManager = (BackupsManager) objectInputStream.readObject();
+            return new Data(tags, tagFilesStore1, backupsManager);
         } catch (FileNotFoundException e) {
             TagFilesStore tagFilesStore1 = new TagFilesStore();
             Tags tags = new Tags();
             tags.setStore(tagFilesStore1);
             Tags.setDefaultInstance(tags);
-            return new Data(tags, tagFilesStore1);
+            BackupsManager backupsManager = new BackupsManager(tags);
+            return new Data(tags, tagFilesStore1, backupsManager);
         } catch (ClassNotFoundException e) {
             Logger.getLogger("Data").throwing("core.Data", "load", e);
             return null;
@@ -62,20 +67,7 @@ public final class Data {
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(DATABASE_FILE));
         objectOutputStream.writeObject(getTagFilesStore());
         objectOutputStream.writeObject(getTags());
-    }
-
-    /**
-     * Obiekt służący do zarządzania strukturą tagów.
-     */
-    public Tags getTags() {
-        return tags;
-    }
-
-    /**
-     * Obiekt służący do zarządzania otagowanymi plikami.
-     */
-    public TagFilesStore getTagFilesStore() {
-        return tagFilesStore;
+        objectOutputStream.writeObject(getBackupsManager());
     }
 
     static boolean isLoaded() {
@@ -84,5 +76,32 @@ public final class Data {
 
     static void setLoaded(boolean loaded) {
         Data.loaded = loaded;
+    }
+
+    /**
+     * Zwraca obiekt służący do zarządzania strukturą tagów.
+     *
+     * @return Obiekt służący do zarządzania strukturą tagów.
+     */
+    public Tags getTags() {
+        return tags;
+    }
+
+    /**
+     * Zwraca obiekt służący do zarządzania otagowanymi plikami.
+     *
+     * @return Obiekt służący do zarządzania otagowanymi plikami.
+     */
+    public TagFilesStore getTagFilesStore() {
+        return tagFilesStore;
+    }
+
+    /**
+     * Zwraca obiekt służący do zarządzania kopiami zapasowymi
+     *
+     * @return Obiekt służący do zarządzania kopiami zapasowymi
+     */
+    public BackupsManager getBackupsManager() {
+        return backupsManager;
     }
 }

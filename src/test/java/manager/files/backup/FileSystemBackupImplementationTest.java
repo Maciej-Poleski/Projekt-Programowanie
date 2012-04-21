@@ -38,7 +38,7 @@ public class FileSystemBackupImplementationTest {
 		File backupLoc = new File(
 				"src/test/java/manager/files/picasa/downloaded");
 
-		FileSystemBackupImplementation fsb = new FileSystemBackupImplementation(
+		FileSystemBackupImpl fsb = new FileSystemBackupImpl(
 				original, backupLoc);
 
 		fsb.updateBackup();
