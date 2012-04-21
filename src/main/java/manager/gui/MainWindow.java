@@ -22,7 +22,6 @@ public class MainWindow extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonPanel = new javax.swing.JPanel();
-        picasaButton = new javax.swing.JButton();
         editTagsButton = new javax.swing.JButton();
         backupButton = new javax.swing.JButton();
         importButton = new javax.swing.JButton();
@@ -56,15 +55,6 @@ public class MainWindow extends javax.swing.JFrame {
         buttonPanel.setBackground(new java.awt.Color(204, 204, 255));
         buttonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         buttonPanel.setForeground(new java.awt.Color(204, 204, 255));
-
-        picasaButton.setText("EXPORT TO PICASA");
-        picasaButton.setMaximumSize(new java.awt.Dimension(180, 23));
-        picasaButton.setMinimumSize(new java.awt.Dimension(180, 23));
-        picasaButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                picasaButtonActionPerformed(evt);
-            }
-        });
 
         editTagsButton.setText("EDIT TAGS");
         editTagsButton.setMinimumSize(new java.awt.Dimension(72, 23));
@@ -100,12 +90,10 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(editTagsButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(picasaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(backupButton)
                 .addGap(18, 18, 18)
                 .addComponent(editImageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(242, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         buttonPanelLayout.setVerticalGroup(
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -114,7 +102,6 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(importButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(picasaButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(editTagsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(backupButton)
                         .addComponent(editImageButton)))
@@ -140,9 +127,9 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(rightPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, rightPanelLayout.createSequentialGroup()
-                        .addContainerGap(14, Short.MAX_VALUE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(allTagsButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(commonTagsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -229,7 +216,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(middlePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(middleScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(middleScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                     .addGroup(middlePanelLayout.createSequentialGroup()
                         .addComponent(tagSearchButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -287,10 +274,6 @@ public class MainWindow extends javax.swing.JFrame {
     private void editTagsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editTagsButtonActionPerformed
         new EditTagsWindow().setVisible(true);
     }//GEN-LAST:event_editTagsButtonActionPerformed
-
-    private void picasaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_picasaButtonActionPerformed
-        new PicasaWindow().setVisible(true);
-    }//GEN-LAST:event_picasaButtonActionPerformed
 
     private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importButtonActionPerformed
         new ImportWindow().setVisible(true);
@@ -389,7 +372,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JEditorPane middleEditorPane;
     private javax.swing.JPanel middlePanel;
     private javax.swing.JScrollPane middleScrollPane;
-    private javax.swing.JButton picasaButton;
     private javax.swing.JEditorPane rightEditorPane;
     private javax.swing.JPanel rightPanel;
     private javax.swing.JTextField searchTextField;

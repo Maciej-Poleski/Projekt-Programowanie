@@ -82,12 +82,10 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="editTagsButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="picasaButton" min="-2" pref="140" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="backupButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="editImageButton" min="-2" pref="112" max="-2" attributes="0"/>
-                  <EmptySpace pref="242" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -98,7 +96,6 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="importButton" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="picasaButton" alignment="3" max="-2" attributes="0"/>
                           <Component id="editTagsButton" alignment="3" max="32767" attributes="0"/>
                           <Component id="backupButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="editImageButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -110,20 +107,6 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="picasaButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="EXPORT TO PICASA"/>
-            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[180, 23]"/>
-            </Property>
-            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[180, 23]"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="picasaButtonActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="editTagsButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="EDIT TAGS"/>
@@ -177,7 +160,7 @@
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane3" pref="0" max="32767" attributes="0"/>
+                          <Component id="jScrollPane3" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="32767" attributes="0"/>
@@ -357,7 +340,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="middleScrollPane" max="32767" attributes="0"/>
+                      <Component id="middleScrollPane" pref="387" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Component id="tagSearchButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
