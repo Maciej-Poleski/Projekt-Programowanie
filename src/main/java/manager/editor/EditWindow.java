@@ -89,6 +89,7 @@ public class EditWindow extends JFrame implements ActionListener  {
 				new FilterGUI("LUTFilter", "Filtr LUT", FWindowType.WindowLUT, null),
 				new FilterGUI("Gradient", "Gradient", FWindowType.WindowGradient, null),
 				new FilterGUI("Resize", "Zmień rozmiar", FWindowType.WindowResize, null),
+				new FilterGUI("FGallery", "Galeria filtrów", FWindowType.WindowGallery, null),
 		};
 		jMenuFilterButtons=new JMenuItem[filters.length];
 		jMenuFilterCategories=new JMenu[filterCategoryNamesGUI.length];
@@ -126,6 +127,7 @@ public class EditWindow extends JFrame implements ActionListener  {
 		JMenuItem mHistogram = new JMenuItem("Histogram");
 		mHistogram.setActionCommand("mHistogram");
 		mHistogram.addActionListener(this);
+		mHistogram.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK));
 		menuBar.add(mHistogram);
 		
 		JMenuItem mUndo = new JMenuItem("Cofnij");
@@ -134,6 +136,8 @@ public class EditWindow extends JFrame implements ActionListener  {
 		mUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK));
 		jMenuFilterCategories[0].add(mUndo);
 		jMenuFilterCategories[0].add(jMenuFilterButtons[17]);
+		menuBar.add(jMenuFilterButtons[18]);
+		jMenuFilterButtons[18].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK));
 		//mEdycja.add(mUndo);
 	}
 
@@ -225,6 +229,7 @@ public class EditWindow extends JFrame implements ActionListener  {
 					apply (tdata); 
 					break;		
 				case WindowGallery:
+					apply (new WindowGallery(pdImage).showDialog()); 
 					break;	
 				}
 				return;

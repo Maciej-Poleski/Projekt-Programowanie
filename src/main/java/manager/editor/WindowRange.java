@@ -41,6 +41,7 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 		this.setModalityType(JDialog.DEFAULT_MODALITY_TYPE);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.image=image;
+		this.setResizable(false);
 		this.filter=iFilter;
 		ranges=filter.getRangeTable();
 		jlabels=new  JLabel [ranges.length];
