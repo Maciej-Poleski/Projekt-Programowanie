@@ -289,7 +289,7 @@ public class PixelData implements Cloneable {
 		return new Histogram(table, HistogramChannel.HUE);
     }
     private Histogram getHistogramSaturation(){
-    	int[] table = new int[SV_CHANNEL_PRECISON]; toHSV();
+    	int[] table = new int[SV_CHANNEL_PRECISON+1]; toHSV();
 		for(int i=0;i<mWidth;i++) {
 			for(int j=0;j<mHeight;j++) {
 				table[(int)(mData[PIXEL_SIZE*(i*mHeight+j)+1]*(float)SV_CHANNEL_PRECISON)]++;
@@ -298,7 +298,7 @@ public class PixelData implements Cloneable {
 		return new Histogram(table, HistogramChannel.SATURATION);
     }
     private Histogram getHistogramValue(){
-    	int[] table = new int[SV_CHANNEL_PRECISON]; toHSV();
+    	int[] table = new int[SV_CHANNEL_PRECISON+1]; toHSV();
 		for(int i=0;i<mWidth;i++) {
 			for(int j=0;j<mHeight;j++) {
 				table[(int)(mData[PIXEL_SIZE*(i*mHeight+j)+2]*(float)SV_CHANNEL_PRECISON)]++;

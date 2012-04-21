@@ -220,6 +220,7 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
        //     throw e;
         }
         this.setVisible(false);
+        this.dispose();
     }
 
     private void previewMousePressed(MouseEvent evt) {
@@ -252,6 +253,7 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
 
     private void abortMousePressed(MouseEvent evt) {
         this.setVisible(false);
+        this.dispose();
         returnData=null;
     }
 	/**
