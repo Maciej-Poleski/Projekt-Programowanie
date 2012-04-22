@@ -28,9 +28,13 @@ public class TagFilesStore implements Serializable {
      * @param fileId    Uchwyt do reprezentanta pliku
      * @param masterTag Tag macierzysty związany z plikiem
      * @param userTags  Opcjonalne tagi użytkownika
-     * @throws IllegalStateException Jeżeli podany plik jest już w bazie
+     * @throws IllegalStateException    Jeżeli podany plik jest już w bazie
+     * @throws IllegalArgumentException Jeżeli fileId lub masterTag jest nullem
      */
     public void addFile(FileID fileId, MasterTag masterTag, Set<UserTag> userTags) {
+        if (fileId == null || masterTag == null) {
+            throw new IllegalArgumentException("Tworzenie powiązania między null-ami nie ma sensu");
+        }
         if (userTags == null) {
             userTags = new HashSet<>();
         }
@@ -44,11 +48,27 @@ public class TagFilesStore implements Serializable {
     }
 
     /**
+     * Dodaje plik do bazy danych. Tag macierzysty jest obowiązkowy.
+     *
+     * @param fileId    Uchwyt do reprezentanta pliku
+     * @param masterTag Tag macierzysty związany z plikiem
+     * @throws IllegalStateException    Jeżeli podany plik jest już w bazie
+     * @throws IllegalArgumentException Jeżeli fileId lub masterTag jest nullem
+     */
+    public void addFile(FileID fileId, MasterTag masterTag) {
+        addFile(fileId, masterTag, null);
+    }
+
+    /**
      * Usuwa plik z bazy danych (nie dokonuje fizycznego usunięcia pliku z nośnika).
      *
      * @param fileId Uchwyt do reprezentanta pliku
+     * @throws IllegalArgumentException Jeżeli fileId==null
      */
     public void removeFile(FileID fileId) {
+        if (fileId == null) {
+            throw new IllegalArgumentException("Usuwanie null-a nie ma sensu");
+        }
         tagsByFiles.remove(fileId);
         for (Set<FileID> set : filesByTags.values()) {
             set.remove(fileId);
