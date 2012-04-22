@@ -8,6 +8,16 @@ import java.util.*;
 /**
  * Główny magazyn otagowanych plików. Pozwala na zarządzanie zbiorem danych. Dodawanie i usuwanie tagów i plików.
  * Uzyskiwanie informacji o plikach posiadających dane Tagi oraz o Tagach przypisanych do danego zbioru plików.
+ * <p/>
+ * Obiekty tej klasy pozwalają na uzyskiwanie informacji o tym jakie tagi posiadają wskazane pliki oraz jakie pliki
+ * są otagowane wskazanymi tagami. Obiekty tej klasy zarządzają tą informacją pozwalając na dodawanie i usuwanie
+ * tak pojedynczych tagów jak i całych plików. Należy pamiętać, że każdy plik posiada dokładnie jeden tag macierzysty.
+ * Usunięcie tagu macierzystego z danego pliku efektywnie spowoduje usunięcie danego pliku z bazy. <B>Usunięcie tagu
+ * macierzystego jako takiego spowoduje usunięcie wszystkich plików otagowanych nim oraz jego pochodnymi</B> (usunięcie
+ * katalogu "zdjęcia" powoduje usunięcie wszystkich zdjęć wewnątrz tego katalogu, a nie tylko samego katalogu
+ * "zdjęcia"). Możliwe jest uzyskanie informacji o plikach otagowanych wskazanym zbiorem tagów. Możliwe jest przy tym
+ * uzyskanie wyniku będącego "sumą" wyników dla pojedynczego tagu jak i "przecięciem". Możliwe jest również uzyskanie
+ * informacji o tym które pliki są "na prawdę" otagowane wskazanym tagiem (a nie dowolną z jego pochodnych).
  *
  * @author Maciej Poleski
  */
@@ -28,9 +38,13 @@ public class TagFilesStore implements Serializable {
      * @param fileId    Uchwyt do reprezentanta pliku
      * @param masterTag Tag macierzysty związany z plikiem
      * @param userTags  Opcjonalne tagi użytkownika
-     * @throws IllegalStateException Jeżeli podany plik jest już w bazie
+     * @throws IllegalStateException    Jeżeli podany plik jest już w bazie
+     * @throws IllegalArgumentException Jeżeli fileId lub masterTag jest nullem
      */
     public void addFile(FileID fileId, MasterTag masterTag, Set<UserTag> userTags) {
+        if (fileId == null || masterTag == null) {
+            throw new IllegalArgumentException("Tworzenie powiązania między null-ami nie ma sensu");
+        }
         if (userTags == null) {
             userTags = new HashSet<>();
         }
@@ -44,11 +58,27 @@ public class TagFilesStore implements Serializable {
     }
 
     /**
+     * Dodaje plik do bazy danych. Tag macierzysty jest obowiązkowy.
+     *
+     * @param fileId    Uchwyt do reprezentanta pliku
+     * @param masterTag Tag macierzysty związany z plikiem
+     * @throws IllegalStateException    Jeżeli podany plik jest już w bazie
+     * @throws IllegalArgumentException Jeżeli fileId lub masterTag jest nullem
+     */
+    public void addFile(FileID fileId, MasterTag masterTag) {
+        addFile(fileId, masterTag, null);
+    }
+
+    /**
      * Usuwa plik z bazy danych (nie dokonuje fizycznego usunięcia pliku z nośnika).
      *
      * @param fileId Uchwyt do reprezentanta pliku
+     * @throws IllegalArgumentException Jeżeli fileId==null
      */
     public void removeFile(FileID fileId) {
+        if (fileId == null) {
+            throw new IllegalArgumentException("Usuwanie null-a nie ma sensu");
+        }
         tagsByFiles.remove(fileId);
         for (Set<FileID> set : filesByTags.values()) {
             set.remove(fileId);

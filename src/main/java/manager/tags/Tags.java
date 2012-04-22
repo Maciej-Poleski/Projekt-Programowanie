@@ -17,6 +17,14 @@ import java.util.*;
  * Klasa zarządzająca całym zbiorem tagów wykorzystywanym w aplikacji. Pozwala na dostęp do "głów".
  * Pozwala na dostęp do etykiety tagów. Pozwala na dodawanie dowolnych metadanych do tagów.
  * Aby uzyskać pełną funkcjonalność należy podać jej referencję do bazy danych.
+ * <p/>
+ * Jest to klasa pełniąca rolę zarządcy całej struktury tagów. Obiekty tej klasy mają wyłączne prawo do modyfikowania
+ * ich struktury. Udostępniają również wiele funkcji pozwalających na pracę z tagami jako pewną całością, a nie
+ * poszczególnymi węzłami. Możliwe jest uzyskanie modelu drzewa reprezentującego strukturę tagów macierzystych
+ * i użytkownika. Dla każdego tagu macierzystego można uzyskać jego ścieżkę w systemie plików od korzenia (lokalizacji)
+ * danej kolekcji. Możliwe jest tworzenie i usuwanie relacji. Tak samo jak samych tagów. Obiekty tej klasy potrafią
+ * również przechowywać dowolne metadane przypisane do dowolnego tagu. Ten mechanizm może być przydatny jeżeli
+ * tekstowa etykieta tagu jest niesatysfakcjonująca.
  *
  * @author Maciej Poleski
  */

@@ -6,6 +6,12 @@ import java.util.List;
 
 /**
  * Tag macierzysty. Tagi tego typu tworzą strukturę drzewiastą.
+ * <p/>
+ * Tag macierzysty jest ściśle powiązany z lokalizacją otagowanych nim plików. Oznacza to, że wszystkie pliki otagowane
+ * danym tagiem macierzystym znajdują się w tym samym katalogu. Co więcej, nazwa tego katalogu odpowiada etykiecie
+ * tagu macierzystego. Tagi macierzyste tworzą strukturę lasu drzew. Oznacza to, że możliwe jest uzyskanie jednoznacznej
+ * odpowiedzi na pytanie o rodzica danego tagu macierzystego. Dla dowolnego pliku otagowanego danym tagiem macierzystym
+ * możliwe jest uzyskanie jego ścieżki względem korzenia (czyli lokalizacji plików na dysku, kolekcji, kopii zapasowej).
  *
  * @author Zygmunt Łenyk
  */
@@ -50,7 +56,7 @@ public class MasterTag extends Tag<MasterTag> {
 
     @Override
     void removeParent(MasterTag parent2) {
-        if (parent2 != this.parent) throw new IllegalStateException("usuwanie nieistniejacego elementu");
+        if (parent2 != this.parent) throw new IllegalStateException("usuwanie nieistniejącego elementu");
         else {
             this.parent = null;
             parent2.childrenList.remove(this);

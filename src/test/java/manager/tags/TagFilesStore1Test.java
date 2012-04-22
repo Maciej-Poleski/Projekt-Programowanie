@@ -11,6 +11,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
 import static junit.framework.Assert.assertEquals;
@@ -82,7 +83,7 @@ public class TagFilesStore1Test {
     }
 
     @Test
-    public void testAddFile() throws Exception {
+    public void testAddFile1() throws Exception {
         FileID file1 = createMock(FileID.class);
         FileID file2 = createMock(FileID.class);
         FileID file3 = createMock(FileID.class);
@@ -97,6 +98,25 @@ public class TagFilesStore1Test {
         assertEquals(store.getTagsFrom(file1), new HashSet<>(Arrays.asList(userTag1, userTag2, masterTag1)));
         assertEquals(store.getTagsFrom(file2), new HashSet<>(Arrays.asList(userTag2, userTag4, masterTag2)));
         assertEquals(store.getTagsFrom(file3), new HashSet<>(Arrays.asList(masterTag1, userTag1, userTag4, userTag5)));
+        verify(file1, file2, file3);
+    }
+
+    @Test
+    public void testAddFile2() throws Exception {
+        FileID file1 = createMock(FileID.class);
+        FileID file2 = createMock(FileID.class);
+        FileID file3 = createMock(FileID.class);
+        replay(file1, file2, file3);
+        store.addFile(file1, masterTag1);
+        store.addFile(file2, masterTag2);
+        store.addFile(file3, masterTag1);
+        assertEquals(store.getFilesWithRealTag(masterTag1), new HashSet<>(Arrays.asList(file1, file3)));
+        assertEquals(store.getFilesWithRealTag(masterTag2), new HashSet<>(Arrays.asList(file2)));
+        assertEquals(store.getFilesWith(masterTag1), new HashSet<>(Arrays.asList(file1, file3)));
+        assertEquals(store.getFilesFrom(masterTag1), new HashSet<>(Arrays.asList(file1, file3)));
+        assertEquals(store.getTagsFrom(file1), new HashSet<>(Collections.singleton(masterTag1)));
+        assertEquals(store.getTagsFrom(file2), new HashSet<>(Collections.singleton(masterTag2)));
+        assertEquals(store.getTagsFrom(file3), new HashSet<>(Collections.singleton(masterTag1)));
         verify(file1, file2, file3);
     }
 
