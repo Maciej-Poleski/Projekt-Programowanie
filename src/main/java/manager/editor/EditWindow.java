@@ -172,11 +172,6 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		this.addComponentListener(this);
 		this.setVisible(true);
 	}
-	/**
-	 * Zwraca obraz po edycji. Jeśli użytkownik nie zdecydował się na zastosowanie zmian, obraz jest nullem
-	 * @return przetworzony obraz
-	 * 
-	 */
 	private void undo (){
 		if (!history.isEmpty()){
 			pdImage=history.pollLast();
