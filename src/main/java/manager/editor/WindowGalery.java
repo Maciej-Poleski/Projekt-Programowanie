@@ -20,9 +20,9 @@ public class WindowGalery extends JDialog implements IWindowFilter{
     WindowGalery(PixelData image){
         this.setModalityType(JDialog.DEFAULT_MODALITY_TYPE);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        originalPixelData = image;
-        copyPixelData = image;
-        preview.setImage(originalPixelData.toBufferedImage());
+        originalPixelData = (PixelData)image.clone();
+        copyPixelData = (PixelData)image.clone();
+        preview = new ImageViewer(originalPixelData.toBufferedImage(), 300, 300);
         initComponents();
         initFilter();
     }
