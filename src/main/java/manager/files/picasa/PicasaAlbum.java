@@ -45,7 +45,7 @@ public class PicasaAlbum {
 	 */
 	String getId() {
 		String id = albumEntry.getId();
-		id = id.substring(id.lastIndexOf("/") + 1);
+		id = id.substring(id.lastIndexOf('/') + 1);
 		return id;
 	}
 
@@ -141,28 +141,30 @@ public class PicasaAlbum {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof PicasaAlbum))
+		}
+		if (!(obj instanceof PicasaAlbum)) {
 			return false;
+		}
 		PicasaAlbum other = (PicasaAlbum) obj;
 		if (albumEntry == null) {
-			if (other.albumEntry != null)
+			if (other.albumEntry != null) {
 				return false;
-		} else if (!albumEntry.equals(other.albumEntry))
+			}
+		} else if (!albumEntry.equals(other.albumEntry)) {
 			return false;
-		if (feedUrl == null) {
-			if (other.feedUrl != null)
-				return false;
-		} else if (!feedUrl.toString().equals(other.feedUrl.toString()))
-			return false;
+		}
 		if (picasawebService == null) {
-			if (other.picasawebService != null)
+			if (other.picasawebService != null) {
 				return false;
-		} else if (!picasawebService.equals(other.picasawebService))
+			}
+		} else if (!picasawebService.equals(other.picasawebService)) {
 			return false;
+		}
 		return true;
 	}
 
@@ -195,7 +197,7 @@ public class PicasaAlbum {
 	 * @author Piotr Kolacz
 	 * 
 	 */
-	public static class PicasaPhotoUploader {
+	public static final class PicasaPhotoUploader {
 		private final File fileToUpload;
 		private final PicasaAlbumMediaType fileType;
 		private final PicasawebService picasaService;

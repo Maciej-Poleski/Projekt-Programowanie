@@ -45,10 +45,15 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 
 		super(originalBackup);
 		location = new File(to.getAbsolutePath());
-		if (!location.exists())
-			location.mkdir();
-		else if (!location.isDirectory())
-			throw new OperationInterruptedException("Specified location should be a directory");
+		if (!location.exists()) {
+			if (!location.mkdir()) {
+				throw new OperationInterruptedException(
+						"Nie można utworzyć katalogu");
+			}
+		} else if (!location.isDirectory()) {
+			throw new OperationInterruptedException(
+					"Specified location should be a directory");
+		}
 	}
 
 	/**
@@ -64,12 +69,14 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 	public File getFile(FileID fileId) throws FileNotAvailableException {
 		if (fileId == null)
 			throw new FileNotAvailableException();
-		
+
 		File toReturn = filesInBackup.get(fileId);
-		if (toReturn != null && toReturn.exists())
+		if (toReturn != null && toReturn.exists()) {
 			return toReturn;
-		else
-			throw new FileNotAvailableException();
+		}
+
+		throw new FileNotAvailableException();
+
 	}
 
 	/**
@@ -118,12 +125,12 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	static private void copyFile(File from, File to)
-			throws FileNotFoundException, IOException {
+	private static void copyFile(File from, File to) throws IOException {
+
 		FileInputStream inFrom = new FileInputStream(from);
 		FileOutputStream outTo = new FileOutputStream(to);
 		FileChannel fromFC = inFrom.getChannel(), toFC = outTo.getChannel();
-		ByteBuffer b = ByteBuffer.allocateDirect(1024);
+		ByteBuffer b = ByteBuffer.allocateDirect(2 << 10);
 		while (fromFC.read(b) != -1) {
 			b.flip();
 			toFC.write(b);
@@ -141,7 +148,7 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 	 */
 	@Override
 	public void updateBackup() throws OperationInterruptedException {
-		boolean problems = false;
+
 		filesInBackup = new HashMap<FileID, File>();
 		deleteInner(location);
 		Set<FileID> listOfFileID = super.originalBackup
@@ -156,14 +163,12 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 					copyFile(fromCopy, toCopy);
 					filesInBackup.put(fileId, toCopy);
 				}
-			} catch (Exception e) {
-				problems = true;
+			} catch (IOException | FileNotAvailableException e) {
+				throw new OperationInterruptedException(
+						"Nie wszystkie pliki zostały skopiowane");
 			}
 		}
-		if (problems) {
-			throw new OperationInterruptedException(
-					"Nie wszystkie pliki zostały skopiowane");
-		}
+
 	}
 
 	@Override

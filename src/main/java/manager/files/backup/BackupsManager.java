@@ -17,6 +17,8 @@ import manager.tags.Tags;
  */
 public class BackupsManager implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+
 	private final Tags tags;
 
 	private Map<MasterTag, BackupManager> backupManagers;
@@ -24,7 +26,8 @@ public class BackupsManager implements Serializable {
 	/**
 	 * Default constructor.
 	 * 
-	 * @param tags Tags object used in application
+	 * @param tags
+	 *            Tags object used in application
 	 */
 	public BackupsManager(Tags tags) {
 		this.tags = tags;
@@ -75,7 +78,7 @@ public class BackupsManager implements Serializable {
 	}
 
 	/**
-	 * Returns all registered backups.  
+	 * Returns all registered backups.
 	 * 
 	 * @return all registered backups.
 	 */

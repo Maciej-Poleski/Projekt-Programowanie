@@ -15,7 +15,7 @@ import static junit.framework.Assert.*;
  * Time: 13:50
  */
 public class DataTest {
-    Data data;
+    private Data data;
 
     @After
     public void tearDown() throws Exception {
