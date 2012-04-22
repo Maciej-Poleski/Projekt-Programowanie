@@ -143,13 +143,29 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		mUndo.setActionCommand("undo");
 		mUndo.addActionListener(this);
 		mUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK));
+		JMenuItem mSave = new JMenuItem("Zapisz");
+		mSave.setActionCommand("save");
+		mSave.addActionListener(this);
+		mSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
+		JMenuItem mClose = new JMenuItem("Zakończ");
+		mClose.setActionCommand("close");
+		mClose.addActionListener(this);
+		mClose.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK));
+		
 		jMenuFilterCategories[0].add(mUndo);
 		jMenuFilterCategories[0].add(jMenuFilterButtons[17]);
+		jMenuFilterCategories[0].add(mSave);
+		jMenuFilterCategories[0].add(mClose);
 		menuBar.add(jMenuFilterButtons[18]);
+		
+		
+		
 		jMenuFilterButtons[18].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK));
 		jMenuFilterButtons[17].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
 		jMenuFilterButtons[0].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_J, InputEvent.CTRL_DOWN_MASK));
 		jMenuFilterButtons[1].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_DOWN_MASK));
+		
+		
 		//mEdycja.add(mUndo);
 	}
 

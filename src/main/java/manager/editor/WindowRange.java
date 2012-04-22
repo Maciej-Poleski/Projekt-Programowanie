@@ -24,6 +24,7 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 	private final JPanel contentPanel = new JPanel();
 	private final transient PixelData image;
 	private transient PixelData timage;
+	private transient PixelData returnData;
 	private final transient IFilterRange filter;
 	private Range[] ranges;
 	private JLabel [] jlabels;
@@ -50,7 +51,7 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 		initGui();
 		filter.apply(image, timage);
 		preview.setImage(timage.toBufferedImage());
-
+		returnData=null;
 	}
 	private void initGui() {
 		this.setSize(dWidth, dHeight);
@@ -128,17 +129,17 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 	@Override
 	public PixelData showDialog(){
 		this.setVisible(true);
-		return timage;
+		return returnData;
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if ("OK".equals(e.getActionCommand())) {
+			returnData=timage;
 			this.setVisible(false);
 			this.dispose();
 			return;
 		} 
 		if ("Cancel".equals(e.getActionCommand())) {
-			timage=null;
 			this.setVisible(false);
 			this.dispose();
 			return;
