@@ -22,15 +22,14 @@ import java.awt.event.ActionListener;
 public class WindowRange extends JDialog implements ChangeListener, ActionListener, IWindowFilter {
 
 	private final JPanel contentPanel = new JPanel();
-
-	transient private final PixelData image;
-	transient private PixelData timage;
-	transient private final IFilterRange filter;
+	private final transient PixelData image;
+	private transient PixelData timage;
+	private final transient IFilterRange filter;
 	private Range[] ranges;
 	private JLabel [] jlabels;
 	private JSlider [] fSliders;
 	private ImageViewer preview;
-	private final int dWidth=450, dHeight=450, maxSliderValue=100, dBorderSize=5, dImageSize=300;
+	private static final int dWidth=450, dHeight=450, maxSliderValue=100, dBorderSize=5, dImageSize=300;
 	
 	/**
 	 * Konstruktor wymaga podania obrazu na którym filtr ma pracować oraz samego filtru
@@ -118,7 +117,7 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 		if (!source.getValueIsAdjusting()) {
 			for (int i=0; i<ranges.length;++i){
 				if (source==fSliders[i]){
-					ranges[i].interpolate( Integer.valueOf(fSliders[i].getValue()).floatValue()/100);
+					ranges[i].interpolate( Integer.valueOf(fSliders[i].getValue()).floatValue()/maxSliderValue);
 				}
 			}
 			filter.setRangeTable(ranges);
@@ -147,7 +146,7 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 		if (e.getActionCommand().equals("reset")){
 			filter.reset();
 			for (int i=0; i<ranges.length;++i){
-					fSliders[i].setValue((int) ((ranges[i].getValue()-ranges[i].getMin())/(ranges[i].getMax()-ranges[i].getMin())*100));
+					fSliders[i].setValue((int) ((ranges[i].getValue()-ranges[i].getMin())/(ranges[i].getMax()-ranges[i].getMin())*maxSliderValue));
 			}
 			return;
 		}

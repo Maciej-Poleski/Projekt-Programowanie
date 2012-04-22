@@ -45,6 +45,7 @@ public class ImageViewer extends JPanel implements ChangeListener {
 		scrollPane.setPreferredSize(new  java.awt.Dimension(this.width, this.height));
 		this.setPreferredSize(scrollPane.getPreferredSize());
 		this.add(scrollPane);
+		this.setSize(scrollPane.getPreferredSize());
 		this.repaint();
 	}
 	/**
@@ -64,6 +65,7 @@ public class ImageViewer extends JPanel implements ChangeListener {
 		this.width=width;
 		scrollPane.setPreferredSize(new  java.awt.Dimension(this.width, this.height));
 		this.setPreferredSize(scrollPane.getPreferredSize());
+		//this.setSize(scrollPane.getPreferredSize());
 		this.repaint();
 		
 	}

@@ -21,14 +21,14 @@ import java.util.LinkedList;
  * @author Marcin Regdos
  */
 public class EditWindow extends JFrame implements ActionListener, ComponentListener  {	
-	transient private PixelData pdImage;
-	transient private LinkedList<PixelData> history;
+	private transient PixelData pdImage;
+	private transient LinkedList<PixelData> history;
 	private ImageViewer mainImageViewer;
 	private String [] filterCategoryNamesGUI;
 	private JMenuItem [] jMenuFilterButtons;
 	private JMenu [] jMenuFilterCategories;
-	transient private FilterGUI [] filters;
-	transient private ImageHolder iHolder;
+	private transient FilterGUI [] filters;
+	private transient ImageHolder iHolder;
 	private static final int dWidth=800, dHeight=600, dLocation=100, dBorderSize=5, dBottomMargin=150, dSideMargins=75;
 	private int mainImageViewerHeight=420, mainImageViewerWidth=560;
 	private static class FilterGUI{
@@ -234,9 +234,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 				case WindowGallery:
 					apply (new WindowGalery(pdImage).showDialog()); 
 					break;	
-				case WindowHistogram:
-					//new WindowHistogram(pdImage); 
-					break;	
+				default: break;	
 				}
 				return;
 			}
