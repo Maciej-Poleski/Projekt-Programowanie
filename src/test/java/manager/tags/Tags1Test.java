@@ -25,9 +25,9 @@ import static org.powermock.api.easymock.PowerMock.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Tags.class)
 public class Tags1Test {
-    Tags tags;
-    static Tags firstInstance;
-    static boolean instantiated = false;
+    private Tags tags;
+    private static Tags firstInstance;
+    private static boolean instantiated = false;
 
     @Before
     public void setUp() throws Exception {
@@ -46,13 +46,13 @@ public class Tags1Test {
 
     @Test
     public void testNewMasterTag1() throws Exception {
-        MasterTag tagReal = tags.newMasterTag();
+        tags.newMasterTag();
         verifyAll();
     }
 
     @Test
     public void testNewUserTag1() throws Exception {
-        UserTag tagReal = tags.newUserTag();
+        tags.newUserTag();
         verifyAll();
     }
 
@@ -67,14 +67,14 @@ public class Tags1Test {
     @Test
     public void testGetMasterTagHeads() throws Exception {
         MasterTag masterReal = tags.newMasterTag();
-        UserTag userReal = tags.newUserTag();
+        tags.newUserTag();
         assertEquals(tags.getMasterTagHeads(), new HashSet<>(Arrays.asList(masterReal)));
         verifyAll();
     }
 
     @Test
     public void testGetUserTagHeads() throws Exception {
-        MasterTag masterReal = tags.newMasterTag();
+        tags.newMasterTag();
         UserTag userReal = tags.newUserTag();
         assertEquals(tags.getUserTagHeads(), new HashSet<>(Arrays.asList(userReal)));
         verifyAll();
@@ -277,7 +277,7 @@ public class Tags1Test {
     @Test
     public void testRemoveParentOfTag() throws Exception {
         UserTag child = tags.newUserTag();
-        UserTag parent = tags.newUserTag(null, new HashSet<UserTag>(Arrays.asList(child)));
+        UserTag parent = tags.newUserTag(null, new HashSet<>(Arrays.asList(child)));
         assertTrue(child.getParents().contains(parent));
         assertTrue(parent.getChildren().contains(child));
         tags.removeParentOfTag(parent, child);

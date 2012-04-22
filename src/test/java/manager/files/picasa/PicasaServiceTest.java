@@ -1,6 +1,8 @@
 package manager.files.picasa;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
@@ -16,12 +18,11 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import manager.files.picasa.PicasaService.AlbumCreator;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import manager.files.picasa.PicasaAlbum.PicasaAlbumMediaType;
-import manager.files.picasa.PicasaService.AlbumCreator;
 
 import com.google.gdata.client.photos.PicasawebService;
 import com.google.gdata.data.Link;

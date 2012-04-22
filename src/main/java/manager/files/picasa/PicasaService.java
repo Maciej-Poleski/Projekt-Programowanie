@@ -23,6 +23,10 @@ public class PicasaService {
 	private PicasawebService picasawebService;
 	private static long counter = 0;
 
+	/**
+	 * Default constructor
+	 * @param userName
+	 */
 	public PicasaService(String userName) {
 		picasawebService = createPicasawebService(userName);
 		feedLink = "https://picasaweb.google.com/data/feed/api/user/"
@@ -54,6 +58,11 @@ public class PicasaService {
 		}
 	}
 
+	/**
+	 * @param tags
+	 * @return all photos associated with given collection of tags
+	 * @throws PicasaInformationCollectionException
+	 */
 	public List<PicasaPhoto> getAllPhotosWithTags(Collection<String> tags)
 			throws PicasaInformationCollectionException {
 
@@ -110,7 +119,7 @@ public class PicasaService {
 			return albums;
 
 		} catch (IOException | ServiceException e) {
-			throw new PicasaInformationCollectionException();
+			throw new PicasaInformationCollectionException(e);
 		}
 	}
 
@@ -151,6 +160,11 @@ public class PicasaService {
 
 	}
 
+	/**
+	 * @param title
+	 * @return album creator - builder pattern
+	 * @throws PicasaInformationCollectionException
+	 */
 	public AlbumCreator getAlbumCreator(String title)
 			throws PicasaInformationCollectionException {
 		try {

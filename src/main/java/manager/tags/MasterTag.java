@@ -10,11 +10,11 @@ import java.util.List;
  * @author Zygmunt Łenyk
  */
 public class MasterTag extends Tag<MasterTag> {
-    MasterTag parent = null;
-    List<MasterTag> predecessorsList = new ArrayList<>();
+    private MasterTag parent = null;
+    private final List<MasterTag> predecessorsList = new ArrayList<>();
     private static final long serialVersionUID = 1;
 
-    protected MasterTag(Tags creator) {
+    MasterTag(Tags creator) {
         super(creator);
     }
 
@@ -71,7 +71,7 @@ public class MasterTag extends Tag<MasterTag> {
      *
      * @param masterTag Tag który zostanie rodzicem tego tagu.
      */
-    public void setParent(MasterTag masterTag) {
+    void setParent(MasterTag masterTag) {
         if (parent == null && masterTag != null) {
             addParent(masterTag);
         } else if (parent != null) {
