@@ -236,7 +236,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 					apply (tdata); 
 					break;		
 				case WindowGallery:
-					apply (new WindowGallery(pdImage).showDialog()); 
+					apply (new WindowGalery(pdImage).showDialog()); 
 					break;	
 				}
 				return;

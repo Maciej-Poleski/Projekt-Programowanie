@@ -43,7 +43,6 @@ public class ImageViewer extends JPanel implements ChangeListener {
 		scrollPane.setWheelScrollingEnabled(true);
 		scrollPane.setColumnHeaderView(topPanel);
 		scrollPane.setPreferredSize(new  java.awt.Dimension(this.width, this.height));
-		//scrollPane.setSize(scrollPane.getPreferredSize());
 		this.setPreferredSize(scrollPane.getPreferredSize());
 		this.add(scrollPane);
 		this.repaint();
@@ -52,9 +51,14 @@ public class ImageViewer extends JPanel implements ChangeListener {
      * Zmiana wyswietlanego obrazu
      * @param image - nowy obraz
      */
-	public void setImage (Image image){
+	void setImage (Image image){
 		iPanel.changeImage(image);
 	}
+	/**
+     * Zmiana rozmiaru kontrolki
+     * @param width nowa szerokość kontrolki
+     * @param height nowa wysokość kontrolki
+     */
 	void changeSize (int width, int height){
 		this.height=height;
 		this.width=width;
