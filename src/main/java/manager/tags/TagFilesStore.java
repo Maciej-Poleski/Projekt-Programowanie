@@ -8,6 +8,16 @@ import java.util.*;
 /**
  * Główny magazyn otagowanych plików. Pozwala na zarządzanie zbiorem danych. Dodawanie i usuwanie tagów i plików.
  * Uzyskiwanie informacji o plikach posiadających dane Tagi oraz o Tagach przypisanych do danego zbioru plików.
+ * <p/>
+ * Obiekty tej klasy pozwalają na uzyskiwanie informacji o tym jakie tagi posiadają wskazane pliki oraz jakie pliki
+ * są otagowane wskazanymi tagami. Obiekty tej klasy zarządzają tą informacją pozwalając na dodawanie i usuwanie
+ * tak pojedynczych tagów jak i całych plików. Należy pamiętać, że każdy plik posiada dokładnie jeden tag macierzysty.
+ * Usunięcie tagu macierzystego z danego pliku efektywnie spowoduje usunięcie danego pliku z bazy. <B>Usunięcie tagu
+ * macierzystego jako takiego spowoduje usunięcie wszystkich plików otagowanych nim oraz jego pochodnymi</B> (usunięcie
+ * katalogu "zdjęcia" powoduje usunięcie wszystkich zdjęć wewnątrz tego katalogu, a nie tylko samego katalogu
+ * "zdjęcia"). Możliwe jest uzyskanie informacji o plikach otagowanych wskazanym zbiorem tagów. Możliwe jest przy tym
+ * uzyskanie wyniku będącego "sumą" wyników dla pojedynczego tagu jak i "przecięciem". Możliwe jest również uzyskanie
+ * informacji o tym które pliki są "na prawdę" otagowane wskazanym tagiem (a nie dowolną z jego pochodnych).
  *
  * @author Maciej Poleski
  */
