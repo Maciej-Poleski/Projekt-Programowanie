@@ -59,7 +59,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		setContentPane(contentPane);
 
 		JToolBar toolBar = new JToolBar();
-		contentPane.add(toolBar, BorderLayout.NORTH);
+		//contentPane.add(toolBar, BorderLayout.NORTH);
 
 		JButton buttonUndo = new JButton("Cofnij");
 		toolBar.add(buttonUndo);
@@ -131,8 +131,8 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		jMenuFilterCategories[4].add(jMenuFilterButtons[9]);
 		jMenuFilterCategories[4].add(jMenuFilterButtons[10]);
 		jMenuFilterCategories[5].add(jMenuFilterButtons[14]);
-		jMenuFilterCategories[5].add(jMenuFilterButtons[15]);
-		jMenuFilterCategories[5].add(jMenuFilterButtons[16]);
+		//jMenuFilterCategories[5].add(jMenuFilterButtons[15]);
+		//jMenuFilterCategories[5].add(jMenuFilterButtons[16]);
 		JMenuItem mHistogram = new JMenuItem("Histogram");
 		mHistogram.setActionCommand("mHistogram");
 		mHistogram.addActionListener(this);
