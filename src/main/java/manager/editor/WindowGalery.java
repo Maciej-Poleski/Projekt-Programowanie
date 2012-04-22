@@ -365,18 +365,6 @@ public class WindowGalery extends JDialog implements IWindowFilter{
         preview.setImage(originalPixelData.toBufferedImage());
     }//GEN-LAST:event_makeEmbossingFilterActionPerformed
 
-    public static void main(String args[]) {
-        //Test
-        try {
-            BufferedImage im = ImageIO.read(new File("C:\\Users\\Karol\\Desktop\\rycerstwo.jpg"));
-            PixelData data = new PixelData(im);
-            WindowGalery window = new WindowGalery(data);
-            ImageIO.write(window.showDialog().toBufferedImage(), "jpg", new File("d:\\dark-new.jpg"));
-        } catch (IOException ex) {
-            Logger.getLogger(WindowGalery.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //test
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel jLabel1;
