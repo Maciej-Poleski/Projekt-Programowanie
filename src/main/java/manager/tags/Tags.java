@@ -6,6 +6,7 @@ import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.nio.file.Path;
@@ -25,6 +26,7 @@ public class Tags implements Serializable {
     private final Map<Tag<?>, String> tagNames = new HashMap<>();
     private final Map<Tag<?>, Set<Serializable>> tagMetadata = new HashMap<>();
     private transient List<WeakReference<MasterTagsTreeModel>> masterTagsTreeModelList = new ArrayList<>();
+    private transient List<WeakReference<UserTagsTreeModel>> userTagsTreeModelList = new ArrayList<>();
     private static Tags defaultInstance;
     private static final long serialVersionUID = 1;
 
@@ -70,6 +72,7 @@ public class Tags implements Serializable {
     public UserTag newUserTag() {
         UserTag tag = new UserTag(this);
         tags.add(tag);
+        notifyUserTagsTreeModels();
         return tag;
     }
 
@@ -234,6 +237,7 @@ public class Tags implements Serializable {
         }
         try {
             checkCycle();
+            notifyUserTagsTreeModels();
         } catch (CycleException e) {
             for (UserTag parent : parents) {
                 result.removeParent(parent);
@@ -260,6 +264,7 @@ public class Tags implements Serializable {
     public UserTag newUserTag(Set<UserTag> parents, Set<UserTag> children, String name) throws CycleException {
         UserTag result = newUserTag(parents, children);
         setNameOfTag(result, name);
+        notifyUserTagsTreeModels();
         return result;
     }
 
@@ -298,6 +303,8 @@ public class Tags implements Serializable {
         tagNames.put(tag, newName);
         if (tag instanceof MasterTag) {
             notifyMasterTagsTreeModels();
+        } else if (tag instanceof UserTag) {
+            notifyUserTagsTreeModels();
         }
     }
 
@@ -370,6 +377,8 @@ public class Tags implements Serializable {
             checkCycle();
             if (tag instanceof MasterTag) {
                 notifyMasterTagsTreeModels();
+            } else if (tag instanceof UserTag) {
+                notifyUserTagsTreeModels();
             }
         } catch (CycleException e) {
             tag.removeChild(child);
@@ -398,7 +407,11 @@ public class Tags implements Serializable {
             throw new IllegalStateException("Tag " + tag + " nie ma dziecka " + child);
         }
         tag.removeChild(child);
-        notifyMasterTagsTreeModels();
+        if (tag instanceof MasterTag) {
+            notifyMasterTagsTreeModels();
+        } else if (tag instanceof UserTag) {
+            notifyUserTagsTreeModels();
+        }
     }
 
     /**
@@ -454,6 +467,8 @@ public class Tags implements Serializable {
         tag.removeParent(parent);
         if (parent instanceof MasterTag) {
             notifyMasterTagsTreeModels();
+        } else if (parent instanceof UserTag) {
+            notifyUserTagsTreeModels();
         }
     }
 
@@ -478,6 +493,7 @@ public class Tags implements Serializable {
         try {
             tag.addParent(parent);
             checkCycle();
+            notifyUserTagsTreeModels();
         } catch (CycleException e) {
             tag.removeParent(parent);
             throw new CycleException(e);
@@ -536,7 +552,9 @@ public class Tags implements Serializable {
      * @return Model drzewa tagów użytkownika
      */
     public TreeModel getModelOfUserTags() {
-        return new UserTagsTreeModel();
+        UserTagsTreeModel userTagsTreeModel = new UserTagsTreeModel();
+        userTagsTreeModelList.add(new WeakReference<>(userTagsTreeModel));
+        return userTagsTreeModel;
     }
 
     /**
@@ -623,6 +641,7 @@ public class Tags implements Serializable {
             tag.removeChild(child);
         }
         tags.remove(tag);
+        notifyUserTagsTreeModels();
     }
 
     private void notifyMasterTagsTreeModels() {
@@ -635,6 +654,25 @@ public class Tags implements Serializable {
             }
         }
         masterTagsTreeModelList = newList;
+    }
+
+    private void notifyUserTagsTreeModels() {
+        List<WeakReference<UserTagsTreeModel>> newList = new ArrayList<>();
+        for (WeakReference<UserTagsTreeModel> model : userTagsTreeModelList) {
+            UserTagsTreeModel realModel = model.get();
+            if (realModel != null) {
+                newList.add(new WeakReference<>(realModel));
+                realModel.changed();
+            }
+        }
+        userTagsTreeModelList = newList;
+    }
+
+    private void readObject(java.io.ObjectInputStream in)
+            throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        masterTagsTreeModelList = new ArrayList<>();
+        userTagsTreeModelList = new ArrayList<>();
     }
 
     private static class CycleParentFinder {
@@ -688,7 +726,8 @@ public class Tags implements Serializable {
     }
 
     private class UserTagsTreeModel implements TreeModel {
-        private final List<UserTag> heads = new ArrayList<>(getUserTagHeads());
+        private List<UserTag> heads = new ArrayList<>(getUserTagHeads());
+        private final List<TreeModelListener> listenerList = new ArrayList<>();
 
         private class Node implements IUserTagNode {
             private final UserTag tag;
@@ -867,12 +906,19 @@ public class Tags implements Serializable {
 
         @Override
         public void addTreeModelListener(TreeModelListener l) {
-            // UNSUPPORTED
+            listenerList.add(l);
         }
 
         @Override
         public void removeTreeModelListener(TreeModelListener l) {
-            // UNSUPPORTED
+            listenerList.remove(l);
+        }
+
+        void changed() {
+            for (TreeModelListener listener : listenerList) {
+                heads = new ArrayList<>(getUserTagHeads());
+                listener.treeStructureChanged(new TreeModelEvent(this, new Object[]{getRoot()}));
+            }
         }
     }
 
