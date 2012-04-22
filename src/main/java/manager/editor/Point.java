@@ -8,11 +8,43 @@ package manager.editor;
  * @author Patryk
  */
 public class Point {
-	public float x;
-	public float y;
+	private float x;
+	private float y;
 	
 	public Point(float mX, float mY){
 		x = mX;
+		y = mY;
+	}
+	
+	/**
+	 * Zwraca współrzędną poziomą
+	 * @return wspołrzędna na osi OX
+	 */
+	public float getX(){
+		return x;
+	}
+	
+	/**
+	 * Zwraca współrzędną pionową
+	 * @return wspołrzędna na osi OY
+	 */
+	public float getY(){
+		return y;
+	}
+	
+	/**
+	 * Ustawia współrzędną poziomą
+	 * @param mX wspołrzędna na osi OX
+	 */
+	public void setX(float mX){
+		x = mX;
+	}
+	
+	/**
+	 * Ustawia współrzędną pionową
+	 * @param mY wspołrzędna na osi OY
+	 */
+	public void setY(float mY){
 		y = mY;
 	}
 }

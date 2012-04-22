@@ -23,13 +23,15 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 
 	private final JPanel contentPanel = new JPanel();
 
-	private final PixelData image;
-	private PixelData timage;
-	private final IFilterRange filter;
+	transient private final PixelData image;
+	transient private PixelData timage;
+	transient private final IFilterRange filter;
 	private Range[] ranges;
 	private JLabel [] jlabels;
 	private JSlider [] fSliders;
 	private ImageViewer preview;
+	private final int dWidth=450, dHeight=450, maxSliderValue=100, dBorderSize=5;
+	
 	/**
 	 * Konstruktor wymaga podania obrazu na którym filtr ma pracować oraz samego filtru
 	 * @param image  obraz do edycji
@@ -39,44 +41,45 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 		this.setModalityType(JDialog.DEFAULT_MODALITY_TYPE);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.image=image;
+		this.setResizable(false);
 		this.filter=iFilter;
 		ranges=filter.getRangeTable();
 		jlabels=new  JLabel [ranges.length];
 		fSliders=new JSlider [ranges.length];
 		timage=(PixelData) image.clone();
 		this.setTitle(name);
-		InitGui();
+		initGui();
 		filter.apply(image, timage);
 		preview.setImage(timage.toBufferedImage());
 
 	}
-	private void InitGui() {
-		this.setSize(450, 450);
+	private void initGui() {
+		this.setSize(dWidth, dHeight);
 		
 		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPanel.setBorder(new EmptyBorder(dBorderSize, dBorderSize, dBorderSize, dBorderSize));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new BorderLayout(0, 0));
 		{
-			JPanel DescrAndSlidersPanel = new JPanel();
-			JPanel DescrPanel = new JPanel();
-			JPanel SlidersPanel = new JPanel();
-			contentPanel.add(DescrAndSlidersPanel, BorderLayout.CENTER);
-			DescrAndSlidersPanel.setLayout(new BoxLayout(DescrAndSlidersPanel, BoxLayout.X_AXIS));
-			DescrAndSlidersPanel.add(DescrPanel);
-			DescrAndSlidersPanel.add(SlidersPanel);
-			SlidersPanel.setLayout(new BoxLayout(SlidersPanel, BoxLayout.Y_AXIS));
-			DescrPanel.setLayout(new BoxLayout(DescrPanel, BoxLayout.Y_AXIS));
+			JPanel descrAndslidersPanel = new JPanel();
+			JPanel descrPanel = new JPanel();
+			JPanel slidersPanel = new JPanel();
+			contentPanel.add(descrAndslidersPanel, BorderLayout.CENTER);
+			descrAndslidersPanel.setLayout(new BoxLayout(descrAndslidersPanel, BoxLayout.X_AXIS));
+			descrAndslidersPanel.add(descrPanel);
+			descrAndslidersPanel.add(slidersPanel);
+			slidersPanel.setLayout(new BoxLayout(slidersPanel, BoxLayout.Y_AXIS));
+			descrPanel.setLayout(new BoxLayout(descrPanel, BoxLayout.Y_AXIS));
 			for (int i=0; i<ranges.length;++i){
 				{
 					jlabels[i] = new JLabel();
-					DescrPanel.add(jlabels[i]);
+					descrPanel.add(jlabels[i]);
 				}
 				{
-					fSliders[i] = new JSlider(0, 100, new Float((ranges[i].getValue()-ranges[i].getMin())/(ranges[i].getMax()-ranges[i].getMin())*100).intValue());
+					fSliders[i] = new JSlider(0, maxSliderValue, (int) ((ranges[i].getValue()-ranges[i].getMin())/(ranges[i].getMax()-ranges[i].getMin())*100));
 					fSliders[i].setToolTipText("Zakres od "+ ranges[i].getMin() + " do " + ranges[i].getMax());
 					fSliders[i].addChangeListener(this);
-					SlidersPanel.add(fSliders[i]);
+					slidersPanel.add(fSliders[i]);
 					jlabels[i].setText(ranges[i].getName());
 					}
 			}
@@ -109,25 +112,26 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 
 
 	}
+	@Override
 	public void stateChanged(ChangeEvent e) {
 		JSlider source = (JSlider)e.getSource();
-		//if (!source.getValueIsAdjusting()) {
+		if (!source.getValueIsAdjusting()) {
 			for (int i=0; i<ranges.length;++i){
 				if (source==fSliders[i]){
-					ranges[i].interpolate(new Integer (fSliders[i].getValue()).floatValue()/100);
+					ranges[i].interpolate( Integer.valueOf(fSliders[i].getValue()).floatValue()/100);
 				}
 			}
 			filter.setRangeTable(ranges);
 			filter.apply(image, timage);
 			preview.setImage(timage.toBufferedImage());
-		//}
+		}
 	}
 	@Override
 	public PixelData showDialog(){
 		this.setVisible(true);
 		return timage;
 	}
-
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		if ("OK".equals(e.getActionCommand())) {
 			this.setVisible(false);
@@ -143,7 +147,7 @@ public class WindowRange extends JDialog implements ChangeListener, ActionListen
 		if (e.getActionCommand().equals("reset")){
 			filter.reset();
 			for (int i=0; i<ranges.length;++i){
-					fSliders[i].setValue( new Float((ranges[i].getValue()-ranges[i].getMin())/(ranges[i].getMax()-ranges[i].getMin())*100).intValue());
+					fSliders[i].setValue((int) ((ranges[i].getValue()-ranges[i].getMin())/(ranges[i].getMax()-ranges[i].getMin())*100));
 			}
 			return;
 		}

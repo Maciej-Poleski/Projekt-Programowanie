@@ -32,14 +32,14 @@ public class TextureGeneratorGradientCircle implements ITextureGenerator{
 	 * @throws IllegalArgumentException - gdy wektor podany jako argument jest wektorem zerowym
 	 */
 	public final void setVector(Point beg, Point end){
-		if(Math.abs(beg.x - end.x) < ColorConverter.FLOAT_PRECISION && 
-				Math.abs(beg.y - end.y) < ColorConverter.FLOAT_PRECISION){
+		if(Math.abs(beg.getX() - end.getX()) < ColorConverter.FLOAT_PRECISION && 
+				Math.abs(beg.getY() - end.getY()) < ColorConverter.FLOAT_PRECISION){
 			throw new IllegalArgumentException();
 		}
 		mBegin = beg;
 		mEnd = end;
-		float dX = mEnd.x-mBegin.x;
-		float dY = mEnd.y-mBegin.y;
+		float dX = mEnd.getX()-mBegin.getX();
+		float dY = mEnd.getY()-mBegin.getY();
 		mRadius = (float)Math.sqrt(dX*dX+dY*dY);
 	}
 	
@@ -63,7 +63,7 @@ public class TextureGeneratorGradientCircle implements ITextureGenerator{
 	
 	@Override
 	public void getValue(float fx, float fy, ColorRGB temp) {
-		float distance = (float)Math.sqrt((mBegin.x-fx)*(mBegin.x-fx) + (mBegin.y-fy)*(mBegin.y-fy));
+		float distance = (float)Math.sqrt((mBegin.getX()-fx)*(mBegin.getX()-fx) + (mBegin.getY()-fy)*(mBegin.getY()-fy));
 		mGrad.interpolate(Math.max(0.0f, Math.min(1.0f, distance/mRadius)), temp);
 	}
 }
