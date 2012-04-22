@@ -1,6 +1,7 @@
 package manager.core;
 
 import manager.tags.MasterTag;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,6 +16,12 @@ import static junit.framework.Assert.*;
  */
 public class DataTest {
     Data data;
+
+    @After
+    public void tearDown() throws Exception {
+        File database = new File("database");
+        database.delete();
+    }
 
     @Before
     public void setUp() throws Exception {
