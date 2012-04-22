@@ -13,6 +13,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
@@ -20,7 +22,7 @@ import java.util.LinkedList;
  * Klasa reprezentuje okno dialogowe w którym dokonywana jest edycja obrazu
  * @author Marcin Regdos
  */
-public class EditWindow extends JFrame implements ActionListener, ComponentListener  {	
+public class EditWindow extends JFrame implements ActionListener, ComponentListener, WindowStateListener  {	
 	private transient PixelData pdImage;
 	private transient LinkedList<PixelData> history;
 	private ImageViewer mainImageViewer;
@@ -170,6 +172,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		
 		getContentPane().add(mainImageViewer);
 		this.addComponentListener(this);
+		this.addWindowStateListener(this);
 		this.setVisible(true);
 	}
 	private void undo (){
@@ -250,5 +253,10 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		
 	}
 	@Override
-	public void componentShown(ComponentEvent e) {} 
+	public void componentShown(ComponentEvent e) {}
+	@Override
+	public void windowStateChanged(WindowEvent arg0) {
+		mainImageViewer.changeSize(this.getWidth()-dSideMargins, this.getHeight()-dBottomMargin);
+		
+	} 
 }
