@@ -3,6 +3,8 @@ package manager.editor;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import manager.files.backup.ImageHolder;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -25,8 +27,9 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 	private String [] filterCategoryNamesGUI;
 	private JMenuItem [] jMenuFilterButtons;
 	private JMenu [] jMenuFilterCategories;
-	transient private FilterGUI [] filters;;
-	private static final int dWidth=650, dHeight=550, dLocation=100, dBorderSize=5;
+	transient private FilterGUI [] filters;
+	transient private ImageHolder iHolder;
+	private static final int dWidth=800, dHeight=600, dLocation=100, dBorderSize=5, dBottomMargin=150, dSideMargins=75;
 	private int mainImageViewerHeight=420, mainImageViewerWidth=560;
 	private static class FilterGUI{
 		String name, nameGUI;
@@ -40,7 +43,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		}
 	}
 	private enum FWindowType{
-		WindowRange, WindowResize, WindowMatrix, WindowLUT, WindowHistogram, NoWindow, WindowGallery, WindowGradient
+		WindowRange, WindowResize, WindowMatrix, WindowLUT, WindowHistogram, NoWindow, WindowGallery, WindowGradient, WidnowHistogram
 	}
 	private void initGui(){
 		setTitle("Edytor plików graficznych");
@@ -143,18 +146,23 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		menuBar.add(jMenuFilterButtons[18]);
 		jMenuFilterButtons[18].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK));
 		jMenuFilterButtons[17].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
+		jMenuFilterButtons[0].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_J, InputEvent.CTRL_DOWN_MASK));
+		jMenuFilterButtons[1].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_DOWN_MASK));
 		//mEdycja.add(mUndo);
 	}
 
 	/**
 	 * Konstruktor - wymagany jest obraz do edycji
-	 * @param image - referencja do objektu klasy BufferedImage przechowująca obraz do edycji
+	 * @param input - referencja do obiektu klasy ImageHolder, przechowującej obraz do edycji
 	 */
-	public EditWindow(BufferedImage image) {
-		if (image==null){
+	public EditWindow(ImageHolder input) {
+		if (input==null){
 			return;
 		}
+		iHolder=input;
 		initFiltersToGUI();
+		
+		BufferedImage image=iHolder.getBufferedImage();
 		mainImageViewer=new ImageViewer(image, mainImageViewerWidth, mainImageViewerHeight);
 		pdImage=new PixelData(image);
 		history=new LinkedList<PixelData>();
@@ -169,13 +177,6 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 	 * @return przetworzony obraz
 	 * 
 	 */
-	public BufferedImage getTransformedImage() {
-		this.setVisible(true);
-		if (pdImage==null){
-			return null;
-		}
-		return pdImage.toBufferedImage();
-	}
 	private void undo (){
 		if (!history.isEmpty()){
 			pdImage=history.pollLast();
@@ -197,18 +198,18 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 			return;
 		} 
 		if (e.getActionCommand().equals("close")) {
-			pdImage=null;
 			this.setVisible(false);
 			this.dispose();
 			return;
 		} 
 		if (e.getActionCommand().equals("applyclose")) {
+			ImageHolder out=new ImageHolder (pdImage.toBufferedImage(), iHolder.getFileId(), iHolder.getType());
 			this.setVisible(false);
 			this.dispose();
 			return;
 		} 
 		if (e.getActionCommand().equals("mHistogram")) {
-			new WindowHistogram(null);
+			new WindowHistogram(pdImage).showDialog(); 
 			return;
 		} 
 		for (int i=0; i<filters.length; ++i){
@@ -238,6 +239,9 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 				case WindowGallery:
 					apply (new WindowGalery(pdImage).showDialog()); 
 					break;	
+				case WindowHistogram:
+					//new WindowHistogram(pdImage); 
+					break;	
 				}
 				return;
 			}
@@ -249,7 +253,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 	public void componentMoved(ComponentEvent e) {}
 	@Override
 	public void componentResized(ComponentEvent e) {
-		mainImageViewer.changeSize(this.getWidth()-75, this.getHeight()-150);
+		mainImageViewer.changeSize(this.getWidth()-dSideMargins, this.getHeight()-dBottomMargin);
 		
 	}
 	@Override
