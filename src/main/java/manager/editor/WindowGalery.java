@@ -22,9 +22,10 @@ public class WindowGalery extends JDialog implements IWindowFilter{
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         originalPixelData = (PixelData)image.clone();
         copyPixelData = (PixelData)image.clone();
-        preview = new ImageViewer(originalPixelData.toBufferedImage(), 300, 300);
+        preview = new ImageViewer(originalPixelData.toBufferedImage(), 1000, 800);
         initComponents();
         initFilter();
+        System.out.println(preview.getSize());
     }
     
     @Override
@@ -336,33 +337,28 @@ public class WindowGalery extends JDialog implements IWindowFilter{
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void makeEdgeDetectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeEdgeDetectionActionPerformed
-        copyPixelData = (PixelData) originalPixelData.clone();
         filtersEdgeDetection[listEdgeDetection.getSelectedIndex()].apply(originalPixelData, copyPixelData);
-        preview.setImage(originalPixelData.toBufferedImage());
+        preview.setImage(copyPixelData.toBufferedImage());
     }//GEN-LAST:event_makeEdgeDetectionActionPerformed
 
     private void makeEdgeDetectionLaPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeEdgeDetectionLaPlaceActionPerformed
-        copyPixelData = (PixelData) originalPixelData.clone();
         filtersEdgeDetectionLaPlace[listEdgeDetectionLaPlace.getSelectedIndex()].apply(originalPixelData, copyPixelData);
-        preview.setImage(originalPixelData.toBufferedImage());
+        preview.setImage(copyPixelData.toBufferedImage());
     }//GEN-LAST:event_makeEdgeDetectionLaPlaceActionPerformed
 
     private void makeLowPassFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeLowPassFilterActionPerformed
-        copyPixelData = (PixelData) originalPixelData.clone();
         filtersLowPass[listLowPassFilter.getSelectedIndex()].apply(originalPixelData, copyPixelData);
-        preview.setImage(originalPixelData.toBufferedImage());
+        preview.setImage(copyPixelData.toBufferedImage());
     }//GEN-LAST:event_makeLowPassFilterActionPerformed
 
     private void makeHighPassFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeHighPassFilterActionPerformed
-        copyPixelData = (PixelData) originalPixelData.clone();
         filtersHighPass[listHighPassFilter.getSelectedIndex()].apply(originalPixelData, copyPixelData);
-        preview.setImage(originalPixelData.toBufferedImage());
+        preview.setImage(copyPixelData.toBufferedImage());
     }//GEN-LAST:event_makeHighPassFilterActionPerformed
 
     private void makeEmbossingFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeEmbossingFilterActionPerformed
-        copyPixelData = (PixelData) originalPixelData.clone();
         filtersEmbossing[listEmbossingFilter.getSelectedIndex()].apply(originalPixelData, copyPixelData);
-        preview.setImage(originalPixelData.toBufferedImage());
+        preview.setImage(copyPixelData.toBufferedImage());
     }//GEN-LAST:event_makeEmbossingFilterActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
