@@ -119,7 +119,7 @@ public class PicasaService {
 			return albums;
 
 		} catch (IOException | ServiceException e) {
-			throw new PicasaInformationCollectionException();
+			throw new PicasaInformationCollectionException(e);
 		}
 	}
 

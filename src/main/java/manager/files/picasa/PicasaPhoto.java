@@ -63,11 +63,9 @@ public final class PicasaPhoto {
 
 		try {
 			String photoUrl = photoEntry.getMediaContents().get(0).getUrl();
-			int index = photoUrl.lastIndexOf("/");
+			int index = photoUrl.lastIndexOf('/');
 			photoUrl = photoUrl.substring(0, index + 1) + "s2000"
 					+ photoUrl.substring(index);
-
-			System.out.println(photoUrl);
 
 			URL url = new URL(photoUrl);
 
@@ -89,7 +87,7 @@ public final class PicasaPhoto {
 			}
 		} catch (IOException e) {
 
-			throw new PicasaMediaDownloadException();
+			throw new PicasaMediaDownloadException(e);
 		}
 	}
 
@@ -107,11 +105,9 @@ public final class PicasaPhoto {
 		try {
 			String photoUrl = photo.photoEntry.getMediaContents().get(0)
 					.getUrl();
-			int index = photoUrl.lastIndexOf("/");
+			int index = photoUrl.lastIndexOf('/');
 			photoUrl = photoUrl.substring(0, index + 1) + "s2000"
 					+ photoUrl.substring(index);
-
-			System.out.println(photoUrl);
 
 			URL url = new URL(photoUrl);
 
@@ -133,7 +129,7 @@ public final class PicasaPhoto {
 			}
 		} catch (IOException e) {
 
-			throw new PicasaMediaDownloadException();
+			throw new PicasaMediaDownloadException(e);
 		}
 
 	}
