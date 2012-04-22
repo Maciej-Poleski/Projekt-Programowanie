@@ -17,49 +17,48 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-class Info implements Serializable {
-
-	private static final long serialVersionUID = 1L;
-
-	Date created;
-	HashMap<FileID, File> infos = new HashMap<FileID, File>();
-
-	Info() {
-		created = new Date();
-	}
-}
-
-class History implements Serializable {
-
-	private static final long serialVersionUID = 1L;
-
-	Date created;
-
-	HashMap<FileID, File> history = new HashMap<FileID, File>();
-
-	History() {
-		created = new Date();
-	}
-}
-
 /**
  * @author Jakub Cieśla, Marcin Ziemiński
  * 
  */
 public final class PrimaryBackupImpl implements PrimaryBackup {
 
+	class Info implements Serializable {
+
+		private static final long serialVersionUID = 1L;
+
+		private Date created;
+		private HashMap<FileID, File> infos = new HashMap<FileID, File>();
+
+		Info() {
+			created = new Date();
+		}
+	}
+
+	class History implements Serializable {
+
+		private static final long serialVersionUID = 1L;
+
+		private Date created;
+
+		private HashMap<FileID, File> history = new HashMap<FileID, File>();
+
+		History() {
+			created = new Date();
+		}
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	private Info data;
 	private History guard;
 	private File input, hist;
-	private ObjectOutputStream wHistory;
 
 	private final Tags tempTags;
 	private final String backupPath;
 
-	public PrimaryBackupImpl(String path, Tags tags, File info,
-			File history) throws IOException {
+	public PrimaryBackupImpl(String path, Tags tags, File info, File history)
+			throws IOException {
 		backupPath = path;
 		tempTags = tags;
 		readInput(info, history);
@@ -150,7 +149,8 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 	 * @throws java.io.IOException
 	 */
 	private void saveHistory() throws IOException {
-		wHistory = new ObjectOutputStream(new FileOutputStream(hist));
+		ObjectOutputStream wHistory = new ObjectOutputStream(
+				new FileOutputStream(hist));
 		guard.created = new Date();
 		wHistory.writeObject(guard);
 		wHistory.close();
@@ -222,7 +222,11 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 		try {
 			Path end = tempTags.getPathFromMasterTag(tag);
 			File real = new File(backupPath + File.separator + end.toString());
-			real.mkdirs();
+			if (real.mkdirs()) {
+				throw new OperationInterruptedException(
+						"Nie można utworzyć katalogu");
+			}
+
 			real = new File(real.toString() + File.separator + file.getName());
 			addPath(new FileID(), real);
 
@@ -263,18 +267,27 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 		try {
 			File file = getFile(fileId);
 			removePath(fileId);
-			
+
 			File temp = file;
-			temp.delete();
-			
+
+			if (!temp.delete()) {
+				throw new OperationInterruptedException(
+						"Nie można usunąć pliku");
+			}
+
 			file = file.getParentFile();
 
 			while (file != null) {
 				temp = file;
 				file = file.getParentFile();
-				if (temp.listFiles().length == 0)
+				if (temp.listFiles().length == 0) {
 					break;
-				temp.delete();
+				}
+
+				if (!temp.delete()) {
+					throw new OperationInterruptedException(
+							"Nie można usunąć pliku");
+				}
 			}
 
 		} catch (IOException e) {
@@ -306,8 +319,9 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 			StringBuilder temp = new StringBuilder();
 
 			// pobranie typy pliku
-			for (int i = name.length() - 1; name.charAt(i) != '.'; i--)
+			for (int i = name.length() - 1; name.charAt(i) != '.'; i--) {
 				temp.append(name.charAt(i));
+			}
 			temp.reverse();
 
 			return new ImageHolder(im, fileId, temp.toString());
@@ -335,7 +349,10 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 			String type = image.getType();
 
 			// usuwanie pliku z przed edycji
-			file.delete();
+			if (!file.delete()) {
+				throw new OperationInterruptedException(
+						"Nie można usunać starej wersji pliku");
+			}
 			removePath(image.getFileId());
 
 			// dodanie zedytowanego pliku
