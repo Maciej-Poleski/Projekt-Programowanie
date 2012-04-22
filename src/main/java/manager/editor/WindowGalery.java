@@ -1,11 +1,5 @@
 package manager.editor;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 
 /**
@@ -22,9 +16,10 @@ public class WindowGalery extends JDialog implements IWindowFilter{
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         originalPixelData = (PixelData)image.clone();
         copyPixelData = (PixelData)image.clone();
-        preview = new ImageViewer(originalPixelData.toBufferedImage(), 300, 300);
+        preview = new ImageViewer(originalPixelData.toBufferedImage(), 940, 540);
         initComponents();
         initFilter();
+        this.setResizable(false);
     }
     
     @Override
@@ -103,7 +98,6 @@ public class WindowGalery extends JDialog implements IWindowFilter{
     }
     
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -138,6 +132,7 @@ public class WindowGalery extends JDialog implements IWindowFilter{
         listEdgeDetection.setValueIsAdjusting(true);
         jScrollPane1.setViewportView(listEdgeDetection);
         listEdgeDetection.getAccessibleContext().setAccessibleParent(listEdgeDetection);
+        listEdgeDetection.setSelectedIndex(0);
 
         jLabel1.setText("Keep changes?");
 
@@ -209,6 +204,7 @@ public class WindowGalery extends JDialog implements IWindowFilter{
             public Object getElementAt(int i) { return strings[i]; }
         });
         listEdgeDetectionLaPlace.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        listEdgeDetectionLaPlace.setSelectedIndex(0);
         jScrollPane2.setViewportView(listEdgeDetectionLaPlace);
 
         makeEdgeDetectionLaPlace.setText("Make Edge Detection LaPlace");
@@ -231,6 +227,7 @@ public class WindowGalery extends JDialog implements IWindowFilter{
             public Object getElementAt(int i) { return strings[i]; }
         });
         listLowPassFilter.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        listLowPassFilter.setSelectedIndex(0);
         jScrollPane3.setViewportView(listLowPassFilter);
 
         makeHighPassFilter.setText("Make High Pass Filter");
@@ -246,6 +243,7 @@ public class WindowGalery extends JDialog implements IWindowFilter{
             public Object getElementAt(int i) { return strings[i]; }
         });
         listHighPassFilter.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        listHighPassFilter.setSelectedIndex(0);
         jScrollPane4.setViewportView(listHighPassFilter);
 
         makeEmbossingFilter.setText("Make Embossing FIlter");
@@ -261,6 +259,7 @@ public class WindowGalery extends JDialog implements IWindowFilter{
             public Object getElementAt(int i) { return strings[i]; }
         });
         listEmbossingFilter.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        listEmbossingFilter.setSelectedIndex(0);
         jScrollPane5.setViewportView(listEmbossingFilter);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -322,50 +321,44 @@ public class WindowGalery extends JDialog implements IWindowFilter{
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
         this.setVisible(false);
         this.dispose();
-    }//GEN-LAST:event_okButtonActionPerformed
+    }
 
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
         copyPixelData = null;
         this.setVisible(false);
         this.dispose();
-    }//GEN-LAST:event_cancelButtonActionPerformed
+    }
 
-    private void makeEdgeDetectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeEdgeDetectionActionPerformed
-        copyPixelData = (PixelData) originalPixelData.clone();
+    private void makeEdgeDetectionActionPerformed(java.awt.event.ActionEvent evt) {
         filtersEdgeDetection[listEdgeDetection.getSelectedIndex()].apply(originalPixelData, copyPixelData);
-        preview.setImage(originalPixelData.toBufferedImage());
-    }//GEN-LAST:event_makeEdgeDetectionActionPerformed
+        preview.setImage(copyPixelData.toBufferedImage());
+    }
 
-    private void makeEdgeDetectionLaPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeEdgeDetectionLaPlaceActionPerformed
-        copyPixelData = (PixelData) originalPixelData.clone();
+    private void makeEdgeDetectionLaPlaceActionPerformed(java.awt.event.ActionEvent evt) {
         filtersEdgeDetectionLaPlace[listEdgeDetectionLaPlace.getSelectedIndex()].apply(originalPixelData, copyPixelData);
-        preview.setImage(originalPixelData.toBufferedImage());
-    }//GEN-LAST:event_makeEdgeDetectionLaPlaceActionPerformed
+        preview.setImage(copyPixelData.toBufferedImage());
+    }
 
-    private void makeLowPassFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeLowPassFilterActionPerformed
-        copyPixelData = (PixelData) originalPixelData.clone();
+    private void makeLowPassFilterActionPerformed(java.awt.event.ActionEvent evt) {
         filtersLowPass[listLowPassFilter.getSelectedIndex()].apply(originalPixelData, copyPixelData);
-        preview.setImage(originalPixelData.toBufferedImage());
-    }//GEN-LAST:event_makeLowPassFilterActionPerformed
+        preview.setImage(copyPixelData.toBufferedImage());
+    }
 
-    private void makeHighPassFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeHighPassFilterActionPerformed
-        copyPixelData = (PixelData) originalPixelData.clone();
+    private void makeHighPassFilterActionPerformed(java.awt.event.ActionEvent evt) {
         filtersHighPass[listHighPassFilter.getSelectedIndex()].apply(originalPixelData, copyPixelData);
-        preview.setImage(originalPixelData.toBufferedImage());
-    }//GEN-LAST:event_makeHighPassFilterActionPerformed
+        preview.setImage(copyPixelData.toBufferedImage());
+    }
 
-    private void makeEmbossingFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeEmbossingFilterActionPerformed
-        copyPixelData = (PixelData) originalPixelData.clone();
+    private void makeEmbossingFilterActionPerformed(java.awt.event.ActionEvent evt) {
         filtersEmbossing[listEmbossingFilter.getSelectedIndex()].apply(originalPixelData, copyPixelData);
         preview.setImage(originalPixelData.toBufferedImage());
-    }//GEN-LAST:event_makeEmbossingFilterActionPerformed
+    }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
@@ -386,6 +379,5 @@ public class WindowGalery extends JDialog implements IWindowFilter{
     private javax.swing.JButton makeLowPassFilter;
     private javax.swing.JButton okButton;
     private javax.swing.JPanel viewPanel;
-    // End of variables declaration//GEN-END:variables
 
 }

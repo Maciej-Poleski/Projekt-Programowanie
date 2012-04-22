@@ -15,7 +15,7 @@ public class ImageHolder {
 	private final FileID imageID;
 	private final String type;
 
-	ImageHolder(BufferedImage editableImage, FileID imageID, String type) {
+	public ImageHolder(BufferedImage editableImage, FileID imageID, String type) {
 		this.editableImage = editableImage;
 		this.imageID = imageID;
 		this.type = type;
