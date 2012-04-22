@@ -7,6 +7,7 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -23,7 +24,7 @@ public class Tags implements Serializable {
     private TagFilesStore store = new TagFilesStore();
     private final Map<Tag<?>, String> tagNames = new HashMap<>();
     private final Map<Tag<?>, Set<Serializable>> tagMetadata = new HashMap<>();
-    private final transient List<MasterTagsTreeModel> masterTagsTreeModelList = new ArrayList<>();
+    private transient List<WeakReference<MasterTagsTreeModel>> masterTagsTreeModelList = new ArrayList<>();
     private static Tags defaultInstance;
     private static final long serialVersionUID = 1;
 
@@ -524,7 +525,7 @@ public class Tags implements Serializable {
      */
     public TreeModel getModelOfMasterTags() {
         MasterTagsTreeModel masterTagsTreeModel = new MasterTagsTreeModel();
-        masterTagsTreeModelList.add(masterTagsTreeModel);
+        masterTagsTreeModelList.add(new WeakReference<>(masterTagsTreeModel));
         return masterTagsTreeModel;
     }
 
@@ -625,9 +626,15 @@ public class Tags implements Serializable {
     }
 
     private void notifyMasterTagsTreeModels() {
-        for (MasterTagsTreeModel model : masterTagsTreeModelList) {
-            model.changed();
+        List<WeakReference<MasterTagsTreeModel>> newList = new ArrayList<>();
+        for (WeakReference<MasterTagsTreeModel> model : masterTagsTreeModelList) {
+            MasterTagsTreeModel realModel = model.get();
+            if (realModel != null) {
+                newList.add(new WeakReference<>(realModel));
+                realModel.changed();
+            }
         }
+        masterTagsTreeModelList = newList;
     }
 
     private static class CycleParentFinder {
