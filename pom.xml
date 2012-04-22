@@ -4,7 +4,7 @@
 
     <groupId>net.launchpad.projekt-programowanie</groupId>
     <artifactId>manager</artifactId>
-    <version>0.5</version>
+    <version>0.9</version>
     <packaging>jar</packaging>
 
     <name>Menadżer plików i edytor grafiki</name>
