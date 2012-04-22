@@ -8,6 +8,9 @@ import java.util.List;
 /**
  * Reprezentuje szeroko pojęty Tag. Obiekty będące tagami można pytać o rodziców oraz dzieci.
  * Można odszukać wszystkich przodków oraz potomków.
+ * <p/>
+ * Tag jest specyficznym oznaczeniem jakie można nadawać plikom. Zazwyczaj tag posiada etykietę w postaci napisu.
+ * Każdy plik posiada dokładnie jeden tag macierzysty oraz dowolną ilość tagów użytkownika. Tagi tworzą strukturę grafu.
  *
  * @param <T> Klasa konkretna rozszerzająca tą klasę.
  * @author Zygmunt Łenyk
@@ -99,6 +102,11 @@ public abstract class Tag<T extends Tag<T>> implements Serializable {
         return creator;
     }
 
+    /**
+     * Zwraca nazwę tagu.
+     *
+     * @return Nazwa tagu
+     */
     @Override
     public String toString() {
         return getCreator().getNameOfTag(this);

@@ -5,6 +5,11 @@ import java.util.List;
 
 /**
  * Tag użytkownika. Tagi tego typu tworzą strukturę DAG-u.
+ * <p/>
+ * Tagi użytkownika mogą być swobodnie przypisywane dowolnym plikom. Każdy plik może mieć przypisane dowolnie wiele
+ * takich tagów. Tagi tego typu tworzą strukturę DAG-u. Oznacza to, że możliwe jest wyrażenie sytuacji w której dany
+ * tag zawęża znaczenie kilku innych tagów. Możliwe jest np określenie że pewien gatunek muzyki jest rodzajem kilku
+ * innych gatunków.
  *
  * @author Zygmunt Łenyk
  */
@@ -49,7 +54,7 @@ public class UserTag extends Tag<UserTag> {
 
     @Override
     void removeParent(UserTag parent) {
-        if (parentsList.indexOf(parent) == -1) throw new IllegalStateException("usuwanie nieistniejacego tagu");
+        if (parentsList.indexOf(parent) == -1) throw new IllegalStateException("usuwanie nieistniejącego tagu");
         else {
             parentsList.remove(parent);
             parent.childrenList.remove(this);
