@@ -81,9 +81,9 @@ public class FilterTexturer implements IFilter{
 					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2] = origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2] * mCol.getB();
 					break;
 				case MASK:
-					gray = 0.21f*origData[PixelData.PIXEL_SIZE*(j*mWidth+i)] + 
-					0.71f*origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] + 
-					0.07f*origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2];
+					gray = ColorConverter.RED_LUMINOSITY*origData[PixelData.PIXEL_SIZE*(j*mWidth+i)] + 
+					ColorConverter.GREEN_LUMINOSITY*origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] + 
+					ColorConverter.BLUE_LUMINOSITY*origData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2];
 					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)] = gray * mCol.getR();
 					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+1] = gray * mCol.getG();
 					tempData[PixelData.PIXEL_SIZE*(j*mWidth+i)+2] = gray * mCol.getB();
