@@ -91,6 +91,7 @@ public class TagFilesStore implements Serializable {
      *
      * @param tags Poszukiwane tagi
      * @return Zbiór plików takich że każdy z nich posiada przynajmniej jeden z wymienionych tagów.
+     * @throws IllegalArgumentException Jeżeli któryś z tagów jest null-em
      */
     public Set<FileID> getFilesWithOneOf(Set<Tag<?>> tags) {
         Set<FileID> result = new HashSet<>();
@@ -99,6 +100,9 @@ public class TagFilesStore implements Serializable {
         }
         Set<Tag<?>> computedTags = new HashSet<>();
         for (Tag<?> tag : tags) {
+            if (tag == null) {
+                throw new IllegalArgumentException("Żaden plik na pewno nie jest otagowany null-em");
+            }
             computedTags.addAll(tag.getDescendants());
             computedTags.add(tag);
         }
@@ -115,6 +119,7 @@ public class TagFilesStore implements Serializable {
      *
      * @param tags Poszukiwane tagi
      * @return Zbiór plików takich że każdy z nich posiada wszystkie wymienione tagi.
+     * @throws IllegalArgumentException Jeżeli któryś z tagów jest null-em
      */
     public Set<FileID> getFilesWithAllOf(Set<Tag<?>> tags) {
         Set<FileID> result = new HashSet<>();
@@ -126,7 +131,7 @@ public class TagFilesStore implements Serializable {
         }
         for (Tag<?> tag : tags) {
             if (tag == null) {
-                return new HashSet<>();
+                throw new IllegalArgumentException("Żaden plik na pewno nie jest otagowany null-em");
             }
             List<FileID> filesToRemoveFromResult = new ArrayList<>();
             for (FileID file : result) {
