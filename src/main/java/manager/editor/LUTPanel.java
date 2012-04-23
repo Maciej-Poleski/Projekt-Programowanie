@@ -151,7 +151,7 @@ public class LUTPanel extends JPanel implements MouseListener, MouseMotionListen
         if(x<4){ return 0.0f; }
         if(x>204){ return 0.0f; }
         int i;
-        for(i=0;i<points.size();i++){
+        for(i=1;i<points.size();i++){
             if(points.get(i).x>=x){
                 break;
             }
@@ -159,6 +159,7 @@ public class LUTPanel extends JPanel implements MouseListener, MouseMotionListen
         float u=((float)x-(float)points.get(i-1).x)/((float)points.get(i).x-(float)points.get(i-1).x);
         float v=((float)points.get(i).x-(float)x)/((float)points.get(i).x-(float)points.get(i-1).x);
         float value=(v*(float)points.get(i-1).y+u*(float)points.get(i).y);
+        System.out.println(value + " ");
         return value;
     }
     
