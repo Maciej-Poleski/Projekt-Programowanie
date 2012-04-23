@@ -30,9 +30,11 @@ public interface PrimaryBackup extends Backup {
 	 *            specifies connection of file with tag
 	 * @param file
 	 *            file to backup
+	 * @param fresh
+	 *            value true means that files have to be added to recently created root MasterTag
 	 * @throws IOException
 	 */
-	void addFile(MasterTag tag, File file)
+	void addFile(MasterTag tag, File file, boolean fresh)
 			throws OperationInterruptedException, FileNotFoundException;
 
 	/**

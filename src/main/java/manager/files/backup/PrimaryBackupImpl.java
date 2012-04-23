@@ -111,9 +111,11 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 	 *            dodany nowy plik.
 	 * @param file
 	 *            Plik lub katalog to dodania.
+	 * @param fresh
+	 * 			  Zmienna oznacza, że ma zostać dodany folder do MasterTaga korzenia.
 	 */
 	@Override
-	public void addFile(MasterTag tag, File file)
+	public void addFile(MasterTag tag, File file, boolean fresh)
 			throws OperationInterruptedException, FileNotFoundException {
 
 		if (!file.exists()) {
@@ -160,8 +162,8 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 			try { 
 				MasterTag root = null;
 				File realParent = null;
-				if(tag == null) {
-					root = tempTags.newMasterTag(file.getName());
+				if(fresh) {
+					root = tag;
 					realParent = new File(backupPath + File.separator + file.getName());
 
 				} else {
