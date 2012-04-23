@@ -236,6 +236,22 @@ public class TagFilesStore implements Serializable {
     }
 
     /**
+     * Otagowuje wskazany plik wskazanym tagiem użytkownika.
+     *
+     * @param userTag Tag którym zostanie otagowany plik
+     * @param fileID  Plik który zostanie otagowany
+     * @throws IllegalArgumentException Jeżeli userTag==null lub fileIF==null
+     * @throws IllegalStateException    Jeżeli wskazanego pliku nie ma w bazie
+     */
+    public void addUserTagToFile(UserTag userTag, FileID fileID) {
+        if (userTag == null || fileID == null) {
+            throw new IllegalArgumentException("Otagowywanie null-i oraz tagowanie null-ami jest bez sensu");
+        }
+        getMasterTagFrom(fileID); // Sprawdzam stan
+        addTagInformation(fileID, userTag);
+    }
+
+    /**
      * Wyciąga wszystkie tagi z podanego zbioru plików.
      *
      * @param files Kolekcja plików

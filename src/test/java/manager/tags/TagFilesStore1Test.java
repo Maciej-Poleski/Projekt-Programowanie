@@ -273,6 +273,33 @@ public class TagFilesStore1Test {
     }
 
     @Test
+    public void testAddUserTagToFile() throws Exception {
+        FileID file1 = createMock(FileID.class);
+        FileID file2 = createMock(FileID.class);
+        FileID file3 = createMock(FileID.class);
+        replay(file1, file2, file3);
+        store.addFiles(new HashSet<>(Arrays.asList(file1, file3)), masterTag1);
+        store.addFiles(new HashSet<>(Arrays.asList(file2)), masterTag2);
+        store.addUserTagToFile(userTag1, file1);
+        store.addUserTagToFile(userTag1, file3);
+        store.addUserTagToFile(userTag2, file1);
+        store.addUserTagToFile(userTag2, file3);
+        store.addUserTagToFile(userTag1, file2);
+        store.addUserTagToFile(userTag3, file2);
+        store.addUserTagToFile(userTag4, file2);
+        assertEquals(store.getTagsFrom(file1), new HashSet<>(Arrays.asList(masterTag1, userTag1, userTag2)));
+        assertEquals(store.getTagsFrom(file2), new HashSet<>(Arrays.asList(masterTag2, userTag1, userTag3, userTag4)));
+        assertEquals(store.getTagsFrom(file3), new HashSet<>(Arrays.asList(masterTag1, userTag1, userTag2)));
+        assertEquals(store.getTagsFrom(new HashSet<>(Arrays.asList(file1, file2))),
+                new HashSet<>(Arrays.asList(masterTag1, masterTag2, userTag1, userTag2, userTag3, userTag4)));
+        assertEquals(store.getTagsFrom(new HashSet<>(Arrays.asList(file2, file3))),
+                new HashSet<>(Arrays.asList(masterTag1, masterTag2, userTag1, userTag2, userTag3, userTag4)));
+        assertEquals(store.getTagsFrom(new HashSet<>(Arrays.asList(file1, file3))),
+                new HashSet<>(Arrays.asList(masterTag1, userTag1, userTag2)));
+        verify(file1, file2, file3);
+    }
+
+    @Test
     public void testGetMasterTagFrom() throws Exception {
         FileID file1 = createMock(FileID.class);
         FileID file2 = createMock(FileID.class);
