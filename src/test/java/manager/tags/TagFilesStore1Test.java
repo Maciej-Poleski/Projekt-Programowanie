@@ -273,6 +273,22 @@ public class TagFilesStore1Test {
     }
 
     @Test
+    public void testGetMasterTagFrom() throws Exception {
+        FileID file1 = createMock(FileID.class);
+        FileID file2 = createMock(FileID.class);
+        FileID file3 = createMock(FileID.class);
+        replay(file1, file2, file3);
+        store.addFiles(new HashSet<>(Arrays.asList(file1, file3)), masterTag1,
+                new HashSet<>(Arrays.asList(userTag1, userTag2)));
+        store.addFiles(new HashSet<>(Arrays.asList(file2)), masterTag2,
+                new HashSet<>(Arrays.asList(userTag1, userTag3, userTag4)));
+        assertEquals(store.getMasterTagFrom(file1), masterTag1);
+        assertEquals(store.getMasterTagFrom(file2), masterTag2);
+        assertEquals(store.getMasterTagFrom(file3), masterTag1);
+        verify(file1, file2, file3);
+    }
+
+    @Test
     public void testRemoveFileTag() throws Exception {
         FileID file1 = createMock(FileID.class);
         FileID file2 = createMock(FileID.class);
