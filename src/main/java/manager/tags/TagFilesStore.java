@@ -266,6 +266,27 @@ public class TagFilesStore implements Serializable {
     }
 
     /**
+     * Wyciąga tag macierzysty z podanego pliku.
+     *
+     * @param file Plik z którego zostanie wyciągnięty tag macierzysty.
+     * @return Tag macierzysty
+     * @throws IllegalArgumentException Jeżeli file==null
+     * @throws IllegalStateException    Jeżeli plik nie posiada przypisanego tagu macierzystego
+     */
+    public MasterTag getMasterTagFrom(FileID file) {
+        if (file == null) {
+            throw new IllegalArgumentException("null nie jest otagowany");
+        }
+        Set<Tag<?>> partialResult = getTagsFrom(file);
+        for (Tag<?> tag : partialResult) {
+            if (tag instanceof MasterTag) {
+                return (MasterTag) tag;
+            }
+        }
+        throw new IllegalStateException("Plik " + file + " nie posiada żadnego tagu macierzystego");
+    }
+
+    /**
      * Usuwa wskazany tag ze wskazanego pliku.
      *
      * @param file Plik z którego zostanie usunięty tag
