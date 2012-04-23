@@ -99,7 +99,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 				new FilterGUI("grayScaleLuminosity", "Skala szarości (nasycenie)", FWindowType.NoWindow, FilterFactory.grayScaleLuminosity()),
 				new FilterGUI("grayScaleAverage", "Skala szarości (średnia)", FWindowType.NoWindow, FilterFactory.grayScaleAverage()),
 				new FilterGUI("MatrixFilter", "Filtr macierzowy", FWindowType.WindowMatrix, null),
-				new FilterGUI("LUTFilter", "Filtr LUT", FWindowType.WindowLUT, null),
+				new FilterGUI("LUTFilter", "LUT kanałowe", FWindowType.WindowLUT, null),
 				new FilterGUI("Gradient", "Gradient", FWindowType.WindowGradient, null),
 				new FilterGUI("Resize", "Zmień rozmiar", FWindowType.WindowResize, null),
 				new FilterGUI("FGallery", "Galeria filtrów", FWindowType.WindowGallery, null),
@@ -135,7 +135,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		jMenuFilterCategories[4].add(jMenuFilterButtons[9]);
 		jMenuFilterCategories[4].add(jMenuFilterButtons[10]);
 		jMenuFilterCategories[5].add(jMenuFilterButtons[14]);
-		//jMenuFilterCategories[5].add(jMenuFilterButtons[15]);
+		jMenuFilterCategories[5].add(jMenuFilterButtons[15]);
 		//jMenuFilterCategories[5].add(jMenuFilterButtons[16]);
 		JMenuItem mHistogram = new JMenuItem("Histogram");
 		mHistogram.setActionCommand("mHistogram");
@@ -241,20 +241,20 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 			if (e.getActionCommand().equals(filters[i].name)) {
 				switch(filters[i].window){
 				case WindowRange: 
-					apply (new WindowRange(pdImage, (IFilterRange)filters[i].filter, filters[i].nameGUI).showDialog()); 
+					apply (new WindowRange((PixelData)pdImage.clone(), (IFilterRange)filters[i].filter, filters[i].nameGUI).showDialog()); 
 					filters[i].filter.reset();
 					break;
 				case WindowMatrix: 
-					apply (new WindowMatrix(pdImage).showDialog()); 
+					apply (new WindowMatrix((PixelData)pdImage.clone()).showDialog()); 
 					break;	
 				case WindowLUT: 
-					apply (new WindowLUT(pdImage).showDialog()); 
+					apply (new WindowLUT((PixelData)pdImage.clone()).showDialog()); 
 					break;
 				case WindowGradient: 
-					apply (new WindowGradient(pdImage).showDialog()); 
+					apply (new WindowGradient((PixelData)pdImage.clone()).showDialog()); 
 					break;	
 				case WindowResize: 
-					apply (new WindowResize(pdImage).showDialog()); 
+					apply (new WindowResize((PixelData)pdImage.clone()).showDialog()); 
 					break;	
 				case NoWindow:
 					PixelData tdata= (PixelData)pdImage.clone();
@@ -262,7 +262,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 					apply (tdata); 
 					break;		
 				case WindowGallery:
-					apply (new WindowGalery(pdImage).showDialog()); 
+					apply (new WindowGalery((PixelData)pdImage.clone()).showDialog()); 
 					break;	
 				default: break;	
 				}
