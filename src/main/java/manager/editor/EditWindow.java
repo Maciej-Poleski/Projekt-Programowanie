@@ -3,7 +3,11 @@ package manager.editor;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import manager.files.FileNotAvailableException;
+import manager.files.OperationInterruptedException;
 import manager.files.backup.ImageHolder;
+import manager.files.backup.PrimaryBackup;
+import manager.files.backup.PrimaryBackupImpl;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -32,6 +36,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 	private JMenu [] jMenuFilterCategories;
 	private transient FilterGUI [] filters;
 	private transient ImageHolder iHolder;
+	private transient PrimaryBackupImpl pbackup;
 	private static final int dWidth=800, dHeight=600, dLocation=100, dBorderSize=5, dBottomMargin=150, dSideMargins=75;
 	private int mainImageViewerHeight=420, mainImageViewerWidth=560;
 	private static class FilterGUI{
@@ -174,13 +179,13 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 	 * Konstruktor - wymagany jest obraz do edycji
 	 * @param input - referencja do obiektu klasy ImageHolder, przechowującej obraz do edycji
 	 */
-	public EditWindow(ImageHolder input) {
+	public EditWindow(ImageHolder input, PrimaryBackupImpl pb) {
 		if (input==null){
 			return;
 		}
 		iHolder=input;
 		initFiltersToGUI();
-		
+		pbackup=pb;
 		BufferedImage image=iHolder.getBufferedImage();
 		mainImageViewer=new ImageViewer(image, mainImageViewerWidth, mainImageViewerHeight);
 		pdImage=new PixelData(image);
@@ -219,6 +224,13 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		} 
 		if (e.getActionCommand().equals("applyclose")) {
 			ImageHolder out=new ImageHolder (pdImage.toBufferedImage(), iHolder.getFileId(), iHolder.getType());
+			try {
+				pbackup.saveEditedImage(out);
+			} catch (FileNotAvailableException e1) {
+				e1.printStackTrace();
+			} catch (OperationInterruptedException e1) {
+				e1.printStackTrace();
+			}
 			this.setVisible(false);
 			this.dispose();
 			return;
