@@ -124,7 +124,7 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 			try {
 				Path end = tempTags.getPathFromMasterTag(tag);
 				File realParent = new File(backupPath + File.separator + end.toString());
-				if (!realParent.mkdirs()) {
+				if (!realParent.exists() && !realParent.mkdirs()) {
 					throw new OperationInterruptedException(
 							"Nie można utworzyć katalogu");
 				}
@@ -169,7 +169,7 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 					Path end = tempTags.getPathFromMasterTag(root);
 					realParent = new File(backupPath + File.separator + end.toString());
 				}
-				if (!realParent.mkdirs()) {
+				if (!realParent.exists() && !realParent.mkdirs()) {
 					throw new OperationInterruptedException(
 							"Nie można utworzyć katalogu");
 				}
@@ -189,7 +189,7 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 
 				File dest = new File(destination.toString() + File.separator + file.getName());
 				MasterTag mt = tempTags.newMasterTag(parent, file.getName());
-				if(!dest.mkdirs()) {
+				if(!dest.exists() && !dest.mkdirs()) {
 					throw new OperationInterruptedException(
 							"Nie można utworzyć katalogu");
 				}
