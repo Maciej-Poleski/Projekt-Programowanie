@@ -23,6 +23,7 @@ import java.util.LinkedList;
  * @author Marcin Regdos
  */
 public class EditWindow extends JFrame implements ActionListener, ComponentListener, WindowStateListener  {	
+	private static final long serialVersionUID = 1L;
 	private transient PixelData pdImage;
 	private transient LinkedList<PixelData> history;
 	private ImageViewer mainImageViewer;

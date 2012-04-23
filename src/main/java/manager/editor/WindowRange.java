@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
  */
 public class WindowRange extends JDialog implements ChangeListener, ActionListener, IWindowFilter {
 
+	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private final transient PixelData image;
 	private transient PixelData timage;
