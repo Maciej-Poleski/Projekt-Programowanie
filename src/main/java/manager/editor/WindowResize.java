@@ -191,7 +191,8 @@ public class WindowResize extends JDialog implements ActionListener,PropertyChan
          * Zwraca obraz po edycji
          * @return przetworzony obraz
          */
-	public PixelData showDialog()
+    @Override
+    public PixelData showDialog()
 	{
                 this.setVisible(true);
                 return iMage;

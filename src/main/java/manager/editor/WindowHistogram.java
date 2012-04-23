@@ -124,8 +124,8 @@ public class WindowHistogram extends JDialog implements ActionListener, ItemList
         pack();
     }// </editor-fold>
     
-    
-    PixelData showDialog()
+    @Override
+    public PixelData showDialog()
     {
         this.setVisible(true);
         return null;
