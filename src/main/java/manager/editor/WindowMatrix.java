@@ -15,7 +15,8 @@ import javax.swing.JToggleButton;
  */
 
 public class WindowMatrix extends JDialog implements IWindowFilter{
-    private int mode;
+	private static final long serialVersionUID = 1L;
+	private int mode;
     PixelData inputData;
     PixelData tempData;
     PixelData returnData;

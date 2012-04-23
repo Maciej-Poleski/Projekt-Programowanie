@@ -7,6 +7,8 @@ import javax.swing.JDialog;
  * @author Mikołaj Bińkowski
  */
 public class WindowLUT extends JDialog{
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Konstruktor wymaga podania obrazu na którym będziemy pracować
 	 * @param image - obraz do edycji

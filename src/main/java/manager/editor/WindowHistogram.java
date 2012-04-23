@@ -20,7 +20,8 @@ import javax.swing.*;
  */
 public class WindowHistogram extends JDialog implements ActionListener, ItemListener
 {
-    private Drawing jPanel1;
+	private static final long serialVersionUID = 1L;
+	private Drawing jPanel1;
     private static Histogram cos[];
     private static boolean tF[] = {false};
     private JButton jButton1;
@@ -225,11 +226,12 @@ public class WindowHistogram extends JDialog implements ActionListener, ItemList
     
     static class Drawing extends JPanel
     {
-        @Override
+		private static final long serialVersionUID = 1L;
+
+		@Override
         public void paintComponent(Graphics g)
         {
             float max = 0;
-            float cons = 0;
             super.paintComponent(g);
             g.drawLine(0,258,514,258);
             g.drawLine(0,0,0,257);
@@ -239,7 +241,6 @@ public class WindowHistogram extends JDialog implements ActionListener, ItemList
             {
                 if (tF[a1]==true)
                 {
-                    int a2;
                     int d1 = 0;
                     switch(a1)
                     {
