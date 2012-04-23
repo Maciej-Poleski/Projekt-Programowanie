@@ -3,11 +3,7 @@ package manager.editor;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import manager.files.FileNotAvailableException;
-import manager.files.OperationInterruptedException;
 import manager.files.backup.ImageHolder;
-import manager.files.backup.PrimaryBackup;
-import manager.files.backup.PrimaryBackupImpl;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -36,7 +32,8 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 	private JMenu [] jMenuFilterCategories;
 	private transient FilterGUI [] filters;
 	private transient ImageHolder iHolder;
-	private transient PrimaryBackupImpl pbackup;
+	private transient ImageHolder returnHolder;
+	private transient ActionListener parentWindow;
 	private static final int dWidth=800, dHeight=600, dLocation=100, dBorderSize=5, dBottomMargin=150, dSideMargins=75;
 	private int mainImageViewerHeight=420, mainImageViewerWidth=560;
 	private static class FilterGUI{
@@ -79,6 +76,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		toolBar.add(bsClose);
 		bsClose.setActionCommand("applyclose");
 		bsClose.addActionListener(this);
+		
 
 	}
 	private void initFiltersToGUI(){
@@ -179,13 +177,13 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 	 * Konstruktor - wymagany jest obraz do edycji
 	 * @param input - referencja do obiektu klasy ImageHolder, przechowującej obraz do edycji
 	 */
-	public EditWindow(ImageHolder input, PrimaryBackupImpl pb) {
+	public EditWindow(ImageHolder input, ActionListener pw) {
 		if (input==null){
 			return;
 		}
-		iHolder=input;
+		returnHolder=iHolder=input;
 		initFiltersToGUI();
-		pbackup=pb;
+		parentWindow=pw;
 		BufferedImage image=iHolder.getBufferedImage();
 		mainImageViewer=new ImageViewer(image, mainImageViewerWidth, mainImageViewerHeight);
 		pdImage=new PixelData(image);
@@ -196,6 +194,13 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		this.addComponentListener(this);
 		this.addWindowStateListener(this);
 		this.setVisible(true);
+	}
+	/**
+	 * Zwraca aktualnie edytowany obraz (stan z momentu ostatniego zapisu)
+	 * @return ImageHolder 
+	 */
+	public ImageHolder getImage() {
+		return returnHolder;
 	}
 	private void undo (){
 		if (!history.isEmpty()){
@@ -223,15 +228,10 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 			return;
 		} 
 		if (e.getActionCommand().equals("save")) {
-			ImageHolder out=new ImageHolder (pdImage.toBufferedImage(), iHolder.getFileId(), iHolder.getType());
-			try {
-				pbackup.saveEditedImage(out);
-			} catch (FileNotAvailableException e1) {
-				e1.printStackTrace();
-			} catch (OperationInterruptedException e1) {
-				e1.printStackTrace();
-			}
-			return;
+			returnHolder=new ImageHolder (pdImage.toBufferedImage(), iHolder.getFileId(), iHolder.getType());
+			JButton tb=new JButton();
+			tb.addActionListener(parentWindow);
+			tb.doClick();
 		} 
 		if (e.getActionCommand().equals("mHistogram")) {
 			new WindowHistogram(pdImage).showDialog(); 
