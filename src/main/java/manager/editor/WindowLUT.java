@@ -15,7 +15,7 @@ public class WindowLUT extends JDialog{
 	 */
 	WindowLUT(PixelData image){
 	}
-	
+
 	/**
 	 * Zwraca obraz po edycji
 	 * @return obraz po edycji
