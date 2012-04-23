@@ -34,7 +34,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 	private transient ImageHolder iHolder;
 	private transient ImageHolder returnHolder;
 	private transient ActionListener parentWindow;
-	private static final int dWidth=800, dHeight=600, dLocation=100, dBorderSize=5, dBottomMargin=150, dSideMargins=75;
+	private static final int DWidth=800, DHeight=600, DLocation=100, DBorderSize=5, DBottomMargin=100, DSideMargins=75;
 	private int mainImageViewerHeight=420, mainImageViewerWidth=560;
 	private static class FilterGUI{
 		String name, nameGUI;
@@ -53,11 +53,11 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 	private void initGui(){
 		setTitle("Edytor plików graficznych");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(dLocation, dLocation, dWidth, dHeight);
-		setMinimumSize(new Dimension(dWidth, dHeight));
+		setBounds(DLocation, DLocation, DWidth, DHeight);
+		setMinimumSize(new Dimension(DWidth, DHeight));
 		initMenu();
 		JPanel contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(dBorderSize, dBorderSize, dBorderSize, dBorderSize));
+		contentPane.setBorder(new EmptyBorder(DBorderSize, DBorderSize, DBorderSize, DBorderSize));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 
@@ -276,14 +276,14 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 	public void componentMoved(ComponentEvent e) {}
 	@Override
 	public void componentResized(ComponentEvent e) {
-		mainImageViewer.changeSize(this.getWidth()-dSideMargins, this.getHeight()-dBottomMargin);
+		mainImageViewer.changeSize(this.getWidth()-DSideMargins, this.getHeight()-DBottomMargin);
 		
 	}
 	@Override
 	public void componentShown(ComponentEvent e) {}
 	@Override
 	public void windowStateChanged(WindowEvent arg0) {
-		mainImageViewer.changeSize(this.getWidth()-dSideMargins, this.getHeight()-dBottomMargin);
+		mainImageViewer.changeSize(this.getWidth()-DSideMargins, this.getHeight()-DBottomMargin);
 		
 	} 
 }
