@@ -222,7 +222,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 			this.dispose();
 			return;
 		} 
-		if (e.getActionCommand().equals("applyclose")) {
+		if (e.getActionCommand().equals("save")) {
 			ImageHolder out=new ImageHolder (pdImage.toBufferedImage(), iHolder.getFileId(), iHolder.getType());
 			try {
 				pbackup.saveEditedImage(out);
@@ -231,8 +231,6 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 			} catch (OperationInterruptedException e1) {
 				e1.printStackTrace();
 			}
-			this.setVisible(false);
-			this.dispose();
 			return;
 		} 
 		if (e.getActionCommand().equals("mHistogram")) {
