@@ -16,7 +16,8 @@ import java.beans.PropertyChangeEvent;
 
 public class WindowResize extends JDialog implements ActionListener,PropertyChangeListener,IWindowFilter
 {
-    private PixelData iMage;
+	private static final long serialVersionUID = 1L;
+	private PixelData iMage;
     private ButtonGroup buttonGroup1;
     private ButtonGroup buttonGroup2;
     private JButton jButton1;

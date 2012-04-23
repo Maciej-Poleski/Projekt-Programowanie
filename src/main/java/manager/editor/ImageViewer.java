@@ -32,7 +32,7 @@ public class ImageViewer extends JPanel implements ChangeListener {
 	public ImageViewer (Image image, int width, int height){
 		this.height=height;
 		this.width=width;
-		iPanel=new ImagePanel(image);
+		iPanel=new ImagePanel(image, width, height);
 		zoomSpinner =new JSpinner (new SpinnerNumberModel(defZoom, minZoom,maxZoom,minZoom)); 
 		zoomSpinner.addChangeListener(this);
 		JPanel topPanel=new JPanel();
@@ -45,6 +45,7 @@ public class ImageViewer extends JPanel implements ChangeListener {
 		scrollPane.setPreferredSize(new  java.awt.Dimension(this.width, this.height));
 		this.setPreferredSize(scrollPane.getPreferredSize());
 		this.add(scrollPane);
+		this.setSize(scrollPane.getPreferredSize());
 		this.repaint();
 	}
 	/**
@@ -62,8 +63,10 @@ public class ImageViewer extends JPanel implements ChangeListener {
 	void changeSize (int width, int height){
 		this.height=height;
 		this.width=width;
+		iPanel.changeMaxSize(width, height);
 		scrollPane.setPreferredSize(new  java.awt.Dimension(this.width, this.height));
 		this.setPreferredSize(scrollPane.getPreferredSize());
+		//this.setSize(scrollPane.getPreferredSize());
 		this.repaint();
 		
 	}

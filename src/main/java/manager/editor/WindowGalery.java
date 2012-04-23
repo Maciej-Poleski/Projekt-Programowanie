@@ -1,11 +1,5 @@
 package manager.editor;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 
 /**
@@ -13,7 +7,8 @@ import javax.swing.JDialog;
  * @author Karol Banyś
  */
 public class WindowGalery extends JDialog implements IWindowFilter{
-    private PixelData originalPixelData;
+	private static final long serialVersionUID = 1L;
+	private PixelData originalPixelData;
     private PixelData copyPixelData = null;
     private ImageViewer preview;
     private IFilter[] filtersEdgeDetection, filtersEdgeDetectionLaPlace, filtersLowPass, filtersHighPass, filtersEmbossing;
@@ -22,9 +17,10 @@ public class WindowGalery extends JDialog implements IWindowFilter{
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         originalPixelData = (PixelData)image.clone();
         copyPixelData = (PixelData)image.clone();
-        preview = new ImageViewer(originalPixelData.toBufferedImage(), 300, 300);
+        preview = new ImageViewer(originalPixelData.toBufferedImage(), 940, 540);
         initComponents();
         initFilter();
+        this.setResizable(false);
     }
     
     @Override
@@ -103,7 +99,6 @@ public class WindowGalery extends JDialog implements IWindowFilter{
     }
     
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -130,7 +125,8 @@ public class WindowGalery extends JDialog implements IWindowFilter{
         setTitle("Editor");
 
         listEdgeDetection.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Edge Detection Vertical", "Edge Detection Horizontal", "Edge Detection Diagonal", "Edge Detection Diagonal2", "Edge Detection Sobel Horizonta", "Edge Detection Sobel Vertica", "Edge Detection Prewitt Horizontal", "Edge Detection Prewitt Vertica" };
+			private static final long serialVersionUID = 1L;
+			String[] strings = { "Edge Detection Vertical", "Edge Detection Horizontal", "Edge Detection Diagonal", "Edge Detection Diagonal2", "Edge Detection Sobel Horizonta", "Edge Detection Sobel Vertica", "Edge Detection Prewitt Horizontal", "Edge Detection Prewitt Vertica" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
@@ -138,8 +134,9 @@ public class WindowGalery extends JDialog implements IWindowFilter{
         listEdgeDetection.setValueIsAdjusting(true);
         jScrollPane1.setViewportView(listEdgeDetection);
         listEdgeDetection.getAccessibleContext().setAccessibleParent(listEdgeDetection);
+        listEdgeDetection.setSelectedIndex(0);
 
-        jLabel1.setText("Keep changes?");
+        jLabel1.setText("Zachować zmiany?");
 
         okButton.setText("OK");
         okButton.addActionListener(new java.awt.event.ActionListener() {
@@ -167,7 +164,7 @@ public class WindowGalery extends JDialog implements IWindowFilter{
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cancelButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
+                        .addGap(24, 24, 24)
                         .addComponent(jLabel1)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -204,11 +201,13 @@ public class WindowGalery extends JDialog implements IWindowFilter{
         });
 
         listEdgeDetectionLaPlace.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "edgeDetectionLaplace1", "edgeDetectionLaplace2", "edgeDetectionLaplace3", "edgeDetectionLaplaceDiagonal", "edgeDetectionLaplaceHorizontal", "edgeDetectionLaplaceVertical", "edgeDetectionGradientDirectionalEast", "edgeDetectionGradientDirectionalSouthEast", "edgeDetectionGradientDirectionalSouth", "edgeDetectionGradientDirectionalSouthWest", "edgeDetectionGradientDirectionalWest", "edgeDetectionGradientDirectionalNorthWest", "edgeDetectionGradientDirectionalNorth", "edgeDetectionGradientDirectionalNorthEast", " " };
+			private static final long serialVersionUID = 1L;
+			String[] strings = { "Edge Detection Laplace1", "Edge Detection Laplace2", "Edge Detection Laplace3", "Edge Detection Laplace Diagonal", "Edge Detection Laplace Horizontal", "Edge Detection Laplace Vertical", "Edge Detection Gradient Directional East", "Edge Detection Gradient Directional South East", "Edge Detection Gradient Directional South", "Edge Detection Gradient Directional South West", "Edge Detection Gradient Directional West", "Edge Detection Gradient Directional North West", "Edge Detection Gradient Directional North", "Edge Detection Gradient Directional North East"};
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
         listEdgeDetectionLaPlace.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        listEdgeDetectionLaPlace.setSelectedIndex(0);
         jScrollPane2.setViewportView(listEdgeDetectionLaPlace);
 
         makeEdgeDetectionLaPlace.setText("Make Edge Detection LaPlace");
@@ -226,11 +225,13 @@ public class WindowGalery extends JDialog implements IWindowFilter{
         });
 
         listLowPassFilter.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "lowPassAverage3x3", "lowPassAverage5x5", "lowPassAverageCircle", "lowPassLP1", "lowPassLP2", "lowPassLP3", "lowPassPyramid", " lowPassConical", "lowPassGauss1", "lowPassGauss2", "lowPassGauss3", "lowPassGauss4", "lowPassGauss5" };
+			private static final long serialVersionUID = 1L;
+			String[] strings = { "Low Pass Average3x3", "Low Pass Average5x5", "Low Pass Average Circle", "Low Pass LP1", "Low Pass LP2", "Low Pass LP3", "Low Pass Pyramid", "Low Pass Conical", "Low Pass Gauss1", "Low Pass Gauss2", "Low Pass Gauss3", "Low Pass Gauss4", "Low Pass Gauss5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
         listLowPassFilter.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        listLowPassFilter.setSelectedIndex(0);
         jScrollPane3.setViewportView(listLowPassFilter);
 
         makeHighPassFilter.setText("Make High Pass Filter");
@@ -241,11 +242,13 @@ public class WindowGalery extends JDialog implements IWindowFilter{
         });
 
         listHighPassFilter.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "highPassMeanRemoval", "highPassHP1", "highPassHP2", "highPassHP3" };
+			private static final long serialVersionUID = 1L;
+			String[] strings = { "High Pass Mean Removal", "High Pass HP1", "High Pass HP2", "High Pass HP3" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
         listHighPassFilter.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        listHighPassFilter.setSelectedIndex(0);
         jScrollPane4.setViewportView(listHighPassFilter);
 
         makeEmbossingFilter.setText("Make Embossing FIlter");
@@ -256,11 +259,13 @@ public class WindowGalery extends JDialog implements IWindowFilter{
         });
 
         listEmbossingFilter.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "embossEast", "embossSouthEast", "embossSouth", "embossSouthWest", "embossWest", "embossNorthWest", "embossNorth", "embossNorthEast" };
+			private static final long serialVersionUID = 1L;
+			String[] strings = { "Emboss East", "Emboss South East", "Emboss South", "Emboss South West", "Emboss West", "Emboss North West", "Emboss North", "Emboss North East" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
         listEmbossingFilter.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        listEmbossingFilter.setSelectedIndex(0);
         jScrollPane5.setViewportView(listEmbossingFilter);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -322,50 +327,44 @@ public class WindowGalery extends JDialog implements IWindowFilter{
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {
         this.setVisible(false);
         this.dispose();
-    }//GEN-LAST:event_okButtonActionPerformed
+    }
 
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
         copyPixelData = null;
         this.setVisible(false);
         this.dispose();
-    }//GEN-LAST:event_cancelButtonActionPerformed
+    }
 
-    private void makeEdgeDetectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeEdgeDetectionActionPerformed
-        copyPixelData = (PixelData) originalPixelData.clone();
+    private void makeEdgeDetectionActionPerformed(java.awt.event.ActionEvent evt) {
         filtersEdgeDetection[listEdgeDetection.getSelectedIndex()].apply(originalPixelData, copyPixelData);
-        preview.setImage(originalPixelData.toBufferedImage());
-    }//GEN-LAST:event_makeEdgeDetectionActionPerformed
+        preview.setImage(copyPixelData.toBufferedImage());
+    }
 
-    private void makeEdgeDetectionLaPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeEdgeDetectionLaPlaceActionPerformed
-        copyPixelData = (PixelData) originalPixelData.clone();
+    private void makeEdgeDetectionLaPlaceActionPerformed(java.awt.event.ActionEvent evt) {
         filtersEdgeDetectionLaPlace[listEdgeDetectionLaPlace.getSelectedIndex()].apply(originalPixelData, copyPixelData);
-        preview.setImage(originalPixelData.toBufferedImage());
-    }//GEN-LAST:event_makeEdgeDetectionLaPlaceActionPerformed
+        preview.setImage(copyPixelData.toBufferedImage());
+    }
 
-    private void makeLowPassFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeLowPassFilterActionPerformed
-        copyPixelData = (PixelData) originalPixelData.clone();
+    private void makeLowPassFilterActionPerformed(java.awt.event.ActionEvent evt) {
         filtersLowPass[listLowPassFilter.getSelectedIndex()].apply(originalPixelData, copyPixelData);
-        preview.setImage(originalPixelData.toBufferedImage());
-    }//GEN-LAST:event_makeLowPassFilterActionPerformed
+        preview.setImage(copyPixelData.toBufferedImage());
+    }
 
-    private void makeHighPassFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeHighPassFilterActionPerformed
-        copyPixelData = (PixelData) originalPixelData.clone();
+    private void makeHighPassFilterActionPerformed(java.awt.event.ActionEvent evt) {
         filtersHighPass[listHighPassFilter.getSelectedIndex()].apply(originalPixelData, copyPixelData);
-        preview.setImage(originalPixelData.toBufferedImage());
-    }//GEN-LAST:event_makeHighPassFilterActionPerformed
+        preview.setImage(copyPixelData.toBufferedImage());
+    }
 
-    private void makeEmbossingFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makeEmbossingFilterActionPerformed
-        copyPixelData = (PixelData) originalPixelData.clone();
+    private void makeEmbossingFilterActionPerformed(java.awt.event.ActionEvent evt) {
         filtersEmbossing[listEmbossingFilter.getSelectedIndex()].apply(originalPixelData, copyPixelData);
-        preview.setImage(originalPixelData.toBufferedImage());
-    }//GEN-LAST:event_makeEmbossingFilterActionPerformed
+        preview.setImage(copyPixelData.toBufferedImage());
+    }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
@@ -386,6 +385,5 @@ public class WindowGalery extends JDialog implements IWindowFilter{
     private javax.swing.JButton makeLowPassFilter;
     private javax.swing.JButton okButton;
     private javax.swing.JPanel viewPanel;
-    // End of variables declaration//GEN-END:variables
 
 }

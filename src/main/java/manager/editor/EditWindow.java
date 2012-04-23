@@ -3,6 +3,12 @@ package manager.editor;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import manager.files.FileNotAvailableException;
+import manager.files.OperationInterruptedException;
+import manager.files.backup.ImageHolder;
+import manager.files.backup.PrimaryBackup;
+import manager.files.backup.PrimaryBackupImpl;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -11,6 +17,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
@@ -18,15 +26,18 @@ import java.util.LinkedList;
  * Klasa reprezentuje okno dialogowe w którym dokonywana jest edycja obrazu
  * @author Marcin Regdos
  */
-public class EditWindow extends JFrame implements ActionListener, ComponentListener  {	
-	transient private PixelData pdImage;
-	transient private LinkedList<PixelData> history;
+public class EditWindow extends JFrame implements ActionListener, ComponentListener, WindowStateListener  {	
+	private static final long serialVersionUID = 1L;
+	private transient PixelData pdImage;
+	private transient LinkedList<PixelData> history;
 	private ImageViewer mainImageViewer;
 	private String [] filterCategoryNamesGUI;
 	private JMenuItem [] jMenuFilterButtons;
 	private JMenu [] jMenuFilterCategories;
-	transient private FilterGUI [] filters;;
-	private static final int dWidth=650, dHeight=550, dLocation=100, dBorderSize=5;
+	private transient FilterGUI [] filters;
+	private transient ImageHolder iHolder;
+	private transient PrimaryBackupImpl pbackup;
+	private static final int dWidth=800, dHeight=600, dLocation=100, dBorderSize=5, dBottomMargin=150, dSideMargins=75;
 	private int mainImageViewerHeight=420, mainImageViewerWidth=560;
 	private static class FilterGUI{
 		String name, nameGUI;
@@ -40,7 +51,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		}
 	}
 	private enum FWindowType{
-		WindowRange, WindowResize, WindowMatrix, WindowLUT, WindowHistogram, NoWindow, WindowGallery, WindowGradient
+		WindowRange, WindowResize, WindowMatrix, WindowLUT, WindowHistogram, NoWindow, WindowGallery, WindowGradient, WidnowHistogram
 	}
 	private void initGui(){
 		setTitle("Edytor plików graficznych");
@@ -54,7 +65,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		setContentPane(contentPane);
 
 		JToolBar toolBar = new JToolBar();
-		contentPane.add(toolBar, BorderLayout.NORTH);
+		//contentPane.add(toolBar, BorderLayout.NORTH);
 
 		JButton buttonUndo = new JButton("Cofnij");
 		toolBar.add(buttonUndo);
@@ -126,8 +137,8 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		jMenuFilterCategories[4].add(jMenuFilterButtons[9]);
 		jMenuFilterCategories[4].add(jMenuFilterButtons[10]);
 		jMenuFilterCategories[5].add(jMenuFilterButtons[14]);
-		jMenuFilterCategories[5].add(jMenuFilterButtons[15]);
-		jMenuFilterCategories[5].add(jMenuFilterButtons[16]);
+		//jMenuFilterCategories[5].add(jMenuFilterButtons[15]);
+		//jMenuFilterCategories[5].add(jMenuFilterButtons[16]);
 		JMenuItem mHistogram = new JMenuItem("Histogram");
 		mHistogram.setActionCommand("mHistogram");
 		mHistogram.addActionListener(this);
@@ -138,23 +149,44 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		mUndo.setActionCommand("undo");
 		mUndo.addActionListener(this);
 		mUndo.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK));
+		JMenuItem mSave = new JMenuItem("Zapisz");
+		mSave.setActionCommand("save");
+		mSave.addActionListener(this);
+		mSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
+		JMenuItem mClose = new JMenuItem("Zakończ");
+		mClose.setActionCommand("close");
+		mClose.addActionListener(this);
+		mClose.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK));
+		
 		jMenuFilterCategories[0].add(mUndo);
 		jMenuFilterCategories[0].add(jMenuFilterButtons[17]);
+		jMenuFilterCategories[0].add(mSave);
+		jMenuFilterCategories[0].add(mClose);
 		menuBar.add(jMenuFilterButtons[18]);
+		
+		
+		
 		jMenuFilterButtons[18].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, InputEvent.CTRL_DOWN_MASK));
 		jMenuFilterButtons[17].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
+		jMenuFilterButtons[0].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_J, InputEvent.CTRL_DOWN_MASK));
+		jMenuFilterButtons[1].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, InputEvent.CTRL_DOWN_MASK));
+		
+		
 		//mEdycja.add(mUndo);
 	}
 
 	/**
 	 * Konstruktor - wymagany jest obraz do edycji
-	 * @param image - referencja do objektu klasy BufferedImage przechowująca obraz do edycji
+	 * @param input - referencja do obiektu klasy ImageHolder, przechowującej obraz do edycji
 	 */
-	public EditWindow(BufferedImage image) {
-		if (image==null){
+	public EditWindow(ImageHolder input, PrimaryBackupImpl pb) {
+		if (input==null){
 			return;
 		}
+		iHolder=input;
 		initFiltersToGUI();
+		pbackup=pb;
+		BufferedImage image=iHolder.getBufferedImage();
 		mainImageViewer=new ImageViewer(image, mainImageViewerWidth, mainImageViewerHeight);
 		pdImage=new PixelData(image);
 		history=new LinkedList<PixelData>();
@@ -162,19 +194,8 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 		
 		getContentPane().add(mainImageViewer);
 		this.addComponentListener(this);
+		this.addWindowStateListener(this);
 		this.setVisible(true);
-	}
-	/**
-	 * Zwraca obraz po edycji. Jeśli użytkownik nie zdecydował się na zastosowanie zmian, obraz jest nullem
-	 * @return przetworzony obraz
-	 * 
-	 */
-	public BufferedImage getTransformedImage() {
-		this.setVisible(true);
-		if (pdImage==null){
-			return null;
-		}
-		return pdImage.toBufferedImage();
 	}
 	private void undo (){
 		if (!history.isEmpty()){
@@ -197,18 +218,23 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 			return;
 		} 
 		if (e.getActionCommand().equals("close")) {
-			pdImage=null;
 			this.setVisible(false);
 			this.dispose();
 			return;
 		} 
-		if (e.getActionCommand().equals("applyclose")) {
-			this.setVisible(false);
-			this.dispose();
+		if (e.getActionCommand().equals("save")) {
+			ImageHolder out=new ImageHolder (pdImage.toBufferedImage(), iHolder.getFileId(), iHolder.getType());
+			try {
+				pbackup.saveEditedImage(out);
+			} catch (FileNotAvailableException e1) {
+				e1.printStackTrace();
+			} catch (OperationInterruptedException e1) {
+				e1.printStackTrace();
+			}
 			return;
 		} 
 		if (e.getActionCommand().equals("mHistogram")) {
-			new WindowHistogram(null);
+			new WindowHistogram(pdImage).showDialog(); 
 			return;
 		} 
 		for (int i=0; i<filters.length; ++i){
@@ -238,6 +264,7 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 				case WindowGallery:
 					apply (new WindowGalery(pdImage).showDialog()); 
 					break;	
+				default: break;	
 				}
 				return;
 			}
@@ -249,9 +276,14 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 	public void componentMoved(ComponentEvent e) {}
 	@Override
 	public void componentResized(ComponentEvent e) {
-		mainImageViewer.changeSize(this.getWidth()-75, this.getHeight()-150);
+		mainImageViewer.changeSize(this.getWidth()-dSideMargins, this.getHeight()-dBottomMargin);
 		
 	}
 	@Override
-	public void componentShown(ComponentEvent e) {} 
+	public void componentShown(ComponentEvent e) {}
+	@Override
+	public void windowStateChanged(WindowEvent arg0) {
+		mainImageViewer.changeSize(this.getWidth()-dSideMargins, this.getHeight()-dBottomMargin);
+		
+	} 
 }
