@@ -96,42 +96,42 @@ public class WindowLUT extends JDialog implements IWindowFilter{
         applyButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                applyMousePressed(evt);
+                applyMousePressed();
             }
         });
 
         previewButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                previewMousePressed(evt);
+                previewMousePressed();
             }
         });
 
         abortButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                abortMousePressed(evt);
+                abortMousePressed();
             }
         });
 
         modeButton[0].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                modeMousePressed(evt,0);
+                modeMousePressed(0);
             }
         });
 
         modeButton[1].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                modeMousePressed(evt,1);
+                modeMousePressed(1);
             }
         });
 
         modeButton[2].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                modeMousePressed(evt,2);
+                modeMousePressed(2);
             }
         });
     }
@@ -202,25 +202,32 @@ public class WindowLUT extends JDialog implements IWindowFilter{
         }
     }
 
-    private void applyMousePressed(MouseEvent evt) {
+    private void applyMousePressed() {
         LUTTable[] luts = new LUTTable[3];
         for(int i=0;i<3;i++){
             luts[i] = channels[i].getLUTTable();
         }
         switch(mode){
-            case -1:
+            case -1:{
                 this.setVisible(false);
                 this.dispose();
                 returnData=null;
-            case 0:
+                break;
+            }
+            case 0:{
                 cmyFilter.setConversionTable(luts);
                 cmyFilter.apply(inputData);
-            case 1:
+                break;
+            }
+            case 1:{
                 hsvFilter.setConversionTable(luts);
                 hsvFilter.apply(inputData);
-            case 2:
+                break;
+            }
+            case 2:{
                 rgbFilter.setConversionTable(luts);
                 rgbFilter.apply(inputData);
+            }
         }
         returnData = inputData;
         imagePanel.setImage(inputData.toBufferedImage());
@@ -229,35 +236,39 @@ public class WindowLUT extends JDialog implements IWindowFilter{
         this.dispose();
     }
 
-    private void previewMousePressed(MouseEvent evt) {
+    private void previewMousePressed() {
         try{
             LUTTable[] luts = new LUTTable[3];
             for(int i=0;i<3;i++){
                 luts[i] = channels[i].getLUTTable();
             }
             switch(mode){
-                case -1:
+                case (-1):{
                     return;
-                case 0:
-                    cmyFilter.reset();
+                }
+                case 0:{
                     cmyFilter.setConversionTable(luts);
                     cmyFilter.apply(inputData, tempData);
-                case 1:
-                    hsvFilter.reset();
+                    break;
+                }
+                case 1:{
                     hsvFilter.setConversionTable(luts);
                     hsvFilter.apply(inputData, tempData);
-                case 2:
-                    rgbFilter.reset();
+                    break;
+                }
+                case 2:{
                     rgbFilter.setConversionTable(luts);
                     rgbFilter.apply(inputData, tempData);
+                }
             }
             imagePanel.setImage(tempData.toBufferedImage());
             imagePanel.revalidate();
+            imagePanel.repaint();
         } catch(IllegalArgumentException e){
         }
     }
 
-    private void modeMousePressed(MouseEvent evt, int i){
+    private void modeMousePressed(int i){
         if(modeButton[i].isSelected()){
             mode=-1;
             setColors(3);
@@ -272,7 +283,7 @@ public class WindowLUT extends JDialog implements IWindowFilter{
         }
     }
 
-    private void abortMousePressed(MouseEvent evt) {
+    private void abortMousePressed() {
         this.setVisible(false);
         this.dispose();
         returnData=null;

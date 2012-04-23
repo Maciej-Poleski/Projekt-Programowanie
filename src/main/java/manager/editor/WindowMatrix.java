@@ -18,7 +18,6 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
     private static final long serialVersionUID = 1L;
     private final int defaultMode = 3;
     private int mode;
-    private float[][] matrix;
 
     private PixelData inputData;
     private PixelData tempData;
@@ -82,43 +81,43 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
 
         applyButton.addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                applyMousePressed(evt);
+            public void mousePressed(MouseEvent evt) {
+                applyMousePressed();
             }
         });
 
         previewButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                previewMousePressed(evt);
+                previewMousePressed();
             }
         });
 
         abortButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                abortMousePressed(evt);
+                abortMousePressed();
             }
         });
 
         modeButton[0].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                modeMousePressed(evt,0);
+                modeMousePressed(0);
             }
         });
 
         modeButton[1].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                modeMousePressed(evt,1);
+                modeMousePressed(1);
             }
         });
 
         modeButton[2].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                modeMousePressed(evt,2);
+                modeMousePressed(2);
             }
         });
     }
@@ -222,7 +221,7 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
         return new Matrix(tab);
     }
 
-    private void applyMousePressed(MouseEvent evt) {
+    private void applyMousePressed() {
         try{
             IFilter filter = new FilterMatrixAdapter(createMatrix());
             filter.apply(inputData);
@@ -236,7 +235,7 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
         this.dispose();
     }
 
-    private void previewMousePressed(MouseEvent evt) {
+    private void previewMousePressed() {
         try{
             IFilter filter = new FilterMatrixAdapter(createMatrix());
             tempData=inputData;
@@ -247,7 +246,7 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
         }
     }
 
-    private void modeMousePressed(MouseEvent evt, int i){
+    private void modeMousePressed(int i){
         if(modeButton[i].isSelected()){
             mode=-1;
             enableTextSpaces();
@@ -263,7 +262,7 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
         }
     }
 
-    private void abortMousePressed(MouseEvent evt) {
+    private void abortMousePressed() {
         this.setVisible(false);
         this.dispose();
         returnData=null;
