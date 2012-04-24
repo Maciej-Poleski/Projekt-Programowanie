@@ -18,18 +18,18 @@ import javax.swing.*;
  *
  * @author Wojtek
  */
-public class WindowHistogram extends JDialog implements ActionListener, ItemListener
+public class WindowHistogram extends JDialog implements ActionListener, ItemListener, IWindowFilter
 {
 	private static final long serialVersionUID = 1L;
 	private Drawing jPanel1;
-    private static Histogram cos[];
-    private static boolean tF[] = {false};
+    private Histogram cos[];
+    private boolean tF[] = {false};
     private JButton jButton1;
     private JCheckBox jCheckBox1;
     private JCheckBox jCheckBox2;
     private JCheckBox jCheckBox3;
     private JComboBox jComboBox1;
-    private int check = 0;;
+    private int check = 0;
     public WindowHistogram(PixelData data)        
     {
         cos = new Histogram[9];
@@ -48,6 +48,7 @@ public class WindowHistogram extends JDialog implements ActionListener, ItemList
     private void initComponents() 
     {
         this.setModal(true);
+        this.setTitle("Histogram");
         tF = new boolean[9];
         tF[0]=true;
         jPanel1 = new Drawing();
@@ -123,8 +124,8 @@ public class WindowHistogram extends JDialog implements ActionListener, ItemList
         pack();
     }// </editor-fold>
     
-    
-    PixelData showDialog()
+    @Override
+    public PixelData showDialog()
     {
         this.setVisible(true);
         return null;
@@ -144,21 +145,21 @@ public class WindowHistogram extends JDialog implements ActionListener, ItemList
         {
             tF[au]=false;
         }
-        if (jComboBox1.getSelectedItem()=="RGB")
+        if (jComboBox1.getSelectedItem().equals("RGB"))
         {
             check = 0;
             jCheckBox1.setText("Czerwony");
             jCheckBox2.setText("Zielony");
             jCheckBox3.setText("Niebieski");
         }
-        if (jComboBox1.getSelectedItem()=="CMY")
+        if (jComboBox1.getSelectedItem().equals("CMY"))
         {
             check = 3;
             jCheckBox1.setText("Cyjan");
             jCheckBox2.setText("Magenta");
             jCheckBox3.setText("Żółty");
         }
-        if (jComboBox1.getSelectedItem()=="HSV")
+        if (jComboBox1.getSelectedItem().equals("HSV"))
         {
             check = 6;
             jCheckBox1.setText("Barwa");
@@ -224,14 +225,13 @@ public class WindowHistogram extends JDialog implements ActionListener, ItemList
     }
 
     
-    static class Drawing extends JPanel
+    class Drawing extends JPanel
     {
-		private static final long serialVersionUID = 1L;
-
-		@Override
+        @Override
         public void paintComponent(Graphics g)
         {
             float max = 0;
+            float cons = 0;
             super.paintComponent(g);
             g.drawLine(0,258,514,258);
             g.drawLine(0,0,0,257);
@@ -239,8 +239,9 @@ public class WindowHistogram extends JDialog implements ActionListener, ItemList
             g.drawLine(514,0,514,258);
             for (int a1 = 0; a1<9; a1++)
             {
-                if (tF[a1]==true)
+                if (tF[a1])
                 {
+                    int a2;
                     int d1 = 0;
                     switch(a1)
                     {
@@ -333,4 +334,5 @@ public class WindowHistogram extends JDialog implements ActionListener, ItemList
         }
     }
 }
+
 
