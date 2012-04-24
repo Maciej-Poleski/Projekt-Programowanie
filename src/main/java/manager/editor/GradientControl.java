@@ -18,17 +18,14 @@ import manager.editor.Gradient.ColorPos;
 public class GradientControl extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private static final int SET_PRECISION_PIXELS = 3;
+	private static final int BOX_SIZE = 5;
 	private JPanel mSetPanel;
-	private JPanel mGradientPanel;
 	private Gradient mGradient;
 	private JDialog mColorDialog;
 	private JColorChooser mColorChooser;
 	
 	private float mGradientPosMouseDown;
-	private float mGradientPosMouseUp;
 	private float mGradientPrecision;
-	private int mColorPrevIndex;
-	private int mColorNextIndex;
 	
 	GradientControl(){
 		mColorChooser = new JColorChooser();
@@ -45,7 +42,7 @@ public class GradientControl extends JPanel{
 				super.paintComponents(g);
 				float[] pos = mGradient.getPositions();
 				for(int i=0;i<pos.length;i++){
-					g.fillRect(((int)(pos[i]*this.getWidth()))-SET_PRECISION_PIXELS, 5, SET_PRECISION_PIXELS*2, 5);
+					g.fillRect(((int)(pos[i]*this.getWidth()))-SET_PRECISION_PIXELS, BOX_SIZE, SET_PRECISION_PIXELS*2, BOX_SIZE);
 				}
 			}
 		};
@@ -66,10 +63,10 @@ public class GradientControl extends JPanel{
 			}
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
-				mGradientPosMouseUp = (float)arg0.getX()/(float)mSetPanel.getWidth();
+				float mGradientPosMouseUp = (float)arg0.getX()/(float)mSetPanel.getWidth();
 				float[] ret = mGradient.getPositions();
-				mColorPrevIndex = -1;
-				mColorNextIndex = -1;
+				int mColorPrevIndex = -1;
+				int mColorNextIndex = -1;
 				for(int i=0;i<ret.length;i++){
 					if(Math.abs(ret[i] - mGradientPosMouseDown) < mGradientPrecision){
 						mColorPrevIndex = i;
@@ -101,9 +98,11 @@ public class GradientControl extends JPanel{
 		});
 		this.add(mSetPanel, BorderLayout.NORTH);
 		
-		mGradientPanel = new JPanel(){
+		JPanel mGradientPanel = new JPanel(){
 			private static final long serialVersionUID = 1L;
-			private PixelData img = new PixelData(800, 32);
+			private static final int PREVIEW_WIDTH = 800;
+			private static final int PREVIEW_HEIGHT = 32;
+			private PixelData img = new PixelData(PREVIEW_WIDTH, PREVIEW_HEIGHT);
 			@Override
 			public void paintComponent(Graphics g){
 				super.paintComponents(g);

@@ -17,7 +17,7 @@ import java.beans.PropertyChangeEvent;
 public class WindowResize extends JDialog implements ActionListener,PropertyChangeListener,IWindowFilter
 {
 	private static final long serialVersionUID = 1L;
-	private PixelData iMage;
+	private transient PixelData iMage;
     private ButtonGroup buttonGroup1;
     private ButtonGroup buttonGroup2;
     private JButton jButton1;
@@ -48,7 +48,7 @@ public class WindowResize extends JDialog implements ActionListener,PropertyChan
         private void initComponents()
         {
             this.setModal(true);
-            
+            this.setTitle("Zmiana rozmiaru");
             buttonGroup1 = new ButtonGroup();
             buttonGroup2 = new ButtonGroup();
             jLabel1 = new JLabel();
@@ -71,8 +71,8 @@ public class WindowResize extends JDialog implements ActionListener,PropertyChan
             setResizable(false);
             setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
             
-            jTextField1.setValue(new Integer(m));
-            jTextField2.setValue(new Integer(n));
+            jTextField1.setValue(Integer.valueOf(m));
+            jTextField2.setValue(Integer.valueOf(n));
             
             jLabel1.setText("Algorytm kowersji:");
             
@@ -191,7 +191,8 @@ public class WindowResize extends JDialog implements ActionListener,PropertyChan
          * Zwraca obraz po edycji
          * @return przetworzony obraz
          */
-	public PixelData showDialog()
+    @Override
+    public PixelData showDialog()
 	{
                 this.setVisible(true);
                 return iMage;
@@ -230,13 +231,13 @@ public class WindowResize extends JDialog implements ActionListener,PropertyChan
          }
          else if("Piksele".equals(e.getActionCommand()))
          {
-             jTextField1.setValue(new Integer(m));
-             jTextField2.setValue(new Integer(n));
+             jTextField1.setValue(Integer.valueOf(m));
+             jTextField2.setValue(Integer.valueOf(n));
          }
          else if("Wartość procentowa".equals(e.getActionCommand()))
          {
-             jTextField1.setValue(new Integer(100));
-             jTextField2.setValue(new Integer(100));
+             jTextField1.setValue(Integer.valueOf(100));
+             jTextField2.setValue(Integer.valueOf(100));
          }
          
     }
@@ -244,10 +245,10 @@ public class WindowResize extends JDialog implements ActionListener,PropertyChan
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         Object source = evt.getSource();
-        if (source == jTextField1){
+        if (source.equals(jTextField1)){
             if (((Number)jTextField1.getValue()).intValue()<0)
             {
-                jTextField1.setValue(new Integer(x));
+                jTextField1.setValue(Integer.valueOf(x));
             }
             else
             {
@@ -258,7 +259,7 @@ public class WindowResize extends JDialog implements ActionListener,PropertyChan
         {
             if (((Number)jTextField2.getValue()).intValue()<0)
             {
-                jTextField2.setValue(new Integer(y));
+                jTextField2.setValue(Integer.valueOf(y));
             }
             else
             {

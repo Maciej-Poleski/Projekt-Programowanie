@@ -15,12 +15,14 @@ import javax.swing.JToggleButton;
  */
 
 public class WindowMatrix extends JDialog implements IWindowFilter{
-	private static final long serialVersionUID = 1L;
-	private int mode;
-    PixelData inputData;
-    PixelData tempData;
-    PixelData returnData;
-    private float[][] matrix;
+    private static final long serialVersionUID = 1L;
+    private final int defaultMode = 3;
+    private int mode;
+
+    private PixelData inputData;
+    private PixelData tempData;
+    private PixelData returnData;
+    
     private JTextField fields[][];
     private JButton applyButton;
     private JButton previewButton;
@@ -38,22 +40,26 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
         this.setResizable(false);
         this.setLocation(100,100);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
         inputData=image;
         tempData=null;
         returnData=null;
-        imagePanel=new ImageViewer(image.toBufferedImage(), 320, 240);
+        
         initComponents();
-        mode=3;
+        initLayout();
+
+        mode = defaultMode;
         enableTextSpaces();
     }
 
-        @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     private void initComponents() {
-
+        imagePanel=new ImageViewer(inputData.toBufferedImage(), 320, 240);
         applyButton = new JButton();
         previewButton = new JButton();
         abortButton = new JButton();
         modeButton = new JToggleButton[3];
+
         fields = new JTextField[7][7];
         for(int i=0;i<3;i++){
             modeButton[i] = new JToggleButton();
@@ -63,7 +69,8 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
             fields[i/7][i%7].setText("0");
         }
         fields[3][3].setText("1");
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         applyButton.setText("Wykonaj");
         previewButton.setText("Podglad");
@@ -74,41 +81,48 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
 
         applyButton.addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                applyMousePressed(evt);
+            public void mousePressed(MouseEvent evt) {
+                applyMousePressed();
             }
         });
+
         previewButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                previewMousePressed(evt);
+                previewMousePressed();
             }
         });
+
         abortButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                abortMousePressed(evt);
+                abortMousePressed();
             }
         });
-        modeButton[0].addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(java.awt.event.MouseEvent evt) {
-                    modeMousePressed(evt,0);
-                }
-            });
-        modeButton[1].addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(java.awt.event.MouseEvent evt) {
-                    modeMousePressed(evt,1);
-                }
-            });
-        modeButton[2].addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(java.awt.event.MouseEvent evt) {
-                    modeMousePressed(evt,2);
-                }
-            });
 
+        modeButton[0].addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                modeMousePressed(0);
+            }
+        });
+
+        modeButton[1].addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                modeMousePressed(1);
+            }
+        });
+
+        modeButton[2].addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                modeMousePressed(2);
+            }
+        });
+    }
+
+    private void initLayout(){
         GroupLayout layout = new GroupLayout(getContentPane());
 
         GroupLayout.ParallelGroup x = layout.createParallelGroup(GroupLayout.Alignment.TRAILING);
@@ -131,14 +145,14 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
 
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup()
-             .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+            .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                 .addGap(20,20,20)
                 .addComponent(imagePanel)
                 .addContainerGap(20, Short.MAX_VALUE)
                 .addGroup(x)
                 .addGap(20,20,20)
                 )
-             .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(applyButton)
                 .addGap(10, 10, 10)
@@ -153,7 +167,7 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
                 .addComponent(modeButton[2])
                 .addGap(20, 20, 20)
                 )
-        );
+            );
         layout.setVerticalGroup(
             layout.createSequentialGroup()
                 .addGap(20,20,20)
@@ -172,8 +186,6 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
                     )
                 .addGap(20,20,20)
             );
-
-
         pack();
     }
 
@@ -209,7 +221,7 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
         return new Matrix(tab);
     }
 
-    private void applyMousePressed(MouseEvent evt) {
+    private void applyMousePressed() {
         try{
             IFilter filter = new FilterMatrixAdapter(createMatrix());
             filter.apply(inputData);
@@ -218,13 +230,12 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
             imagePanel.revalidate();
 
         } catch(IllegalArgumentException e){
-       //     throw e;
         }
         this.setVisible(false);
         this.dispose();
     }
 
-    private void previewMousePressed(MouseEvent evt) {
+    private void previewMousePressed() {
         try{
             IFilter filter = new FilterMatrixAdapter(createMatrix());
             tempData=inputData;
@@ -232,11 +243,10 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
             imagePanel.setImage(tempData.toBufferedImage());
             imagePanel.revalidate();
         } catch(IllegalArgumentException e){
-         //   throw e;
         }
     }
 
-    private void modeMousePressed(MouseEvent evt, int i){
+    private void modeMousePressed(int i){
         if(modeButton[i].isSelected()){
             mode=-1;
             enableTextSpaces();
@@ -252,15 +262,16 @@ public class WindowMatrix extends JDialog implements IWindowFilter{
         }
     }
 
-    private void abortMousePressed(MouseEvent evt) {
+    private void abortMousePressed() {
         this.setVisible(false);
         this.dispose();
         returnData=null;
     }
-	/**
-	 * Zwraca obraz po edycji
-	 * @return obraz po edycji
-	 */
+
+    /**
+     * Zwraca obraz po edycji
+     * @return obraz po edycji
+     */
     public PixelData getTransformedImage(){
         return returnData;
     }

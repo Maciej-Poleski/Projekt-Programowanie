@@ -22,18 +22,18 @@ public class ImageViewer extends JPanel implements ChangeListener {
 	private JSpinner zoomSpinner;
 	private JScrollPane scrollPane;
 	private int height, width;
-	private static final int maxZoom=1000, defZoom=100, minZoom=10;
+	private static final int MaxZoom=1000, DefZoom=100, MinZoom=10;
 	/**
      * Nowy Image Viewer
      * @param image  wyswietlany obraz
      * @param width szerokosc kontrolki
      * @param height wysokosc kontrolki
      */
-	public ImageViewer (Image image, int width, int height){
+	ImageViewer (Image image, int width, int height){
 		this.height=height;
 		this.width=width;
 		iPanel=new ImagePanel(image, width, height);
-		zoomSpinner =new JSpinner (new SpinnerNumberModel(defZoom, minZoom,maxZoom,minZoom)); 
+		zoomSpinner =new JSpinner (new SpinnerNumberModel(DefZoom, MinZoom,MaxZoom,MinZoom)); 
 		zoomSpinner.addChangeListener(this);
 		JPanel topPanel=new JPanel();
 		topPanel.add(new JLabel ("Zoom"));
