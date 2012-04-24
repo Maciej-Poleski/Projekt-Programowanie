@@ -91,6 +91,7 @@ public class TagFilesStore implements Serializable {
      *
      * @param tags Poszukiwane tagi
      * @return Zbiór plików takich że każdy z nich posiada przynajmniej jeden z wymienionych tagów.
+     * @throws IllegalArgumentException Jeżeli któryś z tagów jest null-em
      */
     public Set<FileID> getFilesWithOneOf(Set<Tag<?>> tags) {
         Set<FileID> result = new HashSet<>();
@@ -99,6 +100,9 @@ public class TagFilesStore implements Serializable {
         }
         Set<Tag<?>> computedTags = new HashSet<>();
         for (Tag<?> tag : tags) {
+            if (tag == null) {
+                throw new IllegalArgumentException("Żaden plik na pewno nie jest otagowany null-em");
+            }
             computedTags.addAll(tag.getDescendants());
             computedTags.add(tag);
         }
@@ -115,6 +119,7 @@ public class TagFilesStore implements Serializable {
      *
      * @param tags Poszukiwane tagi
      * @return Zbiór plików takich że każdy z nich posiada wszystkie wymienione tagi.
+     * @throws IllegalArgumentException Jeżeli któryś z tagów jest null-em
      */
     public Set<FileID> getFilesWithAllOf(Set<Tag<?>> tags) {
         Set<FileID> result = new HashSet<>();
@@ -126,7 +131,7 @@ public class TagFilesStore implements Serializable {
         }
         for (Tag<?> tag : tags) {
             if (tag == null) {
-                return new HashSet<>();
+                throw new IllegalArgumentException("Żaden plik na pewno nie jest otagowany null-em");
             }
             List<FileID> filesToRemoveFromResult = new ArrayList<>();
             for (FileID file : result) {
@@ -231,6 +236,22 @@ public class TagFilesStore implements Serializable {
     }
 
     /**
+     * Otagowuje wskazany plik wskazanym tagiem użytkownika.
+     *
+     * @param userTag Tag którym zostanie otagowany plik
+     * @param fileID  Plik który zostanie otagowany
+     * @throws IllegalArgumentException Jeżeli userTag==null lub fileIF==null
+     * @throws IllegalStateException    Jeżeli wskazanego pliku nie ma w bazie
+     */
+    public void addUserTagToFile(UserTag userTag, FileID fileID) {
+        if (userTag == null || fileID == null) {
+            throw new IllegalArgumentException("Otagowywanie null-i oraz tagowanie null-ami jest bez sensu");
+        }
+        getMasterTagFrom(fileID); // Sprawdzam stan
+        addTagInformation(fileID, userTag);
+    }
+
+    /**
      * Wyciąga wszystkie tagi z podanego zbioru plików.
      *
      * @param files Kolekcja plików
@@ -263,6 +284,27 @@ public class TagFilesStore implements Serializable {
      */
     public Set<Tag<?>> getTagsFrom(FileID file) {
         return getTagsFrom(new HashSet<>(Arrays.asList(file)));
+    }
+
+    /**
+     * Wyciąga tag macierzysty z podanego pliku.
+     *
+     * @param file Plik z którego zostanie wyciągnięty tag macierzysty.
+     * @return Tag macierzysty
+     * @throws IllegalArgumentException Jeżeli file==null
+     * @throws IllegalStateException    Jeżeli plik nie posiada przypisanego tagu macierzystego
+     */
+    public MasterTag getMasterTagFrom(FileID file) {
+        if (file == null) {
+            throw new IllegalArgumentException("null nie jest otagowany");
+        }
+        Set<Tag<?>> partialResult = getTagsFrom(file);
+        for (Tag<?> tag : partialResult) {
+            if (tag instanceof MasterTag) {
+                return (MasterTag) tag;
+            }
+        }
+        throw new IllegalStateException("Plik " + file + " nie posiada żadnego tagu macierzystego");
     }
 
     /**
