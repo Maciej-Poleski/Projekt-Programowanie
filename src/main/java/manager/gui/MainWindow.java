@@ -38,7 +38,8 @@ import manager.tags.Tags.IUserTagNode;
  * @author Jakub Brzeski
  * @author Jakub Czarnowicz
  */
-public class MainWindow extends javax.swing.JFrame {        // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+public class MainWindow extends javax.swing.JDialog {
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         buttonPanel = new javax.swing.JPanel();
@@ -52,6 +53,7 @@ public class MainWindow extends javax.swing.JFrame {        // <editor-fold defa
         commonTagsButton = new javax.swing.JButton();
         tagsListScrollPane = new javax.swing.JScrollPane();
         tagsList = new javax.swing.JList();
+        removeTagFromListButton = new javax.swing.JButton();
         leftPanel = new javax.swing.JPanel();
         lefMenu = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -155,27 +157,35 @@ public class MainWindow extends javax.swing.JFrame {        // <editor-fold defa
         });
         tagsListScrollPane.setViewportView(tagsList);
 
+        removeTagFromListButton.setText("Remove");
+        removeTagFromListButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                removeTagFromListButtonMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout rightPanelLayout = new javax.swing.GroupLayout(rightPanel);
         rightPanel.setLayout(rightPanelLayout);
         rightPanelLayout.setHorizontalGroup(
             rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rightPanelLayout.createSequentialGroup()
                 .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(rightPanelLayout.createSequentialGroup()
-                        .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(rightPanelLayout.createSequentialGroup()
-                                .addGap(51, 51, 51)
-                                .addComponent(tagsLabel))
-                            .addGroup(rightPanelLayout.createSequentialGroup()
-                                .addGap(28, 28, 28)
-                                .addComponent(commonTagsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(rightPanelLayout.createSequentialGroup()
-                                .addGap(59, 59, 59)
-                                .addComponent(allTagsButton)))
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rightPanelLayout.createSequentialGroup()
                         .addGap(0, 10, Short.MAX_VALUE)
-                        .addComponent(tagsListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(tagsListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(rightPanelLayout.createSequentialGroup()
+                        .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(rightPanelLayout.createSequentialGroup()
+                                    .addGap(51, 51, 51)
+                                    .addComponent(tagsLabel))
+                                .addGroup(rightPanelLayout.createSequentialGroup()
+                                    .addGap(28, 28, 28)
+                                    .addComponent(commonTagsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(removeTagFromListButton, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                                .addComponent(allTagsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         rightPanelLayout.setVerticalGroup(
@@ -188,6 +198,8 @@ public class MainWindow extends javax.swing.JFrame {        // <editor-fold defa
                 .addComponent(commonTagsButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(allTagsButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(removeTagFromListButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -249,7 +261,7 @@ public class MainWindow extends javax.swing.JFrame {        // <editor-fold defa
                     .addComponent(intersectionButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(clearButton)
-                .addGap(0, 38, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         middlePanel.setBackground(new java.awt.Color(204, 204, 255));
@@ -354,7 +366,7 @@ public class MainWindow extends javax.swing.JFrame {        // <editor-fold defa
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(middlePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rightPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(rightPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -364,7 +376,7 @@ public class MainWindow extends javax.swing.JFrame {        // <editor-fold defa
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(rightPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
+                    .addComponent(rightPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(middlePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -528,6 +540,17 @@ public class MainWindow extends javax.swing.JFrame {        // <editor-fold defa
       }
     }
   }//GEN-LAST:event_addTagMouseClicked
+
+private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeTagFromListButtonMouseClicked
+    if(tagsList.getSelectedIndices().length > 0 ) {
+      int[] ind = tagsList.getSelectedIndices();
+      for(int i = ind.length - 1; i >= 0; i--) {
+        selectedTags.remove(tagsList.getModel().getElementAt(ind[i]));
+        selectedTagsVector.remove(tagsList.getModel().getElementAt(ind[i]));
+      }
+      tagsList.setListData(selectedTagsVector);
+    }
+}//GEN-LAST:event_removeTagFromListButtonMouseClicked
 
     private void displayTagsOnTagsList(){
             tagsList.setListData(selectedTagsVector);
@@ -705,6 +728,7 @@ public class MainWindow extends javax.swing.JFrame {        // <editor-fold defa
     private javax.swing.JTree masterTagsTree;
     private javax.swing.JPanel middlePanel;
     private javax.swing.JTextField newTagTextField;
+    private javax.swing.JButton removeTagFromListButton;
     private javax.swing.JPanel rightPanel;
     private javax.swing.JTextField searchTextField;
     private javax.swing.JButton sumButton;
