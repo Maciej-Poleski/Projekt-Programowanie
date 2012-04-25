@@ -32,9 +32,15 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 	private JMenu [] jMenuFilterCategories;
 	private transient FilterGUI [] filters;
 	private transient ImageHolder iHolder;
+//<<<<<<< TREE
+	//private transient ImageHolder returnHolder;
+	//private transient ActionListener parentWindow;
+	//private static final int dWidth=800, dHeight=600, dLocation=100, dBorderSize=5, dBottomMargin=150, dSideMargins=75;
+//=======
 	private transient ImageHolder returnHolder;
 	private transient ActionListener parentWindow;
 	private static final int DWidth=800, DHeight=600, DLocation=100, DBorderSize=5, DBottomMargin=100, DSideMargins=75;
+//>>>>>>> MERGE-SOURCE
 	private int mainImageViewerHeight=420, mainImageViewerWidth=560;
 	private static class FilterGUI{
 		String name, nameGUI;

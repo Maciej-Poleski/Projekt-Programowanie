@@ -29,11 +29,9 @@ public class PrimaryBackupImplementationTest {
 				Paths.get("rodzina/wakacje"));
 
 		String backupLoc = "src/test/java/manager/files/picasa/downloaded";
-		File info = new File(backupLoc + "/info.dat");
-		File history = new File(backupLoc + "/history.dat");
 
 		PrimaryBackupImpl pbi = new PrimaryBackupImpl(
-				backupLoc, tags, info, history);
+				backupLoc, tags);
 
 		File file = new File("src/test/java/manager/files/picasa/dj2.jpg");
 		pbi.addFile(mt, file);
