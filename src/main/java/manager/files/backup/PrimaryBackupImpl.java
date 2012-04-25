@@ -6,6 +6,7 @@ import manager.files.OperationInterruptedException;
 import manager.files.backup.PrimaryBackup;
 import manager.tags.MasterTag;
 import manager.tags.Tags;
+import manager.tags.TagFilesStore;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -14,192 +15,92 @@ import java.nio.file.Path;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.regex.*;
 
 import javax.imageio.ImageIO;
 
 /**
  * @author Jakub Cieśla, Marcin Ziemiński
+ * @author 
+ * @version 
  * 
  */
 public final class PrimaryBackupImpl implements PrimaryBackup {
 
-	class Info implements Serializable {
-
-		private static final long serialVersionUID = 1L;
-
-		private Date created;
-		private HashMap<FileID, File> infos = new HashMap<FileID, File>();
-
-		Info() {
-			created = new Date();
-		}
-	}
-
-	class History implements Serializable {
-
-		private static final long serialVersionUID = 1L;
-
-		private Date created;
-
-		private HashMap<FileID, File> history = new HashMap<FileID, File>();
-
-		History() {
-			created = new Date();
-		}
-	}
-
 	private static final long serialVersionUID = 1L;
 
-	private Info data;
-	private History guard;
-	private File input, hist;
+	HashMap<FileID, File> infos = new HashMap<FileID, File>();
 
 	private final Tags tempTags;
+	private final TagFilesStore store;
 	private final String backupPath;
+	private Date created = new Date();
 
-	public PrimaryBackupImpl(String path, Tags tags, File info, File history)
-			throws IOException {
+	public PrimaryBackupImpl(String path, Tags tags) throws IOException {
 		backupPath = path;
 		tempTags = tags;
-		readInput(info, history);
+		store = tempTags.getStore();
 	}
 
 	/**
-	 * Funkcja wczytuje plik z informacjami na temat calej struktury oraz plik z
-	 * historia zmian podczas dzialania ostatniej instancji programu. W
-	 * przypadku brutalnego zamkniecia programu dokonuje synchronizacji
-	 * struktury z historia.
-	 * 
-	 * @param sciezki
-	 *            do pliku z danymi i historia
-	 * @throws java.io.IOException
+	 * Funkcja zwraca datę utworzenia danego PrimaryBackup
 	 */
-	public void readInput(File input, File history) throws IOException {
-		boolean sucD = false, sucH = false;
-		this.input = input;
-		this.hist = history;
-
-		ObjectInputStream inData, inHistory;
-		try {
-			inData = new ObjectInputStream(new FileInputStream(input));
-			try {
-				data = (Info) inData.readObject();
-				sucD = true;
-			} catch (ClassNotFoundException | InvalidClassException e) {
-				data = new Info();
-			}
-			inData.close();
-
-		} catch (FileNotFoundException e) {
-			data = new Info();
-		}
-
-		try {
-			inHistory = new ObjectInputStream(new FileInputStream(hist));
-			try {
-				guard = (History) inHistory.readObject();
-				sucH = true;
-			} catch (ClassNotFoundException e) {
-				guard = new History();
-			} catch (InvalidClassException e) {
-				guard = new History();
-			}
-			inHistory.close();
-		} catch (FileNotFoundException e) {
-			guard = new History();
-		}
-
-		// Synchronizacja struktury danych z historia operacji
-		if ((!sucD && sucH)
-				|| (sucH && sucD && data.created.before(guard.created))) {
-
-			File master;
-			for (FileID file : guard.history.keySet()) {
-				if (guard.history.containsKey(file)) {
-					master = guard.history.get(file);
-					if (master != null) {
-						data.infos.put(file, master);
-					} else {
-						data.infos.remove(file);
-					}
-				}
-			}
-			saveChanges();
-		}
-		guard = new History();
-		saveHistory();
-	}
-
-	/**
-	 * Funkcja uaktualnia plik z informacjami na temat calej struktury
-	 * 
-	 * @throws java.io.IOException
-	 */
-	private void saveChanges() throws IOException {
-		ObjectOutputStream wData = new ObjectOutputStream(new FileOutputStream(
-				input));
-		data.created = new Date();
-		wData.writeObject(data);
-		wData.close();
-	}
-
-	/**
-	 * Funkcja zapisuje biezaca historie zmian
-	 * 
-	 * @throws java.io.IOException
-	 */
-	private void saveHistory() throws IOException {
-		ObjectOutputStream wHistory = new ObjectOutputStream(
-				new FileOutputStream(hist));
-		guard.created = new Date();
-		wHistory.writeObject(guard);
-		wHistory.close();
+	public Date getBackupDate() {
+		return created;
 	}
 
 	/**
 	 * Dodanie oryginalnej sciezki do informacji na temat pliku
 	 * 
-	 * @param ID
-	 *            danego pliku i sciezka do niego
-	 * @throws java.io.IOException
+	 * @param fileid
+	 *           ID danego pliku i scieżka do niego.
+	 * @param path
+	 *			Ścieżka do pliku
 	 */
-	private void addPath(FileID file, File path) throws IOException {
-		data.infos.put(file, path);
-		guard.history.put(file, path);
-		saveHistory();
+	private void addPath(FileID fileid, File path) {
+		infos.put(fileid, path);
 	}
 
 	/**
 	 * Usuniecie oryginalnej z informacji na temat pliku
 	 * 
-	 * @param ID
-	 *            danego pliku
-	 * @throws java.io.IOException
+	 * @param fileid
+	 *            ID danego pliku
 	 */
-	private void removePath(FileID file) throws IOException {
-		guard.history.put(file, null);
-		data.infos.remove(file);
-		saveHistory();
+	private void removePath(FileID fileid) throws IOException {
+		infos.remove(fileid);
 	}
 
+	/**
+	 * Funkcja zwraca ścieżkę do pliku z danego Primary Backup
+	 *
+	 * @param fileid
+	 * 			ID danego pliku
+	 * @throws FileNotAvailableException
+	 * 			Plik o danym ID nie znajduje się w bazie
+	 */
 	@Override
-	public File getFile(FileID file) throws FileNotAvailableException {
-		File result = data.infos.get(file);
+	public File getFile(FileID fileid) throws FileNotAvailableException {
+		File result = infos.get(fileid);
 
 		if (result == null) {
-			throw new FileNotAvailableException(file.toString());
+			throw new FileNotAvailableException(fileid.toString());
 		}
 
 		return result;
 	}
 
+	/**
+	 * Funkcja zwraca zbiór wszystkich plików znajdujących się w danym
+	 * PrimaryBackp
+	 */
 	@Override
 	public Set<FileID> getListOfAvailableFiles() {
-		return data.infos.keySet();
+		return infos.keySet();
 	}
 
 	/**
-	 * Funkcja służąca do dodania nowego pliku do danego PrimaryBackup.
+	 * Funkcja służąca do dodania nowego pliku lub całego katalogu do danego PrimaryBackup.
 	 * 
 	 * @throws IOException
 	 *             Nieudane skopiowanie pliku.
@@ -209,43 +110,160 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 	 *            MasterTag utożsamiany z katalogiem, do którego ma zostać
 	 *            dodany nowy plik.
 	 * @param file
-	 *            Plik to dodania.
+	 *            Plik lub katalog to dodania.
+	 * @param fresh
+	 * 			  Zmienna oznacza, że ma zostać dodany folder do MasterTaga korzenia.
 	 */
 	@Override
-	public void addFile(MasterTag tag, File file)
+	public void addFile(MasterTag tag, File file, boolean fresh)
 			throws OperationInterruptedException, FileNotFoundException {
 
 		if (!file.exists()) {
 			throw new FileNotFoundException(file.getPath());
 		}
 
-		try {
-			Path end = tempTags.getPathFromMasterTag(tag);
-			File real = new File(backupPath + File.separator + end.toString());
-			if (real.mkdirs()) {
-				throw new OperationInterruptedException(
-						"Nie można utworzyć katalogu");
+		if(file.isFile()) { // Kopiuje zwykły plik 
+			try {
+				Path end = tempTags.getPathFromMasterTag(tag);
+				File realParent = new File(backupPath + File.separator + end.toString());
+				if (!realParent.exists() && !realParent.mkdirs()) {
+					throw new OperationInterruptedException(
+							"Nie można utworzyć katalogu");
+				}
+
+				String newName = file.getName();
+				File real = new File(realParent.toString() + File.separator + newName);
+				while(real.exists()) {  
+					newName = getGoodName(newName);
+					real = new File(realParent.toString() + File.separator + newName);
+				}
+
+				// Otwiera kanał na pliku, który ma być kopiowany
+				FileChannel srcChannel = new FileInputStream(file).getChannel();
+
+				// Otwiera kanał dla pliku docelowego
+				FileChannel dstChannel = new FileOutputStream(real).getChannel();
+
+				// Kopiuje zawartość z jednego do drugiego
+				dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
+
+				FileID id = new FileID();
+				addPath(id, real);
+				store.addFile(id, tag, null);	
+
+				// Zamknięcie kanałów.
+				srcChannel.close();
+				dstChannel.close();
+
+			} catch (IOException e) {
+				throw new OperationInterruptedException(e);
+			}
+		} else { // Kopiuje całą hierarchię folderów
+			try { 
+				MasterTag root = null;
+				File realParent = null;
+				if(fresh) {
+					root = tag;
+					realParent = new File(backupPath + File.separator + file.getName());
+
+				} else {
+					root = tempTags.newMasterTag(tag, file.getName());
+					Path end = tempTags.getPathFromMasterTag(root);
+					realParent = new File(backupPath + File.separator + end.toString());
+				}
+				if (!realParent.exists() && !realParent.mkdirs()) {
+					throw new OperationInterruptedException(
+							"Nie można utworzyć katalogu");
+				}
+
+				copyFiles(file, realParent, root);
+
+			} catch(IOException e) {
+				throw new OperationInterruptedException(e);
+			} 
+		}
+	}
+
+	private void copyFiles(File source, File destination, MasterTag parent) throws IOException, OperationInterruptedException {
+		File[] filesAndDirs = source.listFiles();
+		for(File file : filesAndDirs) {
+			if (!file.isFile()) {
+
+				File dest = new File(destination.toString() + File.separator + file.getName());
+				MasterTag mt = tempTags.newMasterTag(parent, file.getName());
+				if(!dest.exists() && !dest.mkdirs()) {
+					throw new OperationInterruptedException(
+							"Nie można utworzyć katalogu");
+				}
+				copyFiles(file, dest, mt);
+
+			} else {
+				String newName = file.getName();
+				FileChannel srcChannel = new FileInputStream(file).getChannel();
+
+				File real = new File(destination.toString() + File.separator + newName);
+				while(real.exists()) {
+					newName = getGoodName(newName);
+					real = new File(destination.toString() + File.separator + newName);
+				}
+
+				FileChannel dstChannel = new FileOutputStream(real).getChannel();
+				dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
+
+				FileID id = new FileID();
+				addPath(id, real);
+				store.addFile(id, parent, null);	
+
+				srcChannel.close();
+				dstChannel.close();
+			}
+		}
+	}
+
+	private String getGoodName(String name) {
+		Matcher tmp;
+		if(name.matches("^\\.?[^\\.]*\\([0-9]+\\)(\\..*||$)")) {
+			String s;
+			int num;
+
+			if(name.matches("^\\.?[^\\.]*\\([0-9]+\\)\\..*")) {
+				tmp = Pattern.compile("\\([0-9]+\\)\\.").matcher(name);
+				tmp.find();
+				s = tmp.group();
+				tmp = Pattern.compile("[0-9]+").matcher(s);
+				tmp.find();
+				s = tmp.group();
+				num = Integer.parseInt(s);
+				num++;
+				tmp = Pattern.compile("\\([0-9]+\\)\\.").matcher(name);
+				name = tmp.replaceFirst("(" + num + ").");
+
+			} else {
+				tmp = Pattern.compile("\\([0-9]+\\)$").matcher(name);
+				tmp.find();
+				s = tmp.group();
+				tmp = Pattern.compile("[0-9]+").matcher(s);
+				tmp.find();
+				s = tmp.group();
+				num = Integer.parseInt(s);
+				num++;
+				tmp = Pattern.compile("\\([0-9]+\\)$").matcher(name);
+				name = tmp.replaceFirst("(" + num + ")");
 			}
 
-			real = new File(real.toString() + File.separator + file.getName());
-			addPath(new FileID(), real);
+		} else {
 
-			// Otwiera kanał na pliku, który ma być kopiowany
-			FileChannel srcChannel = new FileInputStream(file).getChannel();
+			if(name.matches("\\.?[^\\.]+\\..*")) {
+				tmp = Pattern.compile("\\.?[^\\.]*").matcher(name);
+				tmp.find();
+				String s = tmp.group();
+				name = name.replaceFirst("\\.?[^\\.]*\\.", s + "(1).");
 
-			// Otwiera kanał dla pliku docelowego
-			FileChannel dstChannel = new FileOutputStream(real).getChannel();
-
-			// Kopiuje zawartość z jednego do drugiego
-			dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
-
-			// Zamknięcie kanałów.
-			srcChannel.close();
-			dstChannel.close();
-
-		} catch (IOException e) {
-			throw new OperationInterruptedException(e);
+			} else {
+				name = name +"(1)";
+			}
 		}
+		return name;
 	}
 
 	/**
@@ -289,6 +307,8 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 							"Nie można usunąć pliku");
 				}
 			}
+			removePath(fileId);
+			store.removeFile(fileId);
 
 		} catch (IOException e) {
 			throw new OperationInterruptedException(e);
@@ -319,9 +339,8 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 			StringBuilder temp = new StringBuilder();
 
 			// pobranie typy pliku
-			for (int i = name.length() - 1; name.charAt(i) != '.'; i--) {
+			for (int i = name.length() - 1; name.charAt(i) != '.'; i--)
 				temp.append(name.charAt(i));
-			}
 			temp.reverse();
 
 			return new ImageHolder(im, fileId, temp.toString());
@@ -353,11 +372,10 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 				throw new OperationInterruptedException(
 						"Nie można usunać starej wersji pliku");
 			}
-			removePath(image.getFileId());
+
 
 			// dodanie zedytowanego pliku
 			ImageIO.write(im, type, new File(file.getCanonicalPath()));
-			addPath(new FileID(), file);
 
 		} catch (IOException e) {
 			throw new OperationInterruptedException(e);
