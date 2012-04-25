@@ -34,7 +34,7 @@ public class PrimaryBackupImplementationTest {
 				backupLoc, tags);
 
 		File file = new File("src/test/java/manager/files/picasa/dj2.jpg");
-		pbi.addFile(mt, file);
+		pbi.addFile(mt, file, false);
 
 		Set<FileID> files = pbi.getListOfAvailableFiles();
 

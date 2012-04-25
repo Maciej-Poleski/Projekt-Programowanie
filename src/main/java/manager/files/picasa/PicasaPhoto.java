@@ -58,37 +58,10 @@ public final class PicasaPhoto {
 	 * @return handler to downloaded File
 	 * @throws PicasaMediaDownloadException
 	 */
-	public File downloadPhoto(String downloadDirectory)
+	public File downloadPhoto(File downloadDirectory)
 			throws PicasaMediaDownloadException {
 
-		try {
-			String photoUrl = photoEntry.getMediaContents().get(0).getUrl();
-			int index = photoUrl.lastIndexOf('/');
-			photoUrl = photoUrl.substring(0, index + 1) + "s2000"
-					+ photoUrl.substring(index);
-
-			URL url = new URL(photoUrl);
-
-			try (InputStream is = url.openStream()) {
-
-				File file = new File(downloadDirectory + "/" + getTitle());
-
-				try (OutputStream out = new BufferedOutputStream(
-						new FileOutputStream(file))) {
-
-					for (int b; (b = is.read()) != -1;) {
-						out.write(b);
-					}
-
-				}
-
-				return file;
-
-			}
-		} catch (IOException e) {
-
-			throw new PicasaMediaDownloadException(e);
-		}
+		return downloadPhoto(downloadDirectory, this);
 	}
 
 	/**
@@ -100,7 +73,7 @@ public final class PicasaPhoto {
 	 * @return handler to downloaded File
 	 * @throws PicasaMediaDownloadException
 	 */
-	public static File downloadPhoto(String downloadDirectory, PicasaPhoto photo)
+	public static File downloadPhoto(File downloadDirectory, PicasaPhoto photo)
 			throws PicasaMediaDownloadException {
 		try {
 			String photoUrl = photo.photoEntry.getMediaContents().get(0)
@@ -113,13 +86,16 @@ public final class PicasaPhoto {
 
 			try (InputStream is = url.openStream()) {
 
-				File file = new File(downloadDirectory + "/" + photo.getTitle());
+				File file = File.createTempFile("picasaDownload_",
+						photo.getTitle(), downloadDirectory);
 
 				try (OutputStream out = new BufferedOutputStream(
 						new FileOutputStream(file))) {
 
-					for (int b; (b = is.read()) != -1;) {
-						out.write(b);
+					int readed;
+					for (byte buffer[] = new byte[1 << 10]; (readed = is
+							.read(buffer)) != -1;) {
+						out.write(buffer, 0, readed);
 					}
 
 				}

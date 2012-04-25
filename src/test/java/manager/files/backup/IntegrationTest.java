@@ -71,7 +71,7 @@ public class IntegrationTest {
 				.getBackupManagerAssociatedWithMasterTag(mTagChild);
 
 		manager.getPrimaryBackup().addFile(mTagChild,
-				new File("src/test/resources/GoogleMusic.jpg"));
+				new File("src/test/resources/GoogleMusic.jpg"), false);
 
 		FileID fileId = manager.getPrimaryBackup().getListOfAvailableFiles()
 				.iterator().next();
