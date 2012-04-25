@@ -492,11 +492,15 @@ public class MainWindow extends javax.swing.JDialog {
                 BufferedImage bi;
                 try {
                     bi = ImageIO.read(file);
-                    String str = file.toString();
-                    str = str.substring(0, str.lastIndexOf('.'));
-                    ImageHolder i =new ImageHolder(bi,myf.fileID,str);   
-                    editimagewindow  = new EditWindow(i,new ImageChangedActionListener());
-                    editimagewindow.setVisible(true);                    
+                    //str = str.substring(0, str.lastIndexOf('.'));
+                    String name = file.getName();
+                    int pos = name.lastIndexOf('.');
+                    String str = name.substring(pos+1);
+                    ImageHolder i =new ImageHolder(bi,myf.fileID,str); 
+                    if(i!=null){
+                        editimagewindow  = new EditWindow(i,new ImageChangedActionListener());
+                        editimagewindow.setVisible(true);                    
+                    }
                 } catch (IOException ex) {
                     Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
                 }  
@@ -617,6 +621,11 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
                 PrimaryBackup primbackup = backupsmanager.getBackupManagerAssociatedWithMasterTag(mtag).getPrimaryBackup();         
                 ImageHolder changedImageHolder = editimagewindow.getImage();  
                 primbackup.saveEditedImage(changedImageHolder);
+                try {
+                    data.save();
+                } catch (IOException ex) {
+                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } catch (OperationInterruptedException ex) {
             } catch (FileNotAvailableException ex) { }
         }
