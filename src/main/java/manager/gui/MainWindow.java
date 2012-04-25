@@ -484,14 +484,23 @@ public class MainWindow extends javax.swing.JDialog {
 
     private void editImageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editImageButtonActionPerformed
         BufferedImage im3; 
-        try {
-            im3 = ImageIO.read(new File("1.jpg"));
-            ImageHolder i =new ImageHolder(im3, null, null);    
-            editimagewindow = new EditWindow(i,null);
-            editimagewindow.setVisible(true);            
-        } catch (IOException ex) {
-           
-        }
+            int [] ind = mainList.getSelectedIndices();
+            if(ind.length==1){
+                int indeks = ind[0];
+                MyFile myf = (MyFile)mainList.getModel().getElementAt(ind[0]);
+                File file = myf.file;
+                BufferedImage bi;
+                try {
+                    bi = ImageIO.read(file);
+                    String str = file.toString();
+                    str = str.substring(0, str.lastIndexOf('.'));
+                    ImageHolder i =new ImageHolder(bi,myf.fileID,str);   
+                    editimagewindow  = new EditWindow(i,new ImageChangedActionListener());
+                    editimagewindow.setVisible(true);                    
+                } catch (IOException ex) {
+                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }  
+            }
 
     }//GEN-LAST:event_editImageButtonActionPerformed
 
