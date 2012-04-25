@@ -22,9 +22,8 @@ public class WindowHistogram extends JDialog implements ActionListener, ItemList
 {
 	private static final long serialVersionUID = 1L;
 	private Drawing jPanel1;
-    private Histogram cos[];
+    private transient Histogram cos[];
     private boolean tF[] = {false};
-    private JButton jButton1;
     private JCheckBox jCheckBox1;
     private JCheckBox jCheckBox2;
     private JCheckBox jCheckBox3;
@@ -57,7 +56,7 @@ public class WindowHistogram extends JDialog implements ActionListener, ItemList
         jCheckBox1 = new JCheckBox();
         jCheckBox2 = new JCheckBox();
         jCheckBox3 = new JCheckBox();
-        jButton1 = new JButton();
+        JButton jButton1 = new JButton();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
         jCheckBox1.setText("Czerwony");
@@ -231,89 +230,29 @@ public class WindowHistogram extends JDialog implements ActionListener, ItemList
         public void paintComponent(Graphics g)
         {
             float max = 0;
-            float cons = 0;
             super.paintComponent(g);
+            Color colortable[] = new Color[9];
+            colortable[0] = Color.red;
+            colortable[1] = Color.green;
+            colortable[2] = Color.blue;
+            colortable[3] = Color.cyan;
+            colortable[4] = Color.magenta;
+            colortable[5] = new Color(255, 205, 0);
+            colortable[6] = new Color(153, 153, 153);
+            colortable[7] = new Color(102, 102, 102);
+            colortable[8] = new Color(51, 51, 51);
+            
             g.drawLine(0,258,514,258);
             g.drawLine(0,0,0,257);
             g.drawLine(0,0,514,0);
             g.drawLine(514,0,514,258);
-            for (int a1 = 0; a1<9; a1++)
+            
+            for (int a1 = 0; a1<tF.length; a1++)
             {
                 if (tF[a1])
                 {
-                    int a2;
-                    int d1 = 0;
-                    switch(a1)
-                    {
-                        case 0:
-                            g.setColor(Color.red);
-                            while (cos[d1].getChannel()!=Histogram.HistogramChannel.RED)
-                            {
-                                d1++;
-                            }
-                            break;
-                        case 1:
-                            g.setColor(Color.green);
-                            while (cos[d1].getChannel()!=Histogram.HistogramChannel.GREEN)
-                            {
-                                d1++;
-                            }
-                            break;
-                        case 2:
-                            g.setColor(Color.blue);
-                            while (cos[d1].getChannel()!=Histogram.HistogramChannel.BLUE)
-                            {
-                                d1++;
-                            }
-                            break;
-                        case 3:
-                            g.setColor(Color.cyan);
-                            while (cos[d1].getChannel()!=Histogram.HistogramChannel.CYAN)
-                            {
-                                d1++;
-                            }
-                            break;
-                        case 4:
-                            g.setColor(Color.magenta);
-                            while (cos[d1].getChannel()!=Histogram.HistogramChannel.MAGENTA)
-                            {
-                                d1++;
-                            }
-                            break;
-                        case 5:
-                            Color randomColor = new Color(255, 205, 0);
-                            g.setColor(randomColor);
-                            while (cos[d1].getChannel()!=Histogram.HistogramChannel.YELLOW)
-                            {
-                                d1++;
-                            }
-                            break;
-                        case 6:
-                            randomColor = new Color(153, 153, 153);
-                            g.setColor(randomColor);
-                            while (cos[d1].getChannel()!=Histogram.HistogramChannel.HUE)
-                            {
-                                d1++;
-                            }
-                            break;
-                        case 7:
-                            randomColor = new Color(102, 102, 102);
-                            g.setColor(randomColor);
-                            while (cos[d1].getChannel()!=Histogram.HistogramChannel.SATURATION)
-                            {
-                                d1++;
-                            }
-                            break;
-                        case 8:
-                            randomColor = new Color(51, 51, 51);
-                            g.setColor(randomColor);
-                            while (cos[d1].getChannel()!=Histogram.HistogramChannel.VALUE)
-                            {
-                                d1++;
-                            }
-                            break;
-                    }
-                    for (int a=0; a<cos[d1].getValueTableLenght(); a++)
+                    g.setColor(colortable[a1]);
+                    for (int a=0; a<cos[a1].getValueTableLenght(); a++)
                     {
                         if (cos[a1].getValue(a)>max)
                         {
@@ -321,12 +260,12 @@ public class WindowHistogram extends JDialog implements ActionListener, ItemList
                         }  
                     }
                    int x1, x2, y1, y2;
-                   for(int a = 0; a<cos[d1].getValueTableLenght(); a++)
+                   for(int a = 0; a<cos[a1].getValueTableLenght(); a++)
                    {
-                        y1 = (int) (256-(256/max*cos[d1].getValue(a)));
-                        y2 = (int) (256-(256/max*cos[d1].getValue(a+1)));
-                        x1 = 512/cos[d1].getValueTableLenght()*(a);
-                        x2 = 512/cos[d1].getValueTableLenght()*(a+1);
+                        y1 = (int) (256-(256/max*cos[a1].getValue(a)));
+                        y2 = (int) (256-(256/max*cos[a1].getValue(a+1)));
+                        x1 = 512/cos[a1].getValueTableLenght()*(a);
+                        x2 = 512/cos[a1].getValueTableLenght()*(a+1);
                         g.drawLine(x1+1,y1+1,x2+1,y2+1);
                    }
                }
