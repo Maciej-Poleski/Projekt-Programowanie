@@ -4,6 +4,11 @@
  */
 package manager.gui;
 
+
+import java.io.IOException;
+import manager.files.*;
+import manager.tags.*;
+import manager.core.*;
 import manager.files.backup.BackupsManager;
 import manager.files.*;
 import manager.files.backup.*;
@@ -17,9 +22,11 @@ public class PicassaLoginWindow extends javax.swing.JDialog {
     /**
      * Creates new form picassaLoginWindow
      */
+    private Data data;
     BackupManager backupmanager;
-    public PicassaLoginWindow(BackupManager bm) 
+    public PicassaLoginWindow(BackupManager bm, Data d) 
     {
+        this.data=d;
         this.backupmanager=bm;
         initComponents();
     }
@@ -178,7 +185,11 @@ public class PicassaLoginWindow extends javax.swing.JDialog {
         
         //PasswordField.setText(pass+"aaaa");
         this.backupmanager.registerPicasaBackup(login, pass,null);
-        
+         try {
+            data.save();
+        } catch (IOException ex) {
+            System.out.println("Exception");
+        }       
         
               
     }//GEN-LAST:event_loginButtonActionPerformed

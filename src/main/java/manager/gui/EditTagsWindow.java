@@ -164,9 +164,9 @@ public class EditTagsWindow extends javax.swing.JDialog {
         childField.setEditable(false);
         childField.setText("Child");
 
-        parentLabel.setText("Parent");
+        parentLabel.setText("A (Parent)");
 
-        childLabel.setText("Child");
+        childLabel.setText("B (Child)");
 
         setConnectionButton.setText("SET CONNECTION");
         setConnectionButton.addActionListener(new java.awt.event.ActionListener() {
@@ -175,14 +175,14 @@ public class EditTagsWindow extends javax.swing.JDialog {
             }
         });
 
-        changeNameButton.setText("CHANGE PARENT-NAME");
+        changeNameButton.setText("CHANGE A-NAME");
         changeNameButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 changeNameButtonActionPerformed(evt);
             }
         });
 
-        removeParentButton.setText("REMOVE PARENT");
+        removeParentButton.setText("REMOVE A");
         removeParentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeParentButtonActionPerformed(evt);

@@ -227,12 +227,12 @@
     </Component>
     <Component class="javax.swing.JLabel" name="parentLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Parent"/>
+        <Property name="text" type="java.lang.String" value="A (Parent)"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="childLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Child"/>
+        <Property name="text" type="java.lang.String" value="B (Child)"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="setConnectionButton">
@@ -245,7 +245,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="changeNameButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="CHANGE PARENT-NAME"/>
+        <Property name="text" type="java.lang.String" value="CHANGE A-NAME"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="changeNameButtonActionPerformed"/>
@@ -253,7 +253,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="removeParentButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="REMOVE PARENT"/>
+        <Property name="text" type="java.lang.String" value="REMOVE A"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeParentButtonActionPerformed"/>

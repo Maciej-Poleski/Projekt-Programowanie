@@ -201,8 +201,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jSeparator1" pref="119" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="showDiffsButton" alignment="0" pref="119" max="32767" attributes="0"/>
-                          <Component id="updateButton" alignment="0" max="32767" attributes="0"/>
+                          <Component id="updateButton" alignment="0" pref="119" max="32767" attributes="0"/>
                           <Component id="picassaBackupButton" alignment="0" max="32767" attributes="0"/>
                           <Component id="newBackupButton" alignment="0" max="32767" attributes="0"/>
                       </Group>
@@ -224,8 +223,6 @@
                           <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="updateButton" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="showDiffsButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                       <Component id="jScrollPane2" pref="208" max="32767" attributes="0"/>
@@ -284,11 +281,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Update Backup"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="showDiffsButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Show differences"/>
-          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="updateButtonActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

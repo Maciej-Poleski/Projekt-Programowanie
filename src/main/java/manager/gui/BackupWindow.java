@@ -6,9 +6,12 @@ package manager.gui;
 import java.awt.Dialog;
 import java.awt.event.FocusListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -71,7 +74,6 @@ public class BackupWindow extends javax.swing.JDialog {
         picassaBackupButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         updateButton = new javax.swing.JButton();
-        showDiffsButton = new javax.swing.JButton();
 
         buttonPanel.setBackground(new java.awt.Color(204, 204, 255));
         buttonPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -169,8 +171,11 @@ public class BackupWindow extends javax.swing.JDialog {
         });
 
         updateButton.setText("Update Backup");
-
-        showDiffsButton.setText("Show differences");
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -183,8 +188,7 @@ public class BackupWindow extends javax.swing.JDialog {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(showDiffsButton, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
-                        .addComponent(updateButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(updateButton, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
                         .addComponent(picassaBackupButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(newBackupButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -202,8 +206,6 @@ public class BackupWindow extends javax.swing.JDialog {
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(updateButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(showDiffsButton)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE))
                 .addContainerGap())
@@ -245,7 +247,7 @@ public class BackupWindow extends javax.swing.JDialog {
         try
         {
         b=this.backupsmanager.getBackupManagerAssociatedWithMasterTag(this.selectedMasterTag);
-        JOptionPane.showMessageDialog(this,"bckup "+this.selectedMasterTag,"Location",JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this,"The backup of "+this.selectedMasterTag," created.",JOptionPane.INFORMATION_MESSAGE);
         b.registerFileSystemBackup(this.backupLocation);
         //MainWindow.data.save();
         }
@@ -261,13 +263,17 @@ public class BackupWindow extends javax.swing.JDialog {
         {
             JOptionPane.showMessageDialog(this,"Error NPE","Error",JOptionPane.ERROR_MESSAGE);
         }
-        
+        try {
+            data.save();
+        } catch (IOException ex) {
+            Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_newBackupButtonActionPerformed
 
     private void picassaBackupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_picassaBackupButtonActionPerformed
         try
         {
-        PicassaLoginWindow picasawindow = new PicassaLoginWindow(this.backupsmanager.getBackupManagerAssociatedWithMasterTag(this.selectedMasterTag));
+        PicassaLoginWindow picasawindow = new PicassaLoginWindow(this.backupsmanager.getBackupManagerAssociatedWithMasterTag(this.selectedMasterTag),data);
         picasawindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         picasawindow.setVisible(true);
         }
@@ -278,9 +284,22 @@ public class BackupWindow extends javax.swing.JDialog {
         
         
     }//GEN-LAST:event_picassaBackupButtonActionPerformed
+
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+        try {
+            this.selectedSecondaryBackup.updateBackup();
+        } catch (OperationInterruptedException ex) {
+            Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            data.save();
+        } catch (IOException ex) {
+            Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+    }//GEN-LAST:event_updateButtonActionPerformed
     
     
-    static class backupListener implements ListSelectionListener
+    private static class backupListener implements ListSelectionListener
     {
         BackupWindow window;
         backupListener(BackupWindow w)
@@ -294,7 +313,7 @@ public class BackupWindow extends javax.swing.JDialog {
              window.selectedSecondaryBackup=(SecondaryBackup) window.backupsList.getSelectedValue();
         }
     }
-    static class listListener implements ListSelectionListener
+    private static class listListener implements ListSelectionListener
     {
         
         BackupWindow window;
@@ -369,7 +388,6 @@ public class BackupWindow extends javax.swing.JDialog {
     private javax.swing.JList mastertagsList;
     private javax.swing.JButton newBackupButton;
     private javax.swing.JButton picassaBackupButton;
-    private javax.swing.JButton showDiffsButton;
     private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
 }
