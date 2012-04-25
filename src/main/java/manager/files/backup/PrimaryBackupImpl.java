@@ -329,6 +329,7 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 	 * @throws OperationInterruptedException
 	 *             Błąd wykonania operacji.
 	 */
+        @Override
 	public ImageHolder getImageToEdition(FileID fileId)
 			throws FileNotAvailableException, OperationInterruptedException {
 		try {
@@ -360,6 +361,7 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 	 * @throws OperationInterruptedException
 	 *             Błąd wykonania operacji.
 	 */
+        @Override
 	public void saveEditedImage(ImageHolder image)
 			throws FileNotAvailableException, OperationInterruptedException {
 		try {

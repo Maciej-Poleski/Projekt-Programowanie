@@ -48,4 +48,8 @@ public interface PrimaryBackup extends Backup {
 	void removeFile(FileID fileId) throws FileNotAvailableException,
 			OperationInterruptedException;
 
+        public ImageHolder getImageToEdition(FileID fileId)
+			throws FileNotAvailableException, OperationInterruptedException; 
+        public void saveEditedImage(ImageHolder image)
+			throws FileNotAvailableException, OperationInterruptedException; 
 }
