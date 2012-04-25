@@ -51,7 +51,7 @@ public class BackupManager implements Serializable {
 	 *            specified uses default system temp location
 	 */
 	public void registerPicasaBackup(String picasaLogin, String picasaPassword,
-			String downloadLocation) {
+			File downloadLocation) {
 		SecondaryBackup sb = new PicasaBackupImpl(primaryBackup, picasaLogin,
 				picasaPassword, downloadLocation);
 		registerBackup(sb);

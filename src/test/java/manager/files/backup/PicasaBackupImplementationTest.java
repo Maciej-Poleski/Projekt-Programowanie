@@ -30,7 +30,7 @@ public class PicasaBackupImplementationTest {
 		when(original.getFile(id)).thenReturn(new File("src/test/java/manager/files/picasa/dj2.jpg"));
 
 		PicasaBackupImpl bi = new PicasaBackupImpl(
-				original, "projekt.programowanie", "projekt1234", "src/test/java/manager/files/picasa/downloaded");
+				original, "projekt.programowanie", "projekt1234", new File("src/test/java/manager/files/picasa/downloaded"));
 		
 		bi.updateBackup();
 		
@@ -51,7 +51,7 @@ public class PicasaBackupImplementationTest {
 		when(original.getFile(id)).thenReturn(new File("src/test/java/manager/files/picasa/dj2.jpg"));
 
 		PicasaBackupImpl bi = new PicasaBackupImpl(
-				original, "projekt.programowanie", "projekt1234", "src/test/java/manager/files/picasa/downloaded");
+				original, "projekt.programowanie", "projekt1234", new File("src/test/java/manager/files/picasa/downloaded"));
 		
 		bi.updateBackup();
 

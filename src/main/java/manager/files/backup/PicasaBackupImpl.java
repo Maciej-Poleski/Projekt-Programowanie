@@ -34,11 +34,11 @@ final class PicasaBackupImpl extends SecondaryBackup {
 	private Date lastBackup;
 	private String userName;
 	private String password;
-	private String downloadLocation;
+	private File downloadLocation;
 	private final Map<FileID, PicasaPhoto> backupedFiles = new HashMap<>();
 
 	PicasaBackupImpl(PrimaryBackup originalBackup, String picasaLogin,
-			String picasaPassword, String downloadLocation) {
+			String picasaPassword, File downloadLocation) {
 		super(originalBackup);
 
 		userName = picasaLogin;
