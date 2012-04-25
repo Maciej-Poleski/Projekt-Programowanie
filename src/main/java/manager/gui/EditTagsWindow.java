@@ -4,6 +4,7 @@
  */
 package manager.gui;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.TreeSelectionEvent;
@@ -39,7 +40,9 @@ public class EditTagsWindow extends javax.swing.JDialog {
         
         initComponents();
         
+        
         displayUserTagsTree(tags.getModelOfUserTags());
+        new UserTagsTreeSelectionListener();
     }
 
     void displayUserTagsTree(TreeModel utm){
@@ -53,8 +56,10 @@ public class EditTagsWindow extends javax.swing.JDialog {
         }
         @Override
         public void valueChanged(TreeSelectionEvent e) {
-            UserTag utag = (UserTag)userTagsTree.getLastSelectedPathComponent();
-            
+             Tags.IUserTagNode temptag = (Tags.IUserTagNode)userTagsTree.getLastSelectedPathComponent();
+             if(temptag == null) return;
+             UserTag utag = temptag.getTag();
+             
             if(parent==null){
                 parent=utag;
                 parentField.setText(utag.toString());
@@ -248,15 +253,30 @@ public class EditTagsWindow extends javax.swing.JDialog {
 
     private void removeParentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeParentButtonActionPerformed
         tags.removeTag(parent);
+        try {
+            data.save();
+        } catch (IOException ex) {
+            Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_removeParentButtonActionPerformed
 
     private void changeNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeNameButtonActionPerformed
         tags.setNameOfTag(parent, newNameField.getText());
+        try {
+            data.save();
+        } catch (IOException ex) {
+            Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_changeNameButtonActionPerformed
 
     private void setConnectionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setConnectionButtonActionPerformed
         try {
             tags.addChildToTag(child, parent);
+            try {
+                data.save();
+            } catch (IOException ex) {
+                Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (CycleException ex) {
             Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
