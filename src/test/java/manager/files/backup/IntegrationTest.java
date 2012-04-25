@@ -59,9 +59,7 @@ public class IntegrationTest {
 		BackupsManager bManager = new BackupsManager(tags);
 
 		PrimaryBackup primaryBackup = new PrimaryBackupImpl(
-				"src/test/resources/primaryBackup/", tags, new File(
-						"src/test/resources/primaryBackup/history.dat"),
-				new File("src/test/resources/primaryBackup/info.dat"));
+				"src/test/resources/primaryBackup/", tags);
 
 		BackupManager firstBackupManager = new BackupManager(primaryBackup);
 		bManager.registerBackupManager(mTag, firstBackupManager);
@@ -75,7 +73,7 @@ public class IntegrationTest {
 				.getBackupManagerAssociatedWithMasterTag(mTagChild);
 
 		manager.getPrimaryBackup().addFile(mTagChild,
-				new File("src/test/resources/GoogleMusic.jpg"));
+				new File("src/test/resources/GoogleMusic.jpg"), false);
 
 		FileID fileId = manager.getPrimaryBackup().getListOfAvailableFiles()
 				.iterator().next();
