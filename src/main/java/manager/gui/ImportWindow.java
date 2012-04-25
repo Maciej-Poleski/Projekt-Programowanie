@@ -224,17 +224,18 @@ public class ImportWindow extends javax.swing.JDialog {
     private void newMasterTagButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMasterTagButtonActionPerformed
         masterTagToAdd = null;        
         tagsField.setText(null);
+        JOptionPane.showMessageDialog(this, "New connected component created. Click IMPORT.");
     }//GEN-LAST:event_newMasterTagButtonActionPerformed
 
     private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importButtonActionPerformed
         // TODO add your handling code here:
         if (fileToAdd == null) {
-            JOptionPane.showMessageDialog(this, "Wybierz plik lub katalog");
+            JOptionPane.showMessageDialog(this, "Choose file or catalog.");
             return;
         }
         
         if (!fileToAdd.isDirectory() && masterTagToAdd == null) {
-            JOptionPane.showMessageDialog(this, "Wybierz plik i Master Tag\nlub wybierz katalog");
+            JOptionPane.showMessageDialog(this, "Choose file and Master Tag\n or choose catalog.");
             return;
         }
 
@@ -247,7 +248,7 @@ public class ImportWindow extends javax.swing.JDialog {
                 backupsManager.registerBackupManager(mTag, firstBackupManager);
                 primaryBackup.addFile(mTag, fileToAdd, true);
             } else {
-                System.out.println("uwaga:"+masterTagToAdd);
+                //System.out.println("uwaga:"+masterTagToAdd);
                 BackupManager bm = backupsManager.getBackupManagerAssociatedWithMasterTag(masterTagToAdd);
                 PrimaryBackup pb = bm.getPrimaryBackup();
                 pb.addFile(masterTagToAdd, fileToAdd,false);

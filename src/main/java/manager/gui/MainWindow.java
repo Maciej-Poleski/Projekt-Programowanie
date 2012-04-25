@@ -38,8 +38,7 @@ import manager.tags.Tags.IUserTagNode;
  * @author Jakub Brzeski
  * @author Jakub Czarnowicz
  */
-public class MainWindow extends javax.swing.JDialog {
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+public class MainWindow extends javax.swing.JDialog {        // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         buttonPanel = new javax.swing.JPanel();
@@ -153,7 +152,7 @@ public class MainWindow extends javax.swing.JDialog {
         tagsList.setMinimumSize(new java.awt.Dimension(10, 80));
         tagsListScrollPane.setViewportView(tagsList);
 
-        removeTagFromListButton.setText("Remove and display");
+        removeTagFromListButton.setText("Remove selection");
         removeTagFromListButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 removeTagFromListButtonMouseClicked(evt);
@@ -227,10 +226,13 @@ public class MainWindow extends javax.swing.JDialog {
                 .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lefMenu)
                     .addGroup(leftPanelLayout.createSequentialGroup()
-                        .addComponent(intersectionButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sumButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(clearButton))
+                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(leftPanelLayout.createSequentialGroup()
+                                .addComponent(intersectionButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sumButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(clearButton))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         leftPanelLayout.setVerticalGroup(
@@ -244,7 +246,7 @@ public class MainWindow extends javax.swing.JDialog {
                     .addComponent(intersectionButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(clearButton)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 38, Short.MAX_VALUE))
         );
 
         middlePanel.setBackground(new java.awt.Color(204, 204, 255));
@@ -377,6 +379,7 @@ public class MainWindow extends javax.swing.JDialog {
     private Vector<Tag<?>> selectedTagsVector;
     private Set<Tag<?>> selectedTags;
     private boolean lastSelectedTree; // false - MasterTag , true - UserTag
+    private MasterTag masterTagToRemove;
     
     private EditWindow editimagewindow;
     private ImportWindow importwindow;
@@ -575,6 +578,7 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
                 window.lastSelectedTree=false;
             }
             if(mtag!=null){
+                window.masterTagToRemove=mtag;
                 if(window.selectedTags.contains(mtag)==false){
                 window.selectedTags.add(mtag);
                 }
