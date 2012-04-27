@@ -122,12 +122,18 @@ public class TagFilesStore implements Serializable {
      * @throws IllegalArgumentException Jeżeli któryś z tagów jest null-em
      */
     public Set<FileID> getFilesWithAllOf(Set<Tag<?>> tags) {
-        Set<FileID> result = new HashSet<>();
-        for (Set<FileID> set : filesByTags.values()) {
-            result.addAll(set);
-        }
-        if (tags == null) {
-            return result;
+        Set<FileID> result;
+        if (tags == null || tags.isEmpty()) {
+            return tagsByFiles.keySet();
+        } else {
+            if (!tags.iterator().hasNext()) {
+                throw new IllegalArgumentException("Żaden plik na pewno nie jest otagowany null-em");
+            }
+            Tag<?> selectedTag = tags.iterator().next();
+            result = new HashSet<>(filesByTags.get(selectedTag));
+            for (Tag<?> tag : selectedTag.getDescendants()) {
+                result.addAll(filesByTags.get(tag));
+            }
         }
         for (Tag<?> tag : tags) {
             if (tag == null) {
