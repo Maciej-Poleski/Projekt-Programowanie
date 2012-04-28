@@ -84,7 +84,7 @@ public class Tags1Test {
     public void testRemoveTag1() throws Exception {
         MasterTag masterReal = tags.newMasterTag();
         TagFilesStore store = createMock(TagFilesStore.class);
-        expect(store.removeFamily(masterReal)).andReturn(new HashSet<FileID>());
+        expect(store.pretendRemoveFamily(masterReal)).andReturn(new HashSet<FileID>());
         replay(store);
         tags.setStore(store);
         tags.removeTag(masterReal);
