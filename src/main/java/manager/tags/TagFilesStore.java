@@ -115,7 +115,8 @@ public class TagFilesStore implements Serializable {
     }
 
     /**
-     * Zwraca zbiór plików posiadających wszystkie wymienione tagi.
+     * Zwraca zbiór plików posiadających wszystkie wymienione tagi. Jeżeli podany zbiór jest pusty, to zwraca zbiór
+     * pusty.
      *
      * @param tags Poszukiwane tagi
      * @return Zbiór plików takich że każdy z nich posiada wszystkie wymienione tagi.
@@ -124,7 +125,7 @@ public class TagFilesStore implements Serializable {
     public Set<FileID> getFilesWithAllOf(Set<Tag<?>> tags) {
         Set<FileID> result;
         if (tags == null || tags.isEmpty()) {
-            return tagsByFiles.keySet();
+            return new HashSet<>();
         } else {
             if (!tags.iterator().hasNext()) {
                 throw new IllegalArgumentException("Żaden plik na pewno nie jest otagowany null-em");
