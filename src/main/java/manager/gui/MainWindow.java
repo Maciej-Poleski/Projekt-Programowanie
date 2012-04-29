@@ -1,44 +1,36 @@
 package manager.gui;
 
-import java.awt.Component;
 import java.awt.Dialog;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import manager.tags.*;
 import manager.core.*;
 import manager.files.FileID;
 import manager.files.FileNotAvailableException;
-import manager.files.FileSaveException;
 import manager.files.OperationInterruptedException;
 import manager.files.backup.*;
 import manager.editor.*;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeSelectionModel;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.JPanel;
-import javax.swing.RootPaneContainer;
+import javax.swing.JFrame;
 import javax.swing.text.Position;
 import manager.tags.Tags.IUserTagNode;
+
 /**
  *
  * @author Jakub Brzeski
  * @author Jakub Czarnowicz
  */
-public class MainWindow extends javax.swing.JDialog {        // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+public class MainWindow extends JFrame {
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         buttonPanel = new javax.swing.JPanel();
@@ -148,8 +140,9 @@ public class MainWindow extends javax.swing.JDialog {        // <editor-fold def
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        tagsList.setMaximumSize(new java.awt.Dimension(20, 80));
+        tagsList.setMaximumSize(new java.awt.Dimension(0, 80));
         tagsList.setMinimumSize(new java.awt.Dimension(10, 80));
+        tagsList.setPreferredSize(new java.awt.Dimension(20, 80));
         tagsListScrollPane.setViewportView(tagsList);
 
         removeTagFromListButton.setText("Remove selection");
@@ -164,14 +157,16 @@ public class MainWindow extends javax.swing.JDialog {        // <editor-fold def
         rightPanelLayout.setHorizontalGroup(
             rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rightPanelLayout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addComponent(tagsLabel)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(rightPanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tagsListScrollPane)
-                    .addComponent(removeTagFromListButton, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))
+                    .addGroup(rightPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tagsListScrollPane)
+                            .addComponent(removeTagFromListButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(rightPanelLayout.createSequentialGroup()
+                        .addGap(49, 49, 49)
+                        .addComponent(tagsLabel)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         rightPanelLayout.setVerticalGroup(
@@ -179,10 +174,10 @@ public class MainWindow extends javax.swing.JDialog {        // <editor-fold def
             .addGroup(rightPanelLayout.createSequentialGroup()
                 .addComponent(tagsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tagsListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tagsListScrollPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(removeTagFromListButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(19, 19, 19))
         );
 
         leftPanel.setBackground(new java.awt.Color(204, 204, 255));
@@ -196,21 +191,21 @@ public class MainWindow extends javax.swing.JDialog {        // <editor-fold def
 
         lefMenu.addTab("User Tags", jScrollPane2);
 
-        intersectionButton.setText("INTERSECTION");
+        intersectionButton.setText("Intersection");
         intersectionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 intersectionButtonActionPerformed(evt);
             }
         });
 
-        sumButton.setText("SUM");
+        sumButton.setText("Sum");
         sumButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sumButtonActionPerformed(evt);
             }
         });
 
-        clearButton.setText("CLEAR");
+        clearButton.setText("Clear");
         clearButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearButtonActionPerformed(evt);
@@ -312,7 +307,7 @@ public class MainWindow extends javax.swing.JDialog {        // <editor-fold def
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(middlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(searchTextField)
-                            .addComponent(newTagTextField)
+                            .addComponent(newTagTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
                             .addComponent(lastTagTextField))))
                 .addContainerGap())
         );
@@ -349,9 +344,9 @@ public class MainWindow extends javax.swing.JDialog {        // <editor-fold def
                 .addContainerGap()
                 .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(middlePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(middlePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rightPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(rightPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -377,18 +372,33 @@ public class MainWindow extends javax.swing.JDialog {        // <editor-fold def
     private Vector<MyFile> masterTagsVector;
     private Vector<MyFile> userTagsVector;
     private Vector<Tag<?>> selectedTagsVector;
+    private MasterTag masterTagToRemove;
     private Set<Tag<?>> selectedTags;
     private boolean lastSelectedTree; // false - MasterTag , true - UserTag
-    private MasterTag masterTagToRemove;
-    
     private EditWindow editimagewindow;
     private ImportWindow importwindow;
     private BackupWindow backupwindow;
     private EditTagsWindow edittagswindow;
-    
     private FileID imageToEdit; 
     private ImageHolder imageToEditHolder;
     private Data data;
+    
+    private class MyFile implements Comparable<MyFile> {
+        private File file;
+        private FileID fileID;
+        MyFile(File a,FileID b){
+            file=a;
+            fileID=b;
+        }
+        @Override
+        public String toString(){
+            return file.getName();
+        }
+        @Override
+        public int compareTo(MyFile m){
+            return this.toString().compareTo(m.toString());
+        }
+    }
     
     MainWindow(){    
         try {
@@ -400,26 +410,10 @@ public class MainWindow extends javax.swing.JDialog {        // <editor-fold def
             userTagsVector = new Vector<MyFile>();
             selectedTagsVector = new Vector<Tag<?>>();
             selectedTags = new HashSet<Tag<?>>();
-                
         } catch (IOException ex) { }
         initComponents();
     }
-    
 
-    private class MyFile{
-
-        private File file;
-        private FileID fileID;
-        MyFile(File a,FileID b){
-            file=a;
-            fileID=b;
-        }
-        @Override
-        public String toString(){
-            return file.getName();
-        }
-    }
-    
     private void editTagsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editTagsButtonActionPerformed
         edittagswindow = new EditTagsWindow(this.tags, this.tagFilesStore, this.backupsmanager, this.data);
         edittagswindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
@@ -449,6 +443,7 @@ public class MainWindow extends javax.swing.JDialog {        // <editor-fold def
                 }
             }    
         }
+        Collections.sort((List)tagsVector);
         this.mainList.setListData(tagsVector);
     }
     private void sumButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sumButtonActionPerformed
@@ -461,16 +456,17 @@ public class MainWindow extends javax.swing.JDialog {        // <editor-fold def
         else{ //UserTags
             userTagsVector.clear();
             displayFilesOnMainList(files,this.userTagsVector);
-            //this.userTagsVector.clear();
         }
     }//GEN-LAST:event_sumButtonActionPerformed
     
     private void intersectionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_intersectionButtonActionPerformed
-         Set<FileID> files = this.tagFilesStore.getFilesWithAllOf(selectedTags);
+        Set<FileID> files = this.tagFilesStore.getFilesWithAllOf(selectedTags);
         if(this.lastSelectedTree==false){ //MasterTags 
+            masterTagsVector.clear();
             displayFilesOnMainList(files,this.masterTagsVector);
         }
         else{ //UserTags
+            userTagsVector.clear();
             displayFilesOnMainList(files,this.userTagsVector);
         }         
     }//GEN-LAST:event_intersectionButtonActionPerformed
@@ -482,7 +478,6 @@ public class MainWindow extends javax.swing.JDialog {        // <editor-fold def
         this.userTagsVector.clear();
         this.mainList.setListData(new Vector());
         this.tagsList.setListData(new Vector());
-        
     }//GEN-LAST:event_clearButtonActionPerformed
 
     private void editImageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editImageButtonActionPerformed
@@ -491,26 +486,34 @@ public class MainWindow extends javax.swing.JDialog {        // <editor-fold def
             if(ind.length==1){
                 int indeks = ind[0];
                 MyFile myf = (MyFile)mainList.getModel().getElementAt(ind[0]);
-                File file = myf.file;
-                BufferedImage bi;
+                imageToEdit = myf.fileID;
+                MasterTag mtag = tagFilesStore.getMasterTagFrom(imageToEdit);
+                PrimaryBackup primbackup = backupsmanager.getBackupManagerAssociatedWithMasterTag(mtag).getPrimaryBackup();         
+                ImageHolder ih;              
                 try {
-                    bi = ImageIO.read(file);
-                    //str = str.substring(0, str.lastIndexOf('.'));
-                    String name = file.getName();
-                    int pos = name.lastIndexOf('.');
-                    String str = name.substring(pos+1);
-                    ImageHolder i =new ImageHolder(bi,myf.fileID,str); 
-                    if(i!=null){
-                        editimagewindow  = new EditWindow(i,new ImageChangedActionListener());
-                        editimagewindow.setVisible(true);                    
-                    }
-                } catch (IOException ex) {
+                    ih = primbackup.getImageToEdition(imageToEdit);
+                    editimagewindow  = new EditWindow(ih,new ImageChangedActionListener());
+                    editimagewindow.setVisible(true);                    
+                } catch (FileNotAvailableException ex) {
                     Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }  
+                } catch (OperationInterruptedException ex) {
+                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
     }//GEN-LAST:event_editImageButtonActionPerformed
-
+    private class ImageChangedActionListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                MasterTag mtag = tagFilesStore.getMasterTagFrom(imageToEdit);
+                PrimaryBackup primbackup = backupsmanager.getBackupManagerAssociatedWithMasterTag(mtag).getPrimaryBackup();         
+                ImageHolder changedImageHolder = editimagewindow.getImage();  
+                primbackup.saveEditedImage(changedImageHolder);
+            } catch (OperationInterruptedException ex) {
+            } catch (FileNotAvailableException ex) { }
+        }
+    }
   private void fileSearchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileSearchButtonMouseClicked
       int indeks = mainList.getNextMatch(searchTextField.getText(), 0, Position.Bias.Forward);
       if(indeks != -1) mainList.setSelectedIndex(indeks);
@@ -554,7 +557,7 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
 }//GEN-LAST:event_removeTagFromListButtonMouseClicked
 
     private void displayTagsOnTagsList(){
-            tagsList.setListData(selectedTagsVector);
+        tagsList.setListData(selectedTagsVector);
     }
     private void displayUserTagsTree(TreeModel utm){
         this.userTagsTree.setModel(utm);
@@ -609,31 +612,22 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
                 window.selectedTagsVector.clear();
                 window.lastSelectedTree=true;
             }
-            if(utag!=null)window.selectedTags.add(utag);  
-            if(utag!=null)window.selectedTagsVector.add(utag);
+            if(utag!=null){
+                if(window.selectedTags.contains(utag)==false){
+                window.selectedTags.add(utag);
+                }
+            }  
+            if(utag!=null){
+                if(window.selectedTagsVector.contains(utag)==false){
+                    window.selectedTagsVector.add(utag);
+                }
+            }
             window.lastTag = utag;
             window.lastTagTextField.setText(window.lastTag.toString());
             window.displayTagsOnTagsList();
         }  
     } 
-    private class ImageChangedActionListener implements ActionListener{
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            try {
-                File file = backupsmanager.getFile(imageToEdit);
-                MasterTag mtag = tagFilesStore.getMasterTagFrom(imageToEdit);
-                PrimaryBackup primbackup = backupsmanager.getBackupManagerAssociatedWithMasterTag(mtag).getPrimaryBackup();         
-                ImageHolder changedImageHolder = editimagewindow.getImage();  
-                primbackup.saveEditedImage(changedImageHolder);
-                try {
-                    data.save();
-                } catch (IOException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } catch (OperationInterruptedException ex) {
-            } catch (FileNotAvailableException ex) { }
-        }
-    }
+
     private class searchTextFieldActionListener implements ActionListener{
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -688,6 +682,7 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
                     window.displayMasterTagsTree(window.tags.getModelOfMasterTags());
                     window.displayUserTagsTree(window.tags.getModelOfUserTags());
                     window.masterTagsTree.setRootVisible(false);
+                    window.userTagsTree.setRootVisible(false);
                     window.mainList.setListData(new Vector());
                     window.tagsList.setListData(new Vector());
                     window.searchTextField.addActionListener(window.new searchTextFieldActionListener());

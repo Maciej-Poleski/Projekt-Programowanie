@@ -112,9 +112,9 @@ public class ImportWindow extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(masterTagsTree);
 
-        jLabelWybierzTag.setText("Choose parent of your file or catalog:");
+        jLabelWybierzTag.setText("If you chose your files, you can select its parent-tag:");
 
-        importButton.setText("IMPORTUJ");
+        importButton.setText("IMPORT");
         importButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 importButtonActionPerformed(evt);
@@ -129,7 +129,7 @@ public class ImportWindow extends javax.swing.JDialog {
             }
         });
 
-        newMasterTagButton.setText("NEW");
+        newMasterTagButton.setText("NEW COMPONENT");
         newMasterTagButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newMasterTagButtonActionPerformed(evt);
@@ -144,7 +144,7 @@ public class ImportWindow extends javax.swing.JDialog {
         tagsField.setEditable(false);
         tagsField.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
 
-        jLabel1.setText("Or add new connected component:");
+        jLabel1.setText("or add new connected component here:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -160,12 +160,12 @@ public class ImportWindow extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(pathField)
-                            .addComponent(jLabelWybierzTag, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1)
                             .addComponent(tagsField)
                             .addComponent(newMasterTagButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(chooseFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
-                            .addComponent(importButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(chooseFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(importButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelWybierzTag, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -183,8 +183,8 @@ public class ImportWindow extends javax.swing.JDialog {
                         .addComponent(chooseFileButton)
                         .addGap(5, 5, 5)
                         .addComponent(pathField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabelWybierzTag)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelWybierzTag, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -223,8 +223,8 @@ public class ImportWindow extends javax.swing.JDialog {
 
     private void newMasterTagButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMasterTagButtonActionPerformed
         masterTagToAdd = null;        
-        tagsField.setText(null);
-        JOptionPane.showMessageDialog(this, "New connected component created. Click IMPORT.");
+        tagsField.setText("<< NEW COMPONENT >>");
+        JOptionPane.showMessageDialog(this, "Now click IMPORT. New component will be created.");
     }//GEN-LAST:event_newMasterTagButtonActionPerformed
 
     private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importButtonActionPerformed
