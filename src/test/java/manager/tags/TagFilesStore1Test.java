@@ -9,10 +9,7 @@ import org.powermock.api.easymock.PowerMock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
 import static org.easymock.EasyMock.expect;
@@ -159,6 +156,8 @@ public class TagFilesStore1Test {
                 new HashSet<>(Arrays.asList(file1, file2, file3)));
         assertEquals(store.getFilesWithOneOf(new HashSet<Tag<?>>(Arrays.asList(userTag1, userTag4))),
                 new HashSet<>(Arrays.asList(file1, file3)));
+        assertEquals(store.getFilesWithOneOf(null), new HashSet<>());
+        assertEquals(store.getFilesWithOneOf(new HashSet<Tag<?>>(Arrays.asList(masterTag4))), new HashSet<>());
         verify(file1, file2, file3);
     }
 
@@ -181,6 +180,8 @@ public class TagFilesStore1Test {
                 new HashSet<>());
         assertEquals(store.getFilesWithAllOf(new HashSet<Tag<?>>(Arrays.asList(userTag2))),
                 new HashSet<>(Arrays.asList(file1, file2)));
+        assertEquals(store.getFilesWithAllOf(null), new HashSet<>());
+        assertEquals(store.getFilesWithAllOf(new HashSet<Tag<?>>()), new HashSet<>());
         verify(file1, file2, file3);
     }
 
@@ -228,6 +229,9 @@ public class TagFilesStore1Test {
         store.addFiles(new HashSet<>(Arrays.asList(file2)), masterTag2);
         assertEquals(store.getFilesWith(masterTag2), new HashSet<>(Arrays.asList(file2)));
         assertEquals(store.getFilesWith(masterTag1), new HashSet<>(Arrays.asList(file1, file3)));
+        store.addFiles(null, masterTag1);
+        assertEquals(store.getFilesWith(masterTag2), new HashSet<>(Arrays.asList(file2)));
+        assertEquals(store.getFilesWith(masterTag1), new HashSet<>(Arrays.asList(file1, file3)));
         verify(file1, file2, file3);
     }
 
@@ -236,7 +240,8 @@ public class TagFilesStore1Test {
         FileID file1 = createMock(FileID.class);
         FileID file2 = createMock(FileID.class);
         FileID file3 = createMock(FileID.class);
-        replay(file1, file2, file3);
+        FileID file4 = createMock(FileID.class);
+        replay(file1, file2, file3, file4);
         store.addFiles(new HashSet<>(Arrays.asList(file1, file3)), masterTag1,
                 new HashSet<>(Arrays.asList(userTag1, userTag2)));
         store.addFiles(new HashSet<>(Arrays.asList(file2)), masterTag2,
@@ -247,7 +252,22 @@ public class TagFilesStore1Test {
         assertEquals(store.getFilesWith(userTag2), new HashSet<>(Arrays.asList(file1, file3)));
         assertEquals(store.getFilesWith(userTag3), new HashSet<>(Arrays.asList(file2)));
         assertEquals(store.getFilesWith(userTag4), new HashSet<>(Arrays.asList(file2)));
-        verify(file1, file2, file3);
+        store.addFiles(null, masterTag1, new HashSet<>(Arrays.asList(userTag1, userTag2, userTag3)));
+        assertEquals(store.getFilesWith(masterTag2), new HashSet<>(Arrays.asList(file2)));
+        assertEquals(store.getFilesWith(masterTag1), new HashSet<>(Arrays.asList(file1, file3)));
+        assertEquals(store.getFilesWith(userTag1), new HashSet<>(Arrays.asList(file1, file2, file3)));
+        assertEquals(store.getFilesWith(userTag2), new HashSet<>(Arrays.asList(file1, file3)));
+        assertEquals(store.getFilesWith(userTag3), new HashSet<>(Arrays.asList(file2)));
+        assertEquals(store.getFilesWith(userTag4), new HashSet<>(Arrays.asList(file2)));
+        store.addFiles(new HashSet<>(Arrays.asList(file4)), masterTag5, null);
+        assertEquals(store.getFilesWith(masterTag2), new HashSet<>(Arrays.asList(file2)));
+        assertEquals(store.getFilesWith(masterTag1), new HashSet<>(Arrays.asList(file1, file3)));
+        assertEquals(store.getFilesWith(userTag1), new HashSet<>(Arrays.asList(file1, file2, file3)));
+        assertEquals(store.getFilesWith(userTag2), new HashSet<>(Arrays.asList(file1, file3)));
+        assertEquals(store.getFilesWith(userTag3), new HashSet<>(Arrays.asList(file2)));
+        assertEquals(store.getFilesWith(userTag4), new HashSet<>(Arrays.asList(file2)));
+        assertEquals(store.getFilesWith(masterTag5), new HashSet<>(Arrays.asList(file4)));
+        verify(file1, file2, file3, file4);
     }
 
     @Test
@@ -269,6 +289,7 @@ public class TagFilesStore1Test {
                 new HashSet<>(Arrays.asList(masterTag1, masterTag2, userTag1, userTag2, userTag3, userTag4)));
         assertEquals(store.getTagsFrom(new HashSet<>(Arrays.asList(file1, file3))),
                 new HashSet<>(Arrays.asList(masterTag1, userTag1, userTag2)));
+        assertEquals(store.getTagsFrom((Set<FileID>) null), new HashSet<>());
         verify(file1, file2, file3);
     }
 
@@ -496,6 +517,16 @@ public class TagFilesStore1Test {
                 new HashSet<>(Arrays.asList(masterTag1, masterTag2)));
         assertEquals(store.getTagsFrom(new HashSet<>(Arrays.asList(file1, file3))),
                 new HashSet<>(Arrays.asList(masterTag1)));
+        store.removeFileTags(file1, null);
+        assertEquals(store.getTagsFrom(file1), new HashSet<>(Arrays.asList(masterTag1)));
+        assertEquals(store.getTagsFrom(file2), new HashSet<>(Arrays.asList(masterTag2)));
+        assertEquals(store.getTagsFrom(file3), new HashSet<>(Arrays.asList(masterTag1)));
+        assertEquals(store.getTagsFrom(new HashSet<>(Arrays.asList(file1, file2))),
+                new HashSet<>(Arrays.asList(masterTag1, masterTag2)));
+        assertEquals(store.getTagsFrom(new HashSet<>(Arrays.asList(file2, file3))),
+                new HashSet<>(Arrays.asList(masterTag1, masterTag2)));
+        assertEquals(store.getTagsFrom(new HashSet<>(Arrays.asList(file1, file3))),
+                new HashSet<>(Arrays.asList(masterTag1)));
         verify(file1, file2, file3);
     }
 
@@ -626,6 +657,7 @@ public class TagFilesStore1Test {
         assertEquals(store.getFilesWithRealTag(masterTag1), new HashSet<>(Arrays.asList(file1, file3)));
         assertEquals(store.getFilesWithRealTag(userTag1), new HashSet<>(Arrays.asList(file2, file1, file3)));
         assertEquals(store.getFilesWithRealTag(userTag2), new HashSet<>(Arrays.asList(file1, file3)));
+        assertEquals(store.getFilesWithRealTag(masterTag3), new HashSet<>());
         verify(file1, file2, file3);
     }
 }

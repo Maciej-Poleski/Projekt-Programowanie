@@ -15,8 +15,8 @@ import static junit.framework.Assert.assertFalse;
  * Time: 16:14
  */
 public class UserTagAutoExtensionImplementation1Test {
-    UserTagAutoExtensionImplementation implementation;
-    Tags tags;
+    private UserTagAutoExtensionImplementation implementation;
+    private Tags tags;
 
     @Before
     public void setUp() throws Exception {

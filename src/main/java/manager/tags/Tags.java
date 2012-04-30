@@ -207,6 +207,7 @@ public class Tags implements Serializable {
      *
      * @param store Główny magazyn danych
      */
+    @Deprecated
     public void setStore(TagFilesStore store) {
         this.store = store;
     }
@@ -606,6 +607,7 @@ public class Tags implements Serializable {
      *
      * @return Obiekt klasy Tags
      */
+    @Deprecated
     public static synchronized Tags getDefaultInstance() {
         if (defaultInstance != null) {
             return defaultInstance;
@@ -622,6 +624,7 @@ public class Tags implements Serializable {
      * @param defaultInstance Instancja klasy Tags
      * @throws IllegalArgumentException Jeżeli defaultInstance==null
      */
+    @Deprecated
     public static void setDefaultInstance(Tags defaultInstance) {
         if (defaultInstance == null) {
             throw new IllegalArgumentException("Null jest niedozwolony");
@@ -666,6 +669,7 @@ public class Tags implements Serializable {
         return userTagAutoExtensionsManager;
     }
 
+    @Deprecated
     private void checkStore() {
         if (store == null) {
             throw new StoreNotAvailableException();

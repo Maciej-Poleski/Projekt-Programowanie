@@ -9,11 +9,11 @@ import org.junit.Test;
  * Time: 16:45
  */
 public class UserTagAutoExtensionImplementation2Test {
-    UserTagAutoExtensionImplementation implementation;
-    Tags tags;
-    UserTag tag1;
-    UserTag tag2;
-    UserTag tag3;
+    private UserTagAutoExtensionImplementation implementation;
+    private Tags tags;
+    private UserTag tag1;
+    private UserTag tag2;
+    private UserTag tag3;
 
     @Before
     public void setUp() throws Exception {

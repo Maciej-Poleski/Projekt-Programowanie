@@ -39,11 +39,6 @@ public class Tags1Test {
         }
     }
 
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
     @Test
     public void testNewMasterTag1() throws Exception {
         tags.newMasterTag();
