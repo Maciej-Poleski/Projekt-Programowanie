@@ -68,6 +68,7 @@ public final class Data {
         objectOutputStream.writeObject(getTagFilesStore());
         objectOutputStream.writeObject(getTags());
         objectOutputStream.writeObject(getBackupsManager());
+        objectOutputStream.close();
     }
 
     static boolean isLoaded() {

@@ -131,8 +131,14 @@ public class TagFilesStore implements Serializable {
                 throw new IllegalArgumentException("Żaden plik na pewno nie jest otagowany null-em");
             }
             Tag<?> selectedTag = tags.iterator().next();
+            if (!filesByTags.containsKey(selectedTag)) {
+                return new HashSet<>();
+            }
             result = new HashSet<>(filesByTags.get(selectedTag));
             for (Tag<?> tag : selectedTag.getDescendants()) {
+                if (!filesByTags.containsKey(tag)) {
+                    return new HashSet<>();
+                }
                 result.addAll(filesByTags.get(tag));
             }
         }
@@ -144,13 +150,14 @@ public class TagFilesStore implements Serializable {
             for (FileID file : result) {
                 if (!tagsByFiles.containsKey(file)) {
                     filesToRemoveFromResult.add(file);
-                }
-                Set<Tag<?>> computedTagSet = new HashSet<>();
-                computedTagSet.addAll(tag.getDescendants());
-                computedTagSet.add(tag);
-                computedTagSet.retainAll(tagsByFiles.get(file));
-                if (computedTagSet.isEmpty()) {
-                    filesToRemoveFromResult.add(file);
+                } else {
+                    Set<Tag<?>> computedTagSet = new HashSet<>();
+                    computedTagSet.addAll(tag.getDescendants());
+                    computedTagSet.add(tag);
+                    computedTagSet.retainAll(tagsByFiles.get(file));
+                    if (computedTagSet.isEmpty()) {
+                        filesToRemoveFromResult.add(file);
+                    }
                 }
             }
             result.removeAll(filesToRemoveFromResult);

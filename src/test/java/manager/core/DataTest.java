@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.file.Files;
 
 import static junit.framework.Assert.*;
 
@@ -20,7 +21,7 @@ public class DataTest {
     @After
     public void tearDown() throws Exception {
         File database = new File("database");
-        database.delete();
+        database.deleteOnExit();
     }
 
     @Before
