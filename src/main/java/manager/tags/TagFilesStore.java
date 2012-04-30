@@ -127,20 +127,7 @@ public class TagFilesStore implements Serializable {
         if (tags == null || tags.isEmpty()) {
             return new HashSet<>();
         } else {
-            if (!tags.iterator().hasNext()) {
-                throw new IllegalArgumentException("Żaden plik na pewno nie jest otagowany null-em");
-            }
-            Tag<?> selectedTag = tags.iterator().next();
-            if (!filesByTags.containsKey(selectedTag)) {
-                return new HashSet<>();
-            }
-            result = new HashSet<>(filesByTags.get(selectedTag));
-            for (Tag<?> tag : selectedTag.getDescendants()) {
-                if (!filesByTags.containsKey(tag)) {
-                    return new HashSet<>();
-                }
-                result.addAll(filesByTags.get(tag));
-            }
+            result = getFilesWith(tags.iterator().next());
         }
         for (Tag<?> tag : tags) {
             if (tag == null) {

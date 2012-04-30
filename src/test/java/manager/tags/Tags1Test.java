@@ -328,4 +328,14 @@ public class Tags1Test {
         Tags.setDefaultInstance(myTags);
         assertEquals(Tags.getDefaultInstance(), myTags);
     }
+
+    @Test
+    public void testGetUserTagAutoProvider() throws Exception {
+        assertNotNull(tags.getUserTagAutoProvider());
+    }
+
+    @Test
+    public void testGetUserTagAutoExtensionManager() throws Exception {
+        assertNotNull(tags.getUserTagAutoExtensionManager());
+    }
 }

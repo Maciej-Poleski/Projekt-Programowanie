@@ -33,6 +33,15 @@ public class Tags implements Serializable {
     private TagFilesStore store = new TagFilesStore();
     private final Map<Tag<?>, String> tagNames = new HashMap<>();
     private final Map<Tag<?>, Set<Serializable>> tagMetadata = new HashMap<>();
+    private final UserTagAutoProvider userTagAutoProvider;
+    private final UserTagAutoExtensionsManager userTagAutoExtensionsManager;
+
+    {
+        UserTagAutoExtensionImplementation implementation = new UserTagAutoExtensionImplementation();
+        userTagAutoProvider = implementation;
+        userTagAutoExtensionsManager = implementation;
+    }
+
     private transient List<WeakReference<MasterTagsTreeModel>> masterTagsTreeModelList = new ArrayList<>();
     private transient List<WeakReference<UserTagsTreeModel>> userTagsTreeModelList = new ArrayList<>();
     private static Tags defaultInstance;
@@ -636,6 +645,25 @@ public class Tags implements Serializable {
             result = result.getParent();
         }
         return result;
+    }
+
+    /**
+     * Zwraca obiekt który można odpytywać o propozycje tagów dla podanych nazw plików.
+     *
+     * @return Implementacja interfejsu UserTagAutoProvider
+     */
+    public UserTagAutoProvider getUserTagAutoProvider() {
+        return userTagAutoProvider;
+    }
+
+    /**
+     * Zwraca obiekt umożliwiający zarządzanie preferencjami użytkownika dotyczącymi automatycznego tagowania plików
+     * w oparciu o ich rozszerzenia.
+     *
+     * @return Implementacja interfejsu UserTagAutoExtensionManager
+     */
+    public UserTagAutoExtensionsManager getUserTagAutoExtensionManager() {
+        return userTagAutoExtensionsManager;
     }
 
     private void checkStore() {
