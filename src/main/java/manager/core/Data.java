@@ -44,6 +44,7 @@ public final class Data {
             Tags tags = (Tags) objectInputStream.readObject();
             Tags.setDefaultInstance(tags);
             BackupsManager backupsManager = (BackupsManager) objectInputStream.readObject();
+            objectInputStream.close();
             return new Data(tags, tagFilesStore1, backupsManager);
         } catch (FileNotFoundException e) {
             TagFilesStore tagFilesStore1 = new TagFilesStore();
@@ -68,6 +69,7 @@ public final class Data {
         objectOutputStream.writeObject(getTagFilesStore());
         objectOutputStream.writeObject(getTags());
         objectOutputStream.writeObject(getBackupsManager());
+        objectOutputStream.close();
     }
 
     static boolean isLoaded() {

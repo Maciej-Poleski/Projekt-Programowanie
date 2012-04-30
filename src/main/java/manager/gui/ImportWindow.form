@@ -177,12 +177,12 @@
     </Container>
     <Component class="javax.swing.JLabel" name="jLabelWybierzTag">
       <Properties>
-        <Property name="text" type="java.lang.String" value="If you chose your files, you can select its parent-tag:"/>
+        <Property name="text" type="java.lang.String" value="Po wybraniu pliku wybierz jego rodzica w drzewie,"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="importButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="IMPORT"/>
+        <Property name="text" type="java.lang.String" value="IMPORTUJ DO PROGRAMU"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="importButtonActionPerformed"/>
@@ -200,7 +200,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="chooseFileButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="CHOOSE FILES"/>
+        <Property name="text" type="java.lang.String" value="WYBIERZ PLIK LUB KATALOG"/>
         <Property name="actionCommand" type="java.lang.String" value="chooseFile"/>
       </Properties>
       <Events>
@@ -209,7 +209,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="newMasterTagButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="NEW COMPONENT"/>
+        <Property name="text" type="java.lang.String" value="Nowa sk&#x142;adowa"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newMasterTagButtonActionPerformed"/>
@@ -243,7 +243,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="or add new connected component here:"/>
+        <Property name="text" type="java.lang.String" value="lub stw&#xf3;rz now&#x105; sp&#xf3;jn&#x105; sk&#x142;adow&#x105;:"/>
       </Properties>
     </Component>
   </SubComponents>

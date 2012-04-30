@@ -74,16 +74,23 @@ public class TagFilesStore implements Serializable {
      *
      * @param fileId Uchwyt do reprezentanta pliku
      * @throws IllegalArgumentException Jeżeli fileId==null
+     * @throws IllegalStateException    Jeżeli podanego pliku nie ma w bazie
      */
     public void removeFile(FileID fileId) {
         if (fileId == null) {
             throw new IllegalArgumentException("Usuwanie null-a nie ma sensu");
         }
-        tagsByFiles.remove(fileId);
-        for (Set<FileID> set : filesByTags.values()) {
-            set.remove(fileId);
+        Set<Tag<?>> tagsToRemove = tagsByFiles.get(fileId);
+        if (tagsToRemove == null) {
+            throw new IllegalStateException("Podanego pliku nie ma w bazie");
         }
-        cleanupTagsByFiles();
+        tagsByFiles.remove(fileId);
+        for (Tag<?> tag : tagsToRemove) {
+            filesByTags.get(tag).remove(fileId);
+            if (filesByTags.get(tag).isEmpty()) {
+                filesByTags.remove(tag);
+            }
+        }
     }
 
     /**
@@ -127,14 +134,7 @@ public class TagFilesStore implements Serializable {
         if (tags == null || tags.isEmpty()) {
             return new HashSet<>();
         } else {
-            if (!tags.iterator().hasNext()) {
-                throw new IllegalArgumentException("Żaden plik na pewno nie jest otagowany null-em");
-            }
-            Tag<?> selectedTag = tags.iterator().next();
-            result = new HashSet<>(filesByTags.get(selectedTag));
-            for (Tag<?> tag : selectedTag.getDescendants()) {
-                result.addAll(filesByTags.get(tag));
-            }
+            result = getFilesWith(tags.iterator().next());
         }
         for (Tag<?> tag : tags) {
             if (tag == null) {
@@ -142,9 +142,6 @@ public class TagFilesStore implements Serializable {
             }
             List<FileID> filesToRemoveFromResult = new ArrayList<>();
             for (FileID file : result) {
-                if (!tagsByFiles.containsKey(file)) {
-                    filesToRemoveFromResult.add(file);
-                }
                 Set<Tag<?>> computedTagSet = new HashSet<>();
                 computedTagSet.addAll(tag.getDescendants());
                 computedTagSet.add(tag);
@@ -192,18 +189,22 @@ public class TagFilesStore implements Serializable {
      *
      * @param files     Zbiór importowanych plików.
      * @param masterTag Tag macierzysty który otrzymają pliki.
-     * @throws IllegalArgumentException Jeżeli masterTag==null lub któryś z plików jest już w bazie
+     * @throws IllegalArgumentException Jeżeli masterTag==null lub któryś z plików jest null-em
+     * @throws IllegalStateException    Jeżeli któryś z plików jest już w bazie
      */
     public void addFiles(Set<FileID> files, MasterTag masterTag) {
         if (files == null) {
             return;
         }
         if (masterTag == null) {
-            throw new IllegalArgumentException("Nie można tagować null-em");
+            throw new IllegalArgumentException("Każdy plik w bazie musi posiadać tag macierzysty (nie null)");
         }
         for (FileID file : files) {
+            if (file == null) {
+                throw new IllegalArgumentException("Nie można tagować null-i");
+            }
             if (isInDatabase(file)) {
-                throw new IllegalArgumentException("Plik " + file + " jest już w bazie danych");
+                throw new IllegalStateException("Plik " + file + " jest już w bazie danych");
             }
             addTagInformation(file, masterTag);
         }
@@ -217,27 +218,26 @@ public class TagFilesStore implements Serializable {
      * @param files     Zbiór importowanych plików
      * @param masterTag Tag macierzysty który otrzymają pliki
      * @param userTags  Tagi użytkownika które otrzymają pliki
-     * @throws IllegalArgumentException Jeżeli masterTag==null lub któryś z plików jest już w bazie
+     * @throws IllegalArgumentException Jeżeli masterTag==null lub któryś z plików jest nullem
+     * @throws IllegalStateException    Jeżeli któryś z plików jest już w bazie
      */
     public void addFiles(Set<FileID> files, MasterTag masterTag, Set<UserTag> userTags) {
         if (files == null) {
             return;
         }
-        if (masterTag == null) {
-            throw new IllegalArgumentException("Każdy plik w bazie musi posiadać tag macierzysty (nie null)");
-        }
-        if (userTags == null) {
-            userTags = new HashSet<>();
-        }
-        for (FileID file : files) {
-            if (isInDatabase(file)) {
-                throw new IllegalArgumentException("Plik " + file + " jest już w bazie danych");
+        if (userTags != null) {
+            for (UserTag tag : userTags) {
+                if (tag == null) {
+                    throw new IllegalArgumentException("Nie można tagować null-ami");
+                }
             }
         }
-        for (FileID file : files) {
-            addTagInformation(file, masterTag);
-            for (UserTag tag : userTags) {
-                addTagInformation(file, tag);
+        addFiles(files, masterTag);
+        if (userTags != null) {
+            for (FileID file : files) {
+                for (UserTag tag : userTags) {
+                    addTagInformation(file, tag);
+                }
             }
         }
     }
@@ -340,7 +340,7 @@ public class TagFilesStore implements Serializable {
      *
      * @param file Plik z którego zostaną usunięte tagi.
      * @param tags Tagi które będą usunięte ze wskazanego pliku
-     * @throws IllegalArgumentException Jeżeli file==null
+     * @throws IllegalArgumentException Jeżeli file==null lub któryś z tagów jest nullem
      * @throws IllegalStateException    Jeżeli w bazie nie ma pliku file lub nie jest on otagowany wskazanymi tagami
      */
     public void removeFileTags(FileID file, Set<UserTag> tags) {
@@ -351,6 +351,9 @@ public class TagFilesStore implements Serializable {
             return;
         }
         for (UserTag tag : tags) {
+            if (tag == null) {
+                throw new IllegalArgumentException("Żaden plik na pewno nie jest otagowany null-em");
+            }
             if (isNotInDatabase(file, tag)) {
                 throw new IllegalStateException("Plik " + file + " nie posiada tagu " + tag);
             }
@@ -427,27 +430,10 @@ public class TagFilesStore implements Serializable {
     }
 
     private void removeTagInformation(FileID file, UserTag tag) {
-        if (file == null || tag == null) {
-            throw new IllegalArgumentException();
-        }
-        if (!tagsByFiles.containsKey(file) || !tagsByFiles.get(file).contains(tag)) {
-            return;
-        }
         tagsByFiles.get(file).remove(tag);
-        if (tagsByFiles.get(file).isEmpty()) {
-            tagsByFiles.remove(file);
-        }
         filesByTags.get(tag).remove(file);
         if (filesByTags.get(tag).isEmpty()) {
             filesByTags.remove(tag);
-        }
-    }
-
-    private void cleanupTagsByFiles() {
-        for (Iterator<Set<Tag<?>>> i = tagsByFiles.values().iterator(); i.hasNext(); ) {
-            if (i.next().isEmpty()) {
-                i.remove();
-            }
         }
     }
 
@@ -456,9 +442,6 @@ public class TagFilesStore implements Serializable {
     }
 
     private boolean isNotInDatabase(FileID file, Tag<?> tag) {
-        if (file == null || tag == null) {
-            throw new IllegalArgumentException();
-        }
         return !tagsByFiles.containsKey(file) || !tagsByFiles.get(file).contains(tag);
     }
 }

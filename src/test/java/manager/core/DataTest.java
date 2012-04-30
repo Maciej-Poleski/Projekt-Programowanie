@@ -20,7 +20,7 @@ public class DataTest {
     @After
     public void tearDown() throws Exception {
         File database = new File("database");
-        database.delete();
+        database.deleteOnExit();
     }
 
     @Before

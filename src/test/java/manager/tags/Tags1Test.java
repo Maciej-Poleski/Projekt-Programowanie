@@ -39,11 +39,6 @@ public class Tags1Test {
         }
     }
 
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
     @Test
     public void testNewMasterTag1() throws Exception {
         tags.newMasterTag();
@@ -327,5 +322,15 @@ public class Tags1Test {
         Tags myTags = new Tags();
         Tags.setDefaultInstance(myTags);
         assertEquals(Tags.getDefaultInstance(), myTags);
+    }
+
+    @Test
+    public void testGetUserTagAutoProvider() throws Exception {
+        assertNotNull(tags.getUserTagAutoProvider());
+    }
+
+    @Test
+    public void testGetUserTagAutoExtensionManager() throws Exception {
+        assertNotNull(tags.getUserTagAutoExtensionManager());
     }
 }

@@ -266,7 +266,7 @@
         </Container>
         <Component class="javax.swing.JButton" name="newBackupButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="New Backup"/>
+            <Property name="text" type="java.lang.String" value="Nowy Backup"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newBackupButtonActionPerformed"/>
@@ -284,7 +284,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="updateButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Update Backup"/>
+            <Property name="text" type="java.lang.String" value="Aktualizuj Backup"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="updateButtonActionPerformed"/>

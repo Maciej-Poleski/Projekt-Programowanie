@@ -112,16 +112,16 @@ public class ImportWindow extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(masterTagsTree);
 
-        jLabelWybierzTag.setText("If you chose your files, you can select its parent-tag:");
+        jLabelWybierzTag.setText("Po wybraniu pliku wybierz jego rodzica w drzewie,");
 
-        importButton.setText("IMPORT");
+        importButton.setText("IMPORTUJ DO PROGRAMU");
         importButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 importButtonActionPerformed(evt);
             }
         });
 
-        chooseFileButton.setText("CHOOSE FILES");
+        chooseFileButton.setText("WYBIERZ PLIK LUB KATALOG");
         chooseFileButton.setActionCommand("chooseFile");
         chooseFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -129,7 +129,7 @@ public class ImportWindow extends javax.swing.JDialog {
             }
         });
 
-        newMasterTagButton.setText("NEW COMPONENT");
+        newMasterTagButton.setText("Nowa składowa");
         newMasterTagButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newMasterTagButtonActionPerformed(evt);
@@ -144,7 +144,7 @@ public class ImportWindow extends javax.swing.JDialog {
         tagsField.setEditable(false);
         tagsField.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
 
-        jLabel1.setText("or add new connected component here:");
+        jLabel1.setText("lub stwórz nową spójną składową:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -223,19 +223,19 @@ public class ImportWindow extends javax.swing.JDialog {
 
     private void newMasterTagButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMasterTagButtonActionPerformed
         masterTagToAdd = null;        
-        tagsField.setText("<< NEW COMPONENT >>");
-        JOptionPane.showMessageDialog(this, "Now click IMPORT. New component will be created.");
+        tagsField.setText("<< NOWA SKŁADOWA >>");
+        JOptionPane.showMessageDialog(this, "Teraz kliknij IMPORTUJ. Nowa składowa będzie utworzona.");
     }//GEN-LAST:event_newMasterTagButtonActionPerformed
 
     private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importButtonActionPerformed
         // TODO add your handling code here:
         if (fileToAdd == null) {
-            JOptionPane.showMessageDialog(this, "Choose file or catalog.");
+            JOptionPane.showMessageDialog(this, "Musisz wybrać plik lub katalog.");
             return;
         }
         
         if (!fileToAdd.isDirectory() && masterTagToAdd == null) {
-            JOptionPane.showMessageDialog(this, "Choose file and Master Tag\n or choose catalog.");
+            JOptionPane.showMessageDialog(this, "Plik musi być przyporządkowany do konkretnego MasterTagu.");
             return;
         }
 
@@ -267,7 +267,7 @@ public class ImportWindow extends javax.swing.JDialog {
             fileToAdd = null;
             masterTagToAdd = null;
             pathField.setText(null);
-            tagsField.setText("No MasterTag selected.");
+            tagsField.setText("Nie wybrano MasterTagu.");
 
         } catch (OperationInterruptedException | java.io.FileNotFoundException ex) {
             java.util.logging.Logger.getLogger(ImportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
