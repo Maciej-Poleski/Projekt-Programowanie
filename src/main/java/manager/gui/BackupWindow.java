@@ -156,7 +156,7 @@ public class BackupWindow extends javax.swing.JDialog {
         backupsList.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane2.setViewportView(backupsList);
 
-        newBackupButton.setText("New Backup");
+        newBackupButton.setText("Nowy Backup");
         newBackupButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newBackupButtonActionPerformed(evt);
@@ -170,7 +170,7 @@ public class BackupWindow extends javax.swing.JDialog {
             }
         });
 
-        updateButton.setText("Update Backup");
+        updateButton.setText("Aktualizuj Backup");
         updateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateButtonActionPerformed(evt);

@@ -34,43 +34,30 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
-                      <Component id="jSeparator1" min="-2" pref="174" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="removeParentButton" min="-2" max="-2" attributes="0"/>
-                          <Component id="clearSelectionButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="changeNameButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="newNameField" alignment="0" min="-2" pref="101" max="-2" attributes="0"/>
-                          <Component id="jSeparator2" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jSeparator3" alignment="0" max="32767" attributes="0"/>
-                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="setConnectionButton" alignment="0" max="32767" attributes="0"/>
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Component id="parentLabel" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="parentField" pref="79" max="32767" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="childLabel" min="-2" max="-2" attributes="0"/>
-                                      <Component id="childField" min="-2" pref="82" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                          </Group>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="newNameField" alignment="0" min="-2" pref="101" max="-2" attributes="0"/>
+                      <Component id="jSeparator2" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jSeparator3" alignment="0" max="32767" attributes="0"/>
+                      <Component id="setConnectionButton" alignment="0" max="32767" attributes="0"/>
+                      <Component id="changeNameButton" alignment="0" max="32767" attributes="0"/>
+                      <Component id="removeParentButton" alignment="0" max="32767" attributes="0"/>
+                      <Component id="clearSelectionButton" alignment="0" max="32767" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="parentLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                          <Component id="childLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                       </Group>
                   </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="parentField" min="-2" pref="79" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="childField" min="-2" pref="82" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="14" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -82,29 +69,27 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jPanel1" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="parentLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="childLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="parentField" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="childField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="setConnectionButton" min="-2" pref="25" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="clearSelectionButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="childLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="parentLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="childField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="parentField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="setConnectionButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jSeparator2" min="-2" pref="10" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                       <Component id="newNameField" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="changeNameButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="jSeparator3" min="-2" pref="10" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="removeParentButton" min="-2" max="-2" attributes="0"/>
@@ -155,7 +140,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Edit tags"/>
+            <Property name="text" type="java.lang.String" value="Edytuj tagi"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -185,7 +170,7 @@
                           <Component id="jScrollPane1" min="-2" pref="196" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
                           <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -219,14 +204,14 @@
         </Container>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
-            <Property name="text" type="java.lang.String" value="UserTags"/>
+            <Property name="text" type="java.lang.String" value="Tagi u&#x17c;ytkownika"/>
           </Properties>
         </Component>
       </SubComponents>
     </Container>
     <Component class="javax.swing.JButton" name="clearSelectionButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Remove selection"/>
+        <Property name="text" type="java.lang.String" value="Usu&#x144; zaznaczenie"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="clearSelectionButtonActionPerformed"/>
@@ -235,28 +220,28 @@
     <Component class="javax.swing.JTextField" name="parentField">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
-        <Property name="text" type="java.lang.String" value="Parent"/>
+        <Property name="text" type="java.lang.String" value="Rodzic"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="childField">
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
-        <Property name="text" type="java.lang.String" value="Child"/>
+        <Property name="text" type="java.lang.String" value="Dziecko"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="parentLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="A (Parent)"/>
+        <Property name="text" type="java.lang.String" value="A (Rodzic)"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="childLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="B (Child)"/>
+        <Property name="text" type="java.lang.String" value="B (Dziecko)"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="setConnectionButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Set Connection Parent-Child"/>
+        <Property name="text" type="java.lang.String" value="Ustal A rodzicem B"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setConnectionButtonActionPerformed"/>
@@ -264,7 +249,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="changeNameButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Change A-name"/>
+        <Property name="text" type="java.lang.String" value="Zmie&#x144; nazw&#x119; tagu A"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="changeNameButtonActionPerformed"/>
@@ -272,7 +257,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="removeParentButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Remove A"/>
+        <Property name="text" type="java.lang.String" value="Usu&#x144; tag A"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="removeParentButtonActionPerformed"/>
@@ -280,10 +265,8 @@
     </Component>
     <Component class="javax.swing.JTextField" name="newNameField">
       <Properties>
-        <Property name="text" type="java.lang.String" value="New name..."/>
+        <Property name="text" type="java.lang.String" value="Nowa nazwa..."/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JSeparator" name="jSeparator1">
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator2">
     </Component>
