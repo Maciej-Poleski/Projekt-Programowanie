@@ -14,7 +14,7 @@ import static junit.framework.Assert.assertFalse;
  * Date: 30.04.12
  * Time: 16:14
  */
-public class UserTagAutoExtensionImplementationTest {
+public class UserTagAutoExtensionImplementation1Test {
     UserTagAutoExtensionImplementation implementation;
     Tags tags;
 
@@ -183,6 +183,11 @@ public class UserTagAutoExtensionImplementationTest {
         assertEquals(implementation.getUserTagToAutoExtensionsMapping().get(tag1), new HashSet<>(Arrays.asList("jpg")));
         assertEquals(implementation.getUserTagToAutoExtensionsMapping().get(tag2), new HashSet<>(Arrays.asList("png")));
         assertFalse(implementation.getUserTagToAutoExtensionsMapping().containsKey(tag3));
+        implementation.unregisterUserTagAutoExtension(tag3, "pdf");
+        implementation.unregisterUserTagAutoExtension(tag1, "png");
+        assertEquals(implementation.getUserTagToAutoExtensionsMapping().get(tag1), new HashSet<>(Arrays.asList("jpg")));
+        assertEquals(implementation.getUserTagToAutoExtensionsMapping().get(tag2), new HashSet<>(Arrays.asList("png")));
+        assertFalse(implementation.getUserTagToAutoExtensionsMapping().containsKey(tag3));
         implementation.unregisterUserTagAutoExtension(tag2, "png");
         assertEquals(implementation.getUserTagToAutoExtensionsMapping().get(tag1), new HashSet<>(Arrays.asList("jpg")));
         assertFalse(implementation.getUserTagToAutoExtensionsMapping().containsKey(tag2));
@@ -191,6 +196,5 @@ public class UserTagAutoExtensionImplementationTest {
         assertFalse(implementation.getUserTagToAutoExtensionsMapping().containsKey(tag1));
         assertFalse(implementation.getUserTagToAutoExtensionsMapping().containsKey(tag2));
         assertFalse(implementation.getUserTagToAutoExtensionsMapping().containsKey(tag3));
-
     }
 }

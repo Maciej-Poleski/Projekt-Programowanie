@@ -50,7 +50,7 @@ class UserTagAutoExtensionImplementation implements UserTagAutoProvider, UserTag
         if (tag == null || extension == null) {
             throw new IllegalArgumentException("Wyrejestrowywanie null-i jest zabronione");
         }
-        if (extensionsByTags.containsKey(tag)) {
+        if (extensionsByTags.containsKey(tag) && extensionsByTags.get(tag).contains(extension)) {
             extensionsByTags.get(tag).remove(extension);
             userTagsByExtensions.get(extension).remove(tag);
             if (extensionsByTags.get(tag).isEmpty()) {
