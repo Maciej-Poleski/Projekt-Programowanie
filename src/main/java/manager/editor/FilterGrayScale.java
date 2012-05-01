@@ -8,7 +8,7 @@ package manager.editor;
  * @author Patryk
  */
 public class FilterGrayScale implements IFilter{
-	public enum FilterGrayScaleTypes{
+	enum FilterGrayScaleTypes{
 		LIGHTNESS, AVERAGE, LUMINOSITY
 	}
 	private FilterGrayScaleTypes mType;
