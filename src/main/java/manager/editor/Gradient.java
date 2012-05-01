@@ -91,7 +91,7 @@ public class Gradient {
 	 * @param precision - precyzja szukania
 	 */
 	public void delete(float pos, float precision){
-		if(lista.size() == 0) return;
+		if(lista.isEmpty()) return;
 		Iterator<ColorPos> iter = lista.iterator();
 		while(iter.hasNext()){
 			if(Math.abs(iter.next().mPos - pos) < precision){
@@ -121,7 +121,7 @@ public class Gradient {
 	 * @param ref - referencja do wyniku
 	 */
 	public void interpolate(float pos, ColorRGB ref){
-		if(lista.size() == 0){
+		if(lista.isEmpty()){
 			ref.setR(0);
 			ref.setG(0);
 			ref.setB(0);
