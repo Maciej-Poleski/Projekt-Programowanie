@@ -50,11 +50,26 @@ public class BackupManager implements Serializable {
 	 *            location used to store files retrieved from backup, if not
 	 *            specified uses default system temp location
 	 */
-	public void registerPicasaBackup(String picasaLogin, String picasaPassword,
-			File downloadLocation) {
+	public SecondaryBackup registerPicasaBackup(String picasaLogin,
+			String picasaPassword, File downloadLocation)
+			throws OperationInterruptedException {
+
+		for (SecondaryBackup b : backups) {
+			if (b instanceof PicasaBackupImpl) {
+				PicasaBackupImpl tmp = (PicasaBackupImpl) b;
+				if (tmp.getUserName().equals(picasaLogin)) {
+					throw new OperationInterruptedException(
+							"In that location already exists backup");
+				}
+			}
+		}
+
 		SecondaryBackup sb = new PicasaBackupImpl(primaryBackup, picasaLogin,
 				picasaPassword, downloadLocation);
+
 		registerBackup(sb);
+
+		return sb;
 	}
 
 	/**
@@ -68,11 +83,25 @@ public class BackupManager implements Serializable {
 	 * @throws OperationInterruptedException
 	 *             if backupLocation exists and is not a directory
 	 */
-	public void registerFileSystemBackup(File backupLocation)
+	public SecondaryBackup registerFileSystemBackup(File backupLocation)
 			throws OperationInterruptedException {
+
+		for (SecondaryBackup b : backups) {
+			if (b instanceof FileSystemBackupImpl) {
+				FileSystemBackupImpl tmp = (FileSystemBackupImpl) b;
+				if (tmp.getLocation().equals(backupLocation)) {
+					throw new OperationInterruptedException(
+							"In that location already exists backup");
+				}
+			}
+		}
+
 		SecondaryBackup sb = new FileSystemBackupImpl(primaryBackup,
 				backupLocation);
+
 		registerBackup(sb);
+
+		return sb;
 	}
 
 	/**

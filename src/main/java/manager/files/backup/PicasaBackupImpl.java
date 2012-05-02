@@ -33,6 +33,7 @@ final class PicasaBackupImpl extends SecondaryBackup {
 
 	private Date lastBackup;
 	private String userName;
+
 	private String password;
 	private File downloadLocation;
 	private final Map<FileID, PicasaPhoto> backupedFiles = new HashMap<>();
@@ -93,9 +94,12 @@ final class PicasaBackupImpl extends SecondaryBackup {
 
 			Set<FileID> files = originalBackup.getListOfAvailableFiles();
 
+			System.out.println(files);
+
 			for (FileID f : files) {
 				File file = originalBackup.getFile(f);
 
+				System.out.println("uploading: " + file);
 				// FIXME other types
 				PicasaPhoto ph = album.getPicasaPhotoUploader(file,
 						PicasaAlbumMediaType.JPEG).upload();
@@ -118,5 +122,19 @@ final class PicasaBackupImpl extends SecondaryBackup {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Picasa Backup [userName=");
+		builder.append(userName);
+		builder.append("]");
+		return builder.toString();
+	}
+	
+	public String getUserName() {
+		return userName;
+	}
+
 
 }

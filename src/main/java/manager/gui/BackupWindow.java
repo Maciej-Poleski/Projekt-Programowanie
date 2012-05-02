@@ -249,28 +249,30 @@ public class BackupWindow extends javax.swing.JDialog {
         this.backupLocation = fc.getSelectedFile();
         try
         {
-        b=this.backupsmanager.getBackupManagerAssociatedWithMasterTag(this.selectedMasterTag);
-        JOptionPane.showMessageDialog(this,"The backup of "+this.selectedMasterTag," created.",JOptionPane.INFORMATION_MESSAGE);
-        b.registerFileSystemBackup(this.backupLocation);
-        //MainWindow.data.save();
+            if(selectedMasterTag!=null){
+                b=this.backupsmanager.getBackupManagerAssociatedWithMasterTag(this.selectedMasterTag);
+                JOptionPane.showMessageDialog(this,"Backup utworzony"+this.selectedMasterTag,"Info",JOptionPane.INFORMATION_MESSAGE);
+                b.registerFileSystemBackup(this.backupLocation);
+                try {
+                    data.save();
+                } catch (IOException ex) {
+                    Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }                 
+            }
+            else{
+                JOptionPane.showMessageDialog(this,"Nie wybrano MasterTagu","Error",JOptionPane.ERROR_MESSAGE);
+            }
+                //MainWindow.data.save();
         }
         catch(OperationInterruptedException exp) //sprawdzic dlaczego
         {
             JOptionPane.showMessageDialog(this,"Error OIE","Error",JOptionPane.ERROR_MESSAGE);
         }
-        catch(IllegalArgumentException exp2) // brak wybranego mastertagu
-        {
-            JOptionPane.showMessageDialog(this,"No MasterTag choosen","Error",JOptionPane.ERROR_MESSAGE);
-        }
         catch(NullPointerException exp3) //sprawdzic dlaczego
         {
             JOptionPane.showMessageDialog(this,"Error NPE","Error",JOptionPane.ERROR_MESSAGE);
         }
-        try {
-            data.save();
-        } catch (IOException ex) {
-            Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }//GEN-LAST:event_newBackupButtonActionPerformed
 
     private void picassaBackupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_picassaBackupButtonActionPerformed

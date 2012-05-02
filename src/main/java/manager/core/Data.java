@@ -42,21 +42,28 @@ public final class Data {
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(DATABASE_FILE));
             TagFilesStore tagFilesStore1 = (TagFilesStore) objectInputStream.readObject();
             Tags tags = (Tags) objectInputStream.readObject();
-            Tags.setDefaultInstance(tags);
             BackupsManager backupsManager = (BackupsManager) objectInputStream.readObject();
             objectInputStream.close();
             return new Data(tags, tagFilesStore1, backupsManager);
         } catch (FileNotFoundException e) {
-            TagFilesStore tagFilesStore1 = new TagFilesStore();
-            Tags tags = new Tags();
-            tags.setStore(tagFilesStore1);
-            Tags.setDefaultInstance(tags);
-            BackupsManager backupsManager = new BackupsManager(tags);
-            return new Data(tags, tagFilesStore1, backupsManager);
+            return reset();
         } catch (ClassNotFoundException e) {
             Logger.getLogger("Data").throwing("core.Data", "load", e);
             return null;
         }
+    }
+
+    /**
+     * Tworzy nową czystą bazę danych aplikacji i zwraca ją. Wywołanie tej funkcji uniemożliwia dalsze wywołania do
+     * Data.load()
+     *
+     * @return Baza danych gotowa do użycia.
+     */
+    public static Data reset() {
+        loaded = true;
+        Tags tags = new Tags();
+        BackupsManager backupsManager = new BackupsManager(tags);
+        return new Data(tags, tags.getStore(), backupsManager);
     }
 
     /**

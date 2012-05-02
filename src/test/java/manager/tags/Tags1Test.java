@@ -78,10 +78,6 @@ public class Tags1Test {
     @Test
     public void testRemoveTag1() throws Exception {
         MasterTag masterReal = tags.newMasterTag();
-        TagFilesStore store = createMock(TagFilesStore.class);
-        expect(store.pretendRemoveFamily(masterReal)).andReturn(new HashSet<FileID>());
-        replay(store);
-        tags.setStore(store);
         tags.removeTag(masterReal);
         assertEquals(tags.getHeads(), new HashSet<>());
         verifyAll();
@@ -90,29 +86,9 @@ public class Tags1Test {
     @Test
     public void testRemoveTag2() throws Exception {
         UserTag tag = tags.newUserTag();
-        TagFilesStore store = createMock(TagFilesStore.class);
-        expect(store.getFilesWithRealTag(tag)).andReturn(new HashSet<FileID>());
-        replay(store);
-        tags.setStore(store);
         tags.removeTag(tag);
         assertEquals(tags.getHeads(), new HashSet<>());
         verifyAll();
-    }
-
-    @Test
-    public void testSetStore() throws Exception {
-        TagFilesStore store = createMock(TagFilesStore.class);
-        replay(store);
-        tags.setStore(store);
-        assertEquals(tags.getStore(), store);
-    }
-
-    @Test
-    public void testGetStore() throws Exception {
-        TagFilesStore store = createMock(TagFilesStore.class);
-        replay(store);
-        tags.setStore(store);
-        assertEquals(tags.getStore(), store);
     }
 
     @Test
@@ -310,18 +286,6 @@ public class Tags1Test {
         assertEquals(tags.getOldestAncestor(c), a);
         assertEquals(tags.getOldestAncestor(b), a);
         assertEquals(tags.getOldestAncestor(a), a);
-    }
-
-    @Test
-    public void testGetDefaultInstance() throws Exception {
-        assertEquals(Tags.getDefaultInstance(), firstInstance);
-    }
-
-    @Test
-    public void testSetDefaultInstance() throws Exception {
-        Tags myTags = new Tags();
-        Tags.setDefaultInstance(myTags);
-        assertEquals(Tags.getDefaultInstance(), myTags);
     }
 
     @Test

@@ -5,9 +5,12 @@
 package manager.gui;
 
 import java.io.IOException;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
@@ -18,6 +21,10 @@ import manager.tags.TagFilesStore;
 import manager.tags.Tags;
 import manager.tags.UserTag;
 import manager.core.*;
+import manager.files.FileID;
+import manager.files.FileNotAvailableException;
+import manager.files.OperationInterruptedException;
+import manager.tags.*;
 /**
  *
  * @author Jakub Brzeski
@@ -41,13 +48,23 @@ public class EditTagsWindow extends javax.swing.JDialog {
         initComponents();
         displayUserTagsTree(tags.getModelOfUserTags());
         new UserTagsTreeSelectionListener();
-        
+        displayExtensions();
+        extensionList.addListSelectionListener(new extensionListListener());
     }
 
     private void displayUserTagsTree(TreeModel utm){
         this.userTagsTree.setModel(utm);
         this.userTagsTree.setRootVisible(false);
     }
+    private class extensionListListener implements ListSelectionListener{
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            if(extensionList.getSelectedValue()!=null){
+            extensionTextField.setText(extensionList.getSelectedValue().toString());
+            }
+        }
+    }
+
     private class UserTagsTreeSelectionListener implements TreeSelectionListener{
 
         UserTagsTreeSelectionListener(){
@@ -63,13 +80,23 @@ public class EditTagsWindow extends javax.swing.JDialog {
             if(parent==null){
                 parent=utag;
                 parentField.setText(utag.toString());
+                displayExtensions();
             }else if(child==null){
                 child=utag;
                 childField.setText(utag.toString());
             }
         }  
     } 
-    
+     private void displayExtensions(){
+        Map<UserTag, Set<String>> mapa = tags.getUserTagAutoExtensionManager().getUserTagToAutoExtensionsMapping(); 
+        
+        Vector<String> v = new Vector<String>();
+        if(mapa.get(parent)!=null){
+        for(String s: mapa.get(parent))v.add(s);  
+        Collections.sort((List)v);
+        }
+        this.extensionList.setListData(v);
+    }   
     
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -90,12 +117,22 @@ public class EditTagsWindow extends javax.swing.JDialog {
         removeParentButton = new javax.swing.JButton();
         newNameField = new javax.swing.JTextField();
         jSeparator2 = new javax.swing.JSeparator();
-        jSeparator3 = new javax.swing.JSeparator();
+        jSeparator1 = new javax.swing.JSeparator();
+        newUserTagTextField = new javax.swing.JTextField();
+        newUserTagButton = new javax.swing.JButton();
+        jSeparator4 = new javax.swing.JSeparator();
+        extensionTextField = new javax.swing.JTextField();
+        addExtensionButton = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        removeExtensionButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        extensionList = new javax.swing.JList();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Edit tags");
-        setMaximumSize(new java.awt.Dimension(200, 500));
-        setPreferredSize(new java.awt.Dimension(430, 472));
+        setMaximumSize(new java.awt.Dimension(400, 700));
+        setPreferredSize(new java.awt.Dimension(430, 700));
         setResizable(false);
 
         buttonPanel1.setBackground(new java.awt.Color(204, 204, 255));
@@ -145,11 +182,11 @@ public class EditTagsWindow extends javax.swing.JDialog {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 353, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -193,6 +230,42 @@ public class EditTagsWindow extends javax.swing.JDialog {
 
         newNameField.setText("Nowa nazwa...");
 
+        newUserTagTextField.setText("Nazwa...");
+
+        newUserTagButton.setText("Nowy UserTag");
+        newUserTagButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newUserTagButtonActionPerformed(evt);
+            }
+        });
+
+        extensionTextField.setText("Nazwa rozszerzenia...");
+
+        addExtensionButton.setText("Powiąż tag A z rozszerzeniem");
+        addExtensionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addExtensionButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Podaj rozszerzenie bez kropki.");
+
+        removeExtensionButton.setText("Usuń rozszerzenie z tagu A");
+        removeExtensionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeExtensionButtonActionPerformed(evt);
+            }
+        });
+
+        extensionList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(extensionList);
+
+        jLabel4.setText("Rozszerzenia związane z tagiem:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -202,35 +275,46 @@ public class EditTagsWindow extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(newNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jSeparator2)
-                        .addComponent(jSeparator3)
-                        .addComponent(setConnectionButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(changeNameButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(removeParentButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(clearSelectionButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(parentLabel)
-                            .addGap(36, 36, 36)
-                            .addComponent(childLabel)
-                            .addGap(29, 29, 29)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(parentField, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(childField, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(setConnectionButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(changeNameButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(removeParentButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(clearSelectionButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(newUserTagButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(newUserTagTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(newNameField, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(extensionTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(addExtensionButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(removeExtensionButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(parentField, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(parentLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(childLabel)
+                                    .addComponent(childField, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(buttonPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(parentLabel)
                             .addComponent(childLabel))
@@ -249,10 +333,27 @@ public class EditTagsWindow extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(changeNameButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removeParentButton)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(1, 1, 1)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(extensionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addExtensionButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(removeExtensionButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(4, 4, 4)
+                        .addComponent(newUserTagTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(newUserTagButton)))
                 .addContainerGap())
         );
 
@@ -289,7 +390,9 @@ public class EditTagsWindow extends javax.swing.JDialog {
                 Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (CycleException ex) {
-            Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Te tagi są już w relacji.");
+        } catch (IllegalStateException ex){
+            JOptionPane.showMessageDialog(this, "Taka relacja już istnieje.");
         }
     }//GEN-LAST:event_setConnectionButtonActionPerformed
 
@@ -298,7 +401,62 @@ public class EditTagsWindow extends javax.swing.JDialog {
         child=null;
         parentField.setText("");
         childField.setText("");
+        extensionList.setListData(new Vector());
     }//GEN-LAST:event_clearSelectionButtonActionPerformed
+
+    private void addExtensionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addExtensionButtonActionPerformed
+        if(extensionTextField.getText().isEmpty()==false){
+            if(parent!=null){
+                try {
+                    UserTagAutoExtensionsManager extmanager=tags.getUserTagAutoExtensionManager();
+                    extmanager.registerUserTagAutoExtension(parent, extensionTextField.getText());
+                    displayExtensions();
+                    data.save();
+                } catch (IOException ex) {
+                    Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else{
+                JOptionPane.showMessageDialog(this, "Musisz wybrać tag.");
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Najpierw wpisz nazwę.");
+        }        
+    }//GEN-LAST:event_addExtensionButtonActionPerformed
+
+    private void newUserTagButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newUserTagButtonActionPerformed
+        if(newUserTagTextField.getText().isEmpty()==false){
+            try {
+                UserTag ut = tags.newUserTag(newUserTagTextField.getText());
+                data.save();
+            } catch (IOException ex) {
+                Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Najpierw wpisz nazwę.");
+        }
+    }//GEN-LAST:event_newUserTagButtonActionPerformed
+
+    private void removeExtensionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeExtensionButtonActionPerformed
+        if(extensionTextField.getText().isEmpty()==false){
+            if(parent!=null){
+                try {
+                    UserTagAutoExtensionsManager extmanager=tags.getUserTagAutoExtensionManager();
+                    extmanager.unregisterUserTagAutoExtension(parent, extensionTextField.getText());
+                    displayExtensions();
+                    data.save();
+                } catch (IOException ex) {
+                    Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else{
+                JOptionPane.showMessageDialog(this, "Musisz wybrać tag.");
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Najpierw wpisz nazwę.");
+        }         
+    }//GEN-LAST:event_removeExtensionButtonActionPerformed
 
   /**
    * @param args the command line arguments
@@ -329,20 +487,30 @@ public class EditTagsWindow extends javax.swing.JDialog {
     //</editor-fold>
   }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addExtensionButton;
     private javax.swing.JPanel buttonPanel1;
     private javax.swing.JButton changeNameButton;
     private javax.swing.JTextField childField;
     private javax.swing.JLabel childLabel;
     private javax.swing.JButton clearSelectionButton;
+    private javax.swing.JList extensionList;
+    private javax.swing.JTextField extensionTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTextField newNameField;
+    private javax.swing.JButton newUserTagButton;
+    private javax.swing.JTextField newUserTagTextField;
     private javax.swing.JTextField parentField;
     private javax.swing.JLabel parentLabel;
+    private javax.swing.JButton removeExtensionButton;
     private javax.swing.JButton removeParentButton;
     private javax.swing.JButton setConnectionButton;
     private javax.swing.JTree userTagsTree;

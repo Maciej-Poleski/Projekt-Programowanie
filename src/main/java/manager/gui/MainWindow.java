@@ -30,7 +30,8 @@ import manager.tags.Tags.IUserTagNode;
  * @author Jakub Brzeski
  * @author Jakub Czarnowicz
  */
-public class MainWindow extends JFrame {        // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+public class MainWindow extends JFrame{
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         buttonPanel = new javax.swing.JPanel();
@@ -113,8 +114,8 @@ public class MainWindow extends JFrame {        // <editor-fold defaultstate="co
                 .addGap(18, 18, 18)
                 .addComponent(backupButton)
                 .addGap(18, 18, 18)
-                .addComponent(editImageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(426, Short.MAX_VALUE))
+                .addComponent(editImageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         buttonPanelLayout.setVerticalGroup(
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -513,6 +514,9 @@ public class MainWindow extends JFrame {        // <editor-fold defaultstate="co
       try{
         int indeks = mainList.getNextMatch(searchTextField.getText(), 0, Position.Bias.Forward);
         if(indeks != -1) mainList.setSelectedIndex(indeks);
+        else{
+            JOptionPane.showMessageDialog(MainWindow.this, "Nic nie znaleziono."); 
+        }
       }catch(IllegalArgumentException e){
         if(searchTextField.getText()==null)JOptionPane.showMessageDialog(this, "Wpisz nazwę pliku który chcesz wyszukać.");  
         else JOptionPane.showMessageDialog(this, "Lista plików jest pusta.");
@@ -536,6 +540,9 @@ public class MainWindow extends JFrame {        // <editor-fold defaultstate="co
       try{
         int indeks = tagsList.getNextMatch(searchTextField.getText(), 0, Position.Bias.Forward);
         if(indeks != -1) tagsList.setSelectedIndex(indeks);
+        else{
+        JOptionPane.showMessageDialog(MainWindow.this, "Nic nie znaleziono.");    
+        }
       }catch(IllegalArgumentException e){
         if(searchTextField.getText()==null)JOptionPane.showMessageDialog(this, "Wpisz nazwę tagu który chcesz wyszukać.");  
         else JOptionPane.showMessageDialog(this, "Lista tagów jest pusta.");
