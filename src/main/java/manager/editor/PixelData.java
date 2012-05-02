@@ -29,6 +29,24 @@ public class PixelData implements Cloneable {
 	 */
 	public static final int RGBCMY_CHANNEL_PRECISION = 256;
 	
+	/**
+	 * Maska wartośći kanału w standardzie sRGB
+	 */
+	public static final int RGB_CHANNEL_MASK = 0xff;
+	
+	/**
+	 * Przesunięcie kanału czerwonego w standardzie sRGB
+	 */
+	public static final int RGB_RED_SHIFT = 16;
+	/**
+	 * Przesunięcie kanału zielonego w standardzie sRGB
+	 */
+	public static final int RGB_GREEN_SHIFT = 8;
+	/**
+	 * Przesunięcie kanału niebieskiego w standardzie sRGB
+	 */
+	public static final int RGB_BLUE_SHIFT = 0;
+	
 	private enum DataType{
 		RGB, CMY, HSV;
 	}
@@ -55,7 +73,16 @@ public class PixelData implements Cloneable {
     public PixelData(BufferedImage image) {
     	mWidth = image.getWidth();
     	mHeight = image.getHeight();
-    	mData = image.getRaster().getPixels(0, 0, mWidth, mHeight, (float[])null);
+    	mData = new float[PIXEL_SIZE*mWidth*mHeight];
+    	int mRGB;
+		for(int j=0;j<mHeight;j++){
+			for(int i=0;i<mWidth;i++){
+				mRGB = image.getRGB(i, j);
+				mData[PIXEL_SIZE*(j*mWidth+i)] = (float)((mRGB >> RGB_RED_SHIFT) & RGB_CHANNEL_MASK);
+				mData[PIXEL_SIZE*(j*mWidth+i)+1] = (float)((mRGB >> RGB_GREEN_SHIFT) & RGB_CHANNEL_MASK);
+				mData[PIXEL_SIZE*(j*mWidth+i)+2] = (float)((mRGB >> RGB_BLUE_SHIFT) & RGB_CHANNEL_MASK);
+			}
+    	}
     }
     
     /**
@@ -197,8 +224,16 @@ public class PixelData implements Cloneable {
      */
     public void toBufferedImage(BufferedImage image) {
     	if(image.getWidth() != mWidth || image.getHeight() != mHeight) {throw new IllegalArgumentException();}
-    	toRGB();
-    	image.getRaster().setPixels(0, 0, mWidth, mHeight, mData);
+    	toRGB(); int mRGB,mR,mG,mB;
+    	for(int j=0;j<mHeight;j++){
+			for(int i=0;i<mWidth;i++){
+				mR = (int)mData[PIXEL_SIZE*(j*mWidth+i)];
+				mG = (int)mData[PIXEL_SIZE*(j*mWidth+i)+1];
+				mB = (int)mData[PIXEL_SIZE*(j*mWidth+i)+2];
+				mRGB = (mR << RGB_RED_SHIFT) & (mG << RGB_GREEN_SHIFT) & (mB << RGB_BLUE_SHIFT);
+				image.setRGB(i, j, mRGB);
+			}
+		}
     }
 
     /**

@@ -30,7 +30,8 @@ import manager.tags.Tags.IUserTagNode;
  * @author Jakub Brzeski
  * @author Jakub Czarnowicz
  */
-public class MainWindow extends JFrame {        // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+public class MainWindow extends JFrame{
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         buttonPanel = new javax.swing.JPanel();
@@ -113,8 +114,8 @@ public class MainWindow extends JFrame {        // <editor-fold defaultstate="co
                 .addGap(18, 18, 18)
                 .addComponent(backupButton)
                 .addGap(18, 18, 18)
-                .addComponent(editImageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(426, Short.MAX_VALUE))
+                .addComponent(editImageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         buttonPanelLayout.setVerticalGroup(
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

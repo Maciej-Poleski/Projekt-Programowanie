@@ -5,7 +5,7 @@ package manager.editor;
  * @author Patryk
  */
 public class FilterTexturer implements IFilter{
-	public enum TexturingMode{
+	enum TexturingMode{
 		ADD, SUBSTRACT, MULTIPLY, MASK
 	}
 	private TexturingMode mMode = TexturingMode.ADD;

@@ -5,7 +5,7 @@ package manager.editor;
  * @author Patryk
  */
 public class Histogram {
-	public static enum HistogramChannel{
+	static enum HistogramChannel{
 		RED, GREEN, BLUE,
 		CYAN, MAGENTA, YELLOW,
 		HUE, SATURATION, VALUE

@@ -18,18 +18,8 @@ public class WindowResize extends JDialog implements ActionListener,PropertyChan
 {
 	private static final long serialVersionUID = 1L;
 	private transient PixelData iMage;
-    private ButtonGroup buttonGroup1;
-    private ButtonGroup buttonGroup2;
-    private JButton jButton1;
-    private JButton jButton2;
-    private JLabel jLabel1;
-    private JLabel jLabel2;
-    private JLabel jLabel3;
-    private JLabel jLabel4;
     private JRadioButton jRadioButton1;
-    private JRadioButton jRadioButton2;
     private JRadioButton jRadioButton3;
-    private JRadioButton jRadioButton4;
     private JFormattedTextField jTextField1;
     private JFormattedTextField jTextField2;
     private int m, n;
@@ -49,20 +39,20 @@ public class WindowResize extends JDialog implements ActionListener,PropertyChan
         {
             this.setModal(true);
             this.setTitle("Zmiana rozmiaru");
-            buttonGroup1 = new ButtonGroup();
-            buttonGroup2 = new ButtonGroup();
-            jLabel1 = new JLabel();
+            ButtonGroup buttonGroup1 = new ButtonGroup();
+            ButtonGroup buttonGroup2 = new ButtonGroup();
+            JLabel jLabel1 = new JLabel();
             jRadioButton1 = new JRadioButton();
-            jRadioButton2 = new JRadioButton();
-            jLabel2 = new JLabel();
+            JRadioButton jRadioButton2 = new JRadioButton();
+            JLabel jLabel2 = new JLabel();
             jRadioButton3 = new JRadioButton();
-            jRadioButton4 = new JRadioButton();
-            jLabel3 = new JLabel();
-            jLabel4 = new JLabel();
+            JRadioButton jRadioButton4 = new JRadioButton();
+            JLabel jLabel3 = new JLabel();
+            JLabel jLabel4 = new JLabel();
             jTextField1 =  new JFormattedTextField(NumberFormat.getIntegerInstance());
             jTextField2 =  new JFormattedTextField(NumberFormat.getIntegerInstance());
-            jButton1 = new JButton();
-            jButton2 = new JButton();
+            JButton jButton1 = new JButton();
+            JButton jButton2 = new JButton();
             
             m = iMage.getWidth();
             n = iMage.getHeight();

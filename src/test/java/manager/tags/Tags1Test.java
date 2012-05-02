@@ -39,11 +39,6 @@ public class Tags1Test {
         }
     }
 
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
     @Test
     public void testNewMasterTag1() throws Exception {
         tags.newMasterTag();
@@ -84,7 +79,7 @@ public class Tags1Test {
     public void testRemoveTag1() throws Exception {
         MasterTag masterReal = tags.newMasterTag();
         TagFilesStore store = createMock(TagFilesStore.class);
-        expect(store.removeFamily(masterReal)).andReturn(new HashSet<FileID>());
+        expect(store.pretendRemoveFamily(masterReal)).andReturn(new HashSet<FileID>());
         replay(store);
         tags.setStore(store);
         tags.removeTag(masterReal);
@@ -327,5 +322,15 @@ public class Tags1Test {
         Tags myTags = new Tags();
         Tags.setDefaultInstance(myTags);
         assertEquals(Tags.getDefaultInstance(), myTags);
+    }
+
+    @Test
+    public void testGetUserTagAutoProvider() throws Exception {
+        assertNotNull(tags.getUserTagAutoProvider());
+    }
+
+    @Test
+    public void testGetUserTagAutoExtensionManager() throws Exception {
+        assertNotNull(tags.getUserTagAutoExtensionManager());
     }
 }

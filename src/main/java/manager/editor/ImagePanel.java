@@ -21,14 +21,14 @@ class ImagePanel extends JPanel implements Scrollable, MouseMotionListener {
 	private static final long serialVersionUID = 1L;
 	private Image image; 
 	private int zoom, width, height;
-	private static final int Defaultzoom=100, DefaultScroll=10;
+	private static final int DEFAULT_ZOOM=100, D_SCROLL=10;
 	/**
 	 * Nowy Image Panel
 	 * @param image - wyświetlany w kontrolce obraz
 	 */
 	ImagePanel (Image image){
 		this.image=image;
-		zoom=Defaultzoom;
+		zoom=DEFAULT_ZOOM;
 		this.addMouseMotionListener(this);
 	}
 	/**
@@ -70,8 +70,8 @@ class ImagePanel extends JPanel implements Scrollable, MouseMotionListener {
 		height=h;
 	}
 	void changeImageSize (int maxWidth, int maxHeight){
-		int nzoom= maxWidth*Defaultzoom/ image.getWidth(null);
-		int nzoom2= maxHeight*Defaultzoom/ image.getHeight(null);
+		int nzoom= maxWidth*DEFAULT_ZOOM/ image.getWidth(null);
+		int nzoom2= maxHeight*DEFAULT_ZOOM/ image.getHeight(null);
 		if (nzoom>nzoom2){
 			nzoom=nzoom2;
 		}
@@ -88,7 +88,7 @@ class ImagePanel extends JPanel implements Scrollable, MouseMotionListener {
 		g.setColor(Color.GRAY);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		if (image!=null){
-			g.drawImage(image, 0, 0, image.getWidth(null)*zoom/Defaultzoom,  image.getHeight(null)*zoom/Defaultzoom, null);
+			g.drawImage(image, 0, 0, image.getWidth(null)*zoom/DEFAULT_ZOOM,  image.getHeight(null)*zoom/DEFAULT_ZOOM, null);
 		}
 	}
 	/**
@@ -99,7 +99,7 @@ class ImagePanel extends JPanel implements Scrollable, MouseMotionListener {
 		if (image==null) {
 			return new Dimension(1, 1);
 		} else {
-			return new java.awt.Dimension(image.getWidth(null)*zoom/Defaultzoom, image.getHeight(null)*zoom/Defaultzoom);
+			return new java.awt.Dimension(image.getWidth(null)*zoom/DEFAULT_ZOOM, image.getHeight(null)*zoom/DEFAULT_ZOOM);
 		}
 	}
 	@Override
@@ -117,9 +117,9 @@ class ImagePanel extends JPanel implements Scrollable, MouseMotionListener {
 	@Override
 	public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
 		if (orientation == SwingConstants.HORIZONTAL) {
-			return visibleRect.width - DefaultScroll;
+			return visibleRect.width - D_SCROLL;
 		} else {
-			return visibleRect.height - DefaultScroll;
+			return visibleRect.height - D_SCROLL;
 		}
 	}
 	@Override
@@ -133,9 +133,9 @@ class ImagePanel extends JPanel implements Scrollable, MouseMotionListener {
 	@Override
 	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
 		if (orientation == SwingConstants.HORIZONTAL) {
-			return visibleRect.width - DefaultScroll;
+			return visibleRect.width - D_SCROLL;
 		} else {
-			return visibleRect.height - DefaultScroll;
+			return visibleRect.height - D_SCROLL;
 		}
 	}
 }

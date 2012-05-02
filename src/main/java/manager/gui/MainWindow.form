@@ -83,8 +83,8 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="backupButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="editImageButton" min="-2" pref="112" max="-2" attributes="0"/>
-                  <EmptySpace pref="426" max="32767" attributes="0"/>
+                  <Component id="editImageButton" min="-2" pref="139" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

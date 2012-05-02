@@ -33,6 +33,15 @@ public class Tags implements Serializable {
     private TagFilesStore store = new TagFilesStore();
     private final Map<Tag<?>, String> tagNames = new HashMap<>();
     private final Map<Tag<?>, Set<Serializable>> tagMetadata = new HashMap<>();
+    private final UserTagAutoProvider userTagAutoProvider;
+    private final UserTagAutoExtensionsManager userTagAutoExtensionsManager;
+
+    {
+        UserTagAutoExtensionImplementation implementation = new UserTagAutoExtensionImplementation();
+        userTagAutoProvider = implementation;
+        userTagAutoExtensionsManager = implementation;
+    }
+
     private transient List<WeakReference<MasterTagsTreeModel>> masterTagsTreeModelList = new ArrayList<>();
     private transient List<WeakReference<UserTagsTreeModel>> userTagsTreeModelList = new ArrayList<>();
     private static Tags defaultInstance;
@@ -130,13 +139,13 @@ public class Tags implements Serializable {
     }
 
     /**
-     * Usuwa wskazany tag macierzysty usuwając jednocześnie z bazy danych wszystkie pliki otagowane nim, lub jego
-     * pochodną. Tag jest również usuwany ze struktury co może oznaczać rozspójnienie i powstanie nowych "głów".
+     * Usuwa wskazany tag macierzysty ze struktury co może oznaczać rozspójnienie i powstanie nowych "głów".
      * Nie nadużywaj tej funkcji. Przed użyciem tej metody należy ustawić bazę plików.
      *
      * @param tag Tag który ma zostać usunięty.
      * @throws StoreNotAvailableException Jeżeli nie ustawiono bazy plików
      * @throws IllegalArgumentException   Jeżeli tag==null
+     * @throws IllegalStateException      Jeżeli istnieje jakikolwiek plik otagowany wskazanym tagiem lub jego pochodną
      * @see #setStore(TagFilesStore)
      */
     public void removeTag(MasterTag tag) {
@@ -144,7 +153,34 @@ public class Tags implements Serializable {
             throw new IllegalArgumentException("Tagowanie null-ami nie ma sensu");
         }
         checkStore();
-        store.removeFamily(tag);
+        if (!store.pretendRemoveFamily(tag).isEmpty()) {
+            throw new IllegalStateException("Istnieją pliki otagowane tagiem " + tag + ", więc nie można go usunąć");
+        }
+        removeMasterTagFromStructure(tag);
+    }
+
+    /**
+     * Usuwa wskazany tag macierzysty wraz z jego wszystkimi pochodnymi ze struktury.
+     * Nie nadużywaj tej funkcji. Przed użyciem tej metody należy ustawić bazę plików.
+     *
+     * @param tag Tag którego rodzina ma zostać usunięta.
+     * @throws StoreNotAvailableException Jeżeli nie ustawiono bazy plików
+     * @throws IllegalArgumentException   Jeżeli tag==null
+     * @throws IllegalStateException      Jeżeli istnieje jakikolwiek plik otagowany wskazanym tagiem lub jego pochodną
+     * @see #setStore(TagFilesStore)
+     */
+    public void removeMasterTagTree(MasterTag tag) {
+        if (tag == null) {
+            throw new IllegalArgumentException("Tagowanie null-ami nie ma sensu");
+        }
+        checkStore();
+        if (!store.pretendRemoveFamily(tag).isEmpty()) {
+            throw new IllegalStateException("Istnieją pliki otagowane tagiem " + tag + ", więc nie można go usunąć");
+        }
+        Collection<MasterTag> tagsToRemove = new ArrayList<>(tag.getDescendants());
+        for (MasterTag t : tagsToRemove) {
+            removeMasterTagFromStructure(t);
+        }
         removeMasterTagFromStructure(tag);
     }
 
@@ -171,6 +207,7 @@ public class Tags implements Serializable {
      *
      * @param store Główny magazyn danych
      */
+    @Deprecated
     public void setStore(TagFilesStore store) {
         this.store = store;
     }
@@ -570,6 +607,7 @@ public class Tags implements Serializable {
      *
      * @return Obiekt klasy Tags
      */
+    @Deprecated
     public static synchronized Tags getDefaultInstance() {
         if (defaultInstance != null) {
             return defaultInstance;
@@ -586,6 +624,7 @@ public class Tags implements Serializable {
      * @param defaultInstance Instancja klasy Tags
      * @throws IllegalArgumentException Jeżeli defaultInstance==null
      */
+    @Deprecated
     public static void setDefaultInstance(Tags defaultInstance) {
         if (defaultInstance == null) {
             throw new IllegalArgumentException("Null jest niedozwolony");
@@ -611,6 +650,26 @@ public class Tags implements Serializable {
         return result;
     }
 
+    /**
+     * Zwraca obiekt który można odpytywać o propozycje tagów dla podanych nazw plików.
+     *
+     * @return Implementacja interfejsu UserTagAutoProvider
+     */
+    public UserTagAutoProvider getUserTagAutoProvider() {
+        return userTagAutoProvider;
+    }
+
+    /**
+     * Zwraca obiekt umożliwiający zarządzanie preferencjami użytkownika dotyczącymi automatycznego tagowania plików
+     * w oparciu o ich rozszerzenia.
+     *
+     * @return Implementacja interfejsu UserTagAutoExtensionManager
+     */
+    public UserTagAutoExtensionsManager getUserTagAutoExtensionManager() {
+        return userTagAutoExtensionsManager;
+    }
+
+    @Deprecated
     private void checkStore() {
         if (store == null) {
             throw new StoreNotAvailableException();

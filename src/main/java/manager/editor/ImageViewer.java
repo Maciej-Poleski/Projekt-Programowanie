@@ -22,7 +22,7 @@ public class ImageViewer extends JPanel implements ChangeListener {
 	private JSpinner zoomSpinner;
 	private JScrollPane scrollPane;
 	private int height, width;
-	private static final int MaxZoom=1000, DefZoom=100, MinZoom=10;
+	private static final int MAX_ZOOM=1000, D_ZOOM=100, MIN_ZOOM=10;
 	/**
      * Nowy Image Viewer
      * @param image  wyswietlany obraz
@@ -33,7 +33,7 @@ public class ImageViewer extends JPanel implements ChangeListener {
 		this.height=height;
 		this.width=width;
 		iPanel=new ImagePanel(image, width, height);
-		zoomSpinner =new JSpinner (new SpinnerNumberModel(DefZoom, MinZoom,MaxZoom,MinZoom)); 
+		zoomSpinner =new JSpinner (new SpinnerNumberModel(D_ZOOM, MIN_ZOOM,MAX_ZOOM,MIN_ZOOM)); 
 		zoomSpinner.addChangeListener(this);
 		JPanel topPanel=new JPanel();
 		topPanel.add(new JLabel ("Zoom"));

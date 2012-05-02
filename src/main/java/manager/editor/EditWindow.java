@@ -32,38 +32,36 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 	private JMenu [] jMenuFilterCategories;
 	private transient FilterGUI [] filters;
 	private transient ImageHolder iHolder;
-//<<<<<<< TREE
-	//private transient ImageHolder returnHolder;
-	//private transient ActionListener parentWindow;
-	//private static final int dWidth=800, dHeight=600, dLocation=100, dBorderSize=5, dBottomMargin=150, dSideMargins=75;
-//=======
 	private transient ImageHolder returnHolder;
 	private transient ActionListener parentWindow;
-	private static final int DWidth=800, DHeight=600, DLocation=100, DBorderSize=5, DBottomMargin=100, DSideMargins=75;
-//>>>>>>> MERGE-SOURCE
+	private static final int DWIDTH=800, DHEIGHT=600, DLocation=100, DBORDER_SIZE=5, DBOTTOM_MARGIN=100, DSIDE_MARGINS=75;
 	private int mainImageViewerHeight=420, mainImageViewerWidth=560;
 	private static class FilterGUI{
-		String name, nameGUI;
-		FWindowType window;
-		IFilter filter;
+		private final String name, nameGUI;
+		private final FWindowType window;
+		private final IFilter filter;
 		FilterGUI(String name, String nameGUI, FWindowType window, IFilter filter){
 			this.name=name;
 			this.nameGUI=nameGUI;
 			this.window=window;
 			this.filter=filter;
 		}
+		String getName(){return name;}
+		String getNameGUI(){return nameGUI;}
+		IFilter getFilter(){return filter;}
+		FWindowType getWindow(){return window;}
 	}
 	private enum FWindowType{
 		WindowRange, WindowResize, WindowMatrix, WindowLUT, WindowHistogram, NoWindow, WindowGallery, WindowGradient, WidnowHistogram
 	}
 	private void initGui(){
 		setTitle("Edytor plików graficznych");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(DLocation, DLocation, DWidth, DHeight);
-		setMinimumSize(new Dimension(DWidth, DHeight));
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setBounds(DLocation, DLocation, DWIDTH, DHEIGHT);
+		setMinimumSize(new Dimension(DWIDTH, DHEIGHT));
 		initMenu();
 		JPanel contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(DBorderSize, DBorderSize, DBorderSize, DBorderSize));
+		contentPane.setBorder(new EmptyBorder(DBORDER_SIZE, DBORDER_SIZE, DBORDER_SIZE, DBORDER_SIZE));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 
@@ -122,8 +120,8 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 			menuBar.add(jMenuFilterCategories[i]);
 		}
 		for (int i=0; i<jMenuFilterButtons.length; ++i){
-			jMenuFilterButtons[i]=new JMenuItem(filters[i].nameGUI);
-			jMenuFilterButtons[i].setActionCommand(filters[i].name);
+			jMenuFilterButtons[i]=new JMenuItem(filters[i].getNameGUI());
+			jMenuFilterButtons[i].setActionCommand(filters[i].getName());
 			jMenuFilterButtons[i].addActionListener(this);
 		}
 		jMenuFilterCategories[1].add(jMenuFilterButtons[0]);
@@ -244,11 +242,11 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 			return;
 		} 
 		for (int i=0; i<filters.length; ++i){
-			if (e.getActionCommand().equals(filters[i].name)) {
-				switch(filters[i].window){
+			if (e.getActionCommand().equals(filters[i].getName())) {
+				switch(filters[i].getWindow()){
 				case WindowRange: 
-					apply (new WindowRange((PixelData)pdImage.clone(), (IFilterRange)filters[i].filter, filters[i].nameGUI).showDialog()); 
-					filters[i].filter.reset();
+					apply (new WindowRange((PixelData)pdImage.clone(), (IFilterRange)filters[i].getFilter(), filters[i].getNameGUI()).showDialog()); 
+					filters[i].getFilter().reset();
 					break;
 				case WindowMatrix: 
 					apply (new WindowMatrix((PixelData)pdImage.clone()).showDialog()); 
@@ -282,14 +280,14 @@ public class EditWindow extends JFrame implements ActionListener, ComponentListe
 	public void componentMoved(ComponentEvent e) {}
 	@Override
 	public void componentResized(ComponentEvent e) {
-		mainImageViewer.changeSize(this.getWidth()-DSideMargins, this.getHeight()-DBottomMargin);
+		mainImageViewer.changeSize(this.getWidth()-DSIDE_MARGINS, this.getHeight()-DBOTTOM_MARGIN);
 		
 	}
 	@Override
 	public void componentShown(ComponentEvent e) {}
 	@Override
 	public void windowStateChanged(WindowEvent arg0) {
-		mainImageViewer.changeSize(this.getWidth()-DSideMargins, this.getHeight()-DBottomMargin);
+		mainImageViewer.changeSize(this.getWidth()-DSIDE_MARGINS, this.getHeight()-DBOTTOM_MARGIN);
 		
 	} 
 }
