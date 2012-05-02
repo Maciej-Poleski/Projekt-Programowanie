@@ -46,13 +46,24 @@ public final class Data {
             objectInputStream.close();
             return new Data(tags, tagFilesStore1, backupsManager);
         } catch (FileNotFoundException e) {
-            Tags tags = new Tags();
-            BackupsManager backupsManager = new BackupsManager(tags);
-            return new Data(tags, tags.getStore(), backupsManager);
+            return reset();
         } catch (ClassNotFoundException e) {
             Logger.getLogger("Data").throwing("core.Data", "load", e);
             return null;
         }
+    }
+
+    /**
+     * Tworzy nową czystą bazę danych aplikacji i zwraca ją. Wywołanie tej funkcji uniemożliwia dalsze wywołania do
+     * Data.load()
+     *
+     * @return Baza danych gotowa do użycia.
+     */
+    public static Data reset() {
+        loaded = true;
+        Tags tags = new Tags();
+        BackupsManager backupsManager = new BackupsManager(tags);
+        return new Data(tags, tags.getStore(), backupsManager);
     }
 
     /**
