@@ -514,6 +514,9 @@ public class MainWindow extends JFrame{
       try{
         int indeks = mainList.getNextMatch(searchTextField.getText(), 0, Position.Bias.Forward);
         if(indeks != -1) mainList.setSelectedIndex(indeks);
+        else{
+            JOptionPane.showMessageDialog(MainWindow.this, "Nic nie znaleziono."); 
+        }
       }catch(IllegalArgumentException e){
         if(searchTextField.getText()==null)JOptionPane.showMessageDialog(this, "Wpisz nazwę pliku który chcesz wyszukać.");  
         else JOptionPane.showMessageDialog(this, "Lista plików jest pusta.");
@@ -537,6 +540,9 @@ public class MainWindow extends JFrame{
       try{
         int indeks = tagsList.getNextMatch(searchTextField.getText(), 0, Position.Bias.Forward);
         if(indeks != -1) tagsList.setSelectedIndex(indeks);
+        else{
+        JOptionPane.showMessageDialog(MainWindow.this, "Nic nie znaleziono.");    
+        }
       }catch(IllegalArgumentException e){
         if(searchTextField.getText()==null)JOptionPane.showMessageDialog(this, "Wpisz nazwę tagu który chcesz wyszukać.");  
         else JOptionPane.showMessageDialog(this, "Lista tagów jest pusta.");

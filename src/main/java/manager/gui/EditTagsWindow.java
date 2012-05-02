@@ -390,7 +390,9 @@ public class EditTagsWindow extends javax.swing.JDialog {
                 Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (CycleException ex) {
-            Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Te tagi są już w relacji.");
+        } catch (IllegalStateException ex){
+            JOptionPane.showMessageDialog(this, "Taka relacja już istnieje.");
         }
     }//GEN-LAST:event_setConnectionButtonActionPerformed
 
