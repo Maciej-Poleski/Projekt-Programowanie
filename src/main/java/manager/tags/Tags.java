@@ -30,7 +30,7 @@ import java.util.*;
  */
 public class Tags implements Serializable {
     private final List<Tag<?>> tags = new ArrayList<>();
-    private TagFilesStore store = new TagFilesStore();
+    private final TagFilesStore store = new TagFilesStore();
     private final Map<Tag<?>, String> tagNames = new HashMap<>();
     private final Map<Tag<?>, Set<Serializable>> tagMetadata = new HashMap<>();
     private final UserTagAutoProvider userTagAutoProvider;
@@ -44,7 +44,6 @@ public class Tags implements Serializable {
 
     private transient List<WeakReference<MasterTagsTreeModel>> masterTagsTreeModelList = new ArrayList<>();
     private transient List<WeakReference<UserTagsTreeModel>> userTagsTreeModelList = new ArrayList<>();
-    private static Tags defaultInstance;
     private static final long serialVersionUID = 1;
 
     /**
@@ -64,9 +63,6 @@ public class Tags implements Serializable {
      * Konstruuje nowy obiekt z pustą rodziną tagów.
      */
     public Tags() {
-        if (defaultInstance == null) {
-            setDefaultInstance(this);
-        }
     }
 
     /**
@@ -140,19 +136,16 @@ public class Tags implements Serializable {
 
     /**
      * Usuwa wskazany tag macierzysty ze struktury co może oznaczać rozspójnienie i powstanie nowych "głów".
-     * Nie nadużywaj tej funkcji. Przed użyciem tej metody należy ustawić bazę plików.
+     * Nie nadużywaj tej funkcji.
      *
      * @param tag Tag który ma zostać usunięty.
-     * @throws StoreNotAvailableException Jeżeli nie ustawiono bazy plików
      * @throws IllegalArgumentException   Jeżeli tag==null
      * @throws IllegalStateException      Jeżeli istnieje jakikolwiek plik otagowany wskazanym tagiem lub jego pochodną
-     * @see #setStore(TagFilesStore)
      */
     public void removeTag(MasterTag tag) {
         if (tag == null) {
             throw new IllegalArgumentException("Tagowanie null-ami nie ma sensu");
         }
-        checkStore();
         if (!store.pretendRemoveFamily(tag).isEmpty()) {
             throw new IllegalStateException("Istnieją pliki otagowane tagiem " + tag + ", więc nie można go usunąć");
         }
@@ -161,19 +154,16 @@ public class Tags implements Serializable {
 
     /**
      * Usuwa wskazany tag macierzysty wraz z jego wszystkimi pochodnymi ze struktury.
-     * Nie nadużywaj tej funkcji. Przed użyciem tej metody należy ustawić bazę plików.
+     * Nie nadużywaj tej funkcji.
      *
      * @param tag Tag którego rodzina ma zostać usunięta.
-     * @throws StoreNotAvailableException Jeżeli nie ustawiono bazy plików
      * @throws IllegalArgumentException   Jeżeli tag==null
      * @throws IllegalStateException      Jeżeli istnieje jakikolwiek plik otagowany wskazanym tagiem lub jego pochodną
-     * @see #setStore(TagFilesStore)
      */
     public void removeMasterTagTree(MasterTag tag) {
         if (tag == null) {
             throw new IllegalArgumentException("Tagowanie null-ami nie ma sensu");
         }
-        checkStore();
         if (!store.pretendRemoveFamily(tag).isEmpty()) {
             throw new IllegalStateException("Istnieją pliki otagowane tagiem " + tag + ", więc nie można go usunąć");
         }
@@ -186,12 +176,9 @@ public class Tags implements Serializable {
 
     /**
      * Usuwa wskazany tag użytkownika odznaczając jednocześnie wszystkie oznaczone nim pliki w bazie. Tag jest
-     * również usuwany ze struktury co może oznaczać rozspójnienie i powstanie nowych "głów". Przed użyciem tej
-     * metody należy ustawić bazę plików.
+     * również usuwany ze struktury co może oznaczać rozspójnienie i powstanie nowych "głów".
      *
      * @param tag Tag który ma zostać usunięty.
-     * @throws StoreNotAvailableException Jeżeli nie ustawiono bazy plików
-     * @see #setStore(TagFilesStore)
      */
     public void removeTag(UserTag tag) {
         Set<FileID> filesToRemoveTagFrom = store.getFilesWithRealTag(tag);
@@ -199,17 +186,6 @@ public class Tags implements Serializable {
             store.removeFileTag(file, tag);
         }
         removeUserTagFromStructure(tag);
-    }
-
-    /**
-     * Ustawia główny magazyn tagów. Niektóre metody wymagają dostępu do głównego magazynu danych.
-     * Ta funkcja pozwala na jego ustawienie.
-     *
-     * @param store Główny magazyn danych
-     */
-    @Deprecated
-    public void setStore(TagFilesStore store) {
-        this.store = store;
     }
 
     /**
@@ -603,36 +579,6 @@ public class Tags implements Serializable {
     }
 
     /**
-     * Zwraca domyślną instancję klasy Tags
-     *
-     * @return Obiekt klasy Tags
-     */
-    @Deprecated
-    public static synchronized Tags getDefaultInstance() {
-        if (defaultInstance != null) {
-            return defaultInstance;
-        } else {
-            Tags result = new Tags();
-            defaultInstance = result;
-            return result;
-        }
-    }
-
-    /**
-     * Ustawia domyślną instancję klasy Tags w ramach aplikacji.
-     *
-     * @param defaultInstance Instancja klasy Tags
-     * @throws IllegalArgumentException Jeżeli defaultInstance==null
-     */
-    @Deprecated
-    public static void setDefaultInstance(Tags defaultInstance) {
-        if (defaultInstance == null) {
-            throw new IllegalArgumentException("Null jest niedozwolony");
-        }
-        Tags.defaultInstance = defaultInstance;
-    }
-
-    /**
      * Zwraca najstarszego przodka wskazanego tagu macierzystego.
      *
      * @param tag Tag macierzysty
@@ -667,13 +613,6 @@ public class Tags implements Serializable {
      */
     public UserTagAutoExtensionsManager getUserTagAutoExtensionManager() {
         return userTagAutoExtensionsManager;
-    }
-
-    @Deprecated
-    private void checkStore() {
-        if (store == null) {
-            throw new StoreNotAvailableException();
-        }
     }
 
     private void checkCycle() throws CycleException {
