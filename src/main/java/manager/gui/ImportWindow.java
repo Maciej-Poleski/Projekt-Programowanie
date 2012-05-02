@@ -242,7 +242,7 @@ public class ImportWindow extends javax.swing.JDialog {
         try {
 
             if (masterTagToAdd == null){
-                PrimaryBackup primaryBackup = new PrimaryBackupImpl("src/test/resources/primaryBackup/", tags);
+                PrimaryBackup primaryBackup = new PrimaryBackupImpl(fileToAdd.getParent(), tags);
                 BackupManager firstBackupManager = new BackupManager(primaryBackup);
                 MasterTag mTag = tags.newMasterTag(fileToAdd.getName());
                 backupsManager.registerBackupManager(mTag, firstBackupManager);

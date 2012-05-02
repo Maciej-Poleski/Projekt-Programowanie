@@ -20,9 +20,9 @@ import java.util.regex.*;
 import javax.imageio.ImageIO;
 
 /**
- * @author Jakub Cieśla, Marcin Ziemiński
- * @author 
- * @version 
+ * @author Jakub Cieśla
+ * @author Marcin Ziemiński
+ * @version
  * 
  */
 public final class PrimaryBackupImpl implements PrimaryBackup {
@@ -53,9 +53,9 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 	 * Dodanie oryginalnej sciezki do informacji na temat pliku
 	 * 
 	 * @param fileid
-	 *           ID danego pliku i scieżka do niego.
+	 *            ID danego pliku i scieżka do niego.
 	 * @param path
-	 *			Ścieżka do pliku
+	 *            Ścieżka do pliku
 	 */
 	private void addPath(FileID fileid, File path) {
 		infos.put(fileid, path);
@@ -73,11 +73,11 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 
 	/**
 	 * Funkcja zwraca ścieżkę do pliku z danego Primary Backup
-	 *
+	 * 
 	 * @param fileid
-	 * 			ID danego pliku
+	 *            ID danego pliku
 	 * @throws FileNotAvailableException
-	 * 			Plik o danym ID nie znajduje się w bazie
+	 *             Plik o danym ID nie znajduje się w bazie
 	 */
 	@Override
 	public File getFile(FileID fileid) throws FileNotAvailableException {
@@ -100,7 +100,8 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 	}
 
 	/**
-	 * Funkcja służąca do dodania nowego pliku lub całego katalogu do danego PrimaryBackup.
+	 * Funkcja służąca do dodania nowego pliku lub całego katalogu do danego
+	 * PrimaryBackup.
 	 * 
 	 * @throws IOException
 	 *             Nieudane skopiowanie pliku.
@@ -112,7 +113,8 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 	 * @param file
 	 *            Plik lub katalog to dodania.
 	 * @param fresh
-	 * 			  Zmienna oznacza, że ma zostać dodany folder do MasterTaga korzenia.
+	 *            Zmienna oznacza, że ma zostać dodany folder do MasterTaga
+	 *            korzenia.
 	 */
 	@Override
 	public void addFile(MasterTag tag, File file, boolean fresh)
@@ -122,34 +124,38 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 			throw new FileNotFoundException(file.getPath());
 		}
 
-		if(file.isFile()) { // Kopiuje zwykły plik 
+		if (file.isFile()) { // Kopiuje zwykły plik
 			try {
 				Path end = tempTags.getPathFromMasterTag(tag);
-				File realParent = new File(backupPath + File.separator + end.toString());
+				File realParent = new File(backupPath + File.separator
+						+ end.toString());
 				if (!realParent.exists() && !realParent.mkdirs()) {
 					throw new OperationInterruptedException(
 							"Nie można utworzyć katalogu");
 				}
 
 				String newName = file.getName();
-				File real = new File(realParent.toString() + File.separator + newName);
-				while(real.exists()) {  
+				File real = new File(realParent.toString() + File.separator
+						+ newName);
+				while (real.exists()) {
 					newName = getGoodName(newName);
-					real = new File(realParent.toString() + File.separator + newName);
+					real = new File(realParent.toString() + File.separator
+							+ newName);
 				}
 
 				// Otwiera kanał na pliku, który ma być kopiowany
 				FileChannel srcChannel = new FileInputStream(file).getChannel();
 
 				// Otwiera kanał dla pliku docelowego
-				FileChannel dstChannel = new FileOutputStream(real).getChannel();
+				FileChannel dstChannel = new FileOutputStream(real)
+						.getChannel();
 
 				// Kopiuje zawartość z jednego do drugiego
 				dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
 
 				FileID id = new FileID();
 				addPath(id, real);
-				store.addFile(id, tag, null);	
+				store.addFile(id, tag, null);
 
 				// Zamknięcie kanałów.
 				srcChannel.close();
@@ -159,74 +165,92 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 				throw new OperationInterruptedException(e);
 			}
 		} else { // Kopiuje całą hierarchię folderów
-			try { 
+			try {
 				MasterTag root = null;
 				File realParent = null;
-				if(fresh) {
+				if (fresh) {
 					root = tag;
-					realParent = new File(backupPath + File.separator + file.getName());
+					realParent = new File(backupPath + File.separator
+							+ file.getName());
 
 				} else {
 					root = tempTags.newMasterTag(tag, file.getName());
 					Path end = tempTags.getPathFromMasterTag(root);
-					realParent = new File(backupPath + File.separator + end.toString());
+					realParent = new File(backupPath + File.separator
+							+ end.toString());
 				}
 				if (!realParent.exists() && !realParent.mkdirs()) {
 					throw new OperationInterruptedException(
 							"Nie można utworzyć katalogu");
 				}
 
-				copyFiles(file, realParent, root);
+				if (!realParent.equals(file)) {
+					copyFiles(file, realParent, root, false);
+				} else {
+					// only tag files
+					copyFiles(file, realParent, root, true);
+				}
 
-			} catch(IOException e) {
+			} catch (IOException e) {
 				throw new OperationInterruptedException(e);
-			} 
+			}
 		}
 	}
 
-	private void copyFiles(File source, File destination, MasterTag parent) throws IOException, OperationInterruptedException {
+	private void copyFiles(File source, File destination, MasterTag parent,
+			boolean onlyTag) throws IOException, OperationInterruptedException {
 		File[] filesAndDirs = source.listFiles();
-		for(File file : filesAndDirs) {
+		for (File file : filesAndDirs) {
 			if (!file.isFile()) {
 
-				File dest = new File(destination.toString() + File.separator + file.getName());
+				File dest = new File(destination.toString() + File.separator
+						+ file.getName());
 				MasterTag mt = tempTags.newMasterTag(parent, file.getName());
-				if(!dest.exists() && !dest.mkdirs()) {
+				if (!dest.exists() && !dest.mkdirs()) {
 					throw new OperationInterruptedException(
 							"Nie można utworzyć katalogu");
 				}
-				copyFiles(file, dest, mt);
+				copyFiles(file, dest, mt, onlyTag);
 
 			} else {
+
 				String newName = file.getName();
-				FileChannel srcChannel = new FileInputStream(file).getChannel();
+				File real = new File(destination.toString() + File.separator
+						+ newName);
 
-				File real = new File(destination.toString() + File.separator + newName);
-				while(real.exists()) {
-					newName = getGoodName(newName);
-					real = new File(destination.toString() + File.separator + newName);
+				if (!onlyTag) {
+					FileChannel srcChannel = new FileInputStream(file)
+							.getChannel();
+
+					while (real.exists()) {
+						newName = getGoodName(newName);
+						real = new File(destination.toString() + File.separator
+								+ newName);
+					}
+
+					FileChannel dstChannel = new FileOutputStream(real)
+							.getChannel();
+					dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
+
+					srcChannel.close();
+					dstChannel.close();
 				}
-
-				FileChannel dstChannel = new FileOutputStream(real).getChannel();
-				dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
 
 				FileID id = new FileID();
 				addPath(id, real);
-				store.addFile(id, parent, null);	
+				store.addFile(id, parent, null);
 
-				srcChannel.close();
-				dstChannel.close();
 			}
 		}
 	}
 
 	private String getGoodName(String name) {
 		Matcher tmp;
-		if(name.matches("^\\.?[^\\.]*\\([0-9]+\\)(\\..*||$)")) {
+		if (name.matches("^\\.?[^\\.]*\\([0-9]+\\)(\\..*||$)")) {
 			String s;
 			int num;
 
-			if(name.matches("^\\.?[^\\.]*\\([0-9]+\\)\\..*")) {
+			if (name.matches("^\\.?[^\\.]*\\([0-9]+\\)\\..*")) {
 				tmp = Pattern.compile("\\([0-9]+\\)\\.").matcher(name);
 				tmp.find();
 				s = tmp.group();
@@ -253,14 +277,14 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 
 		} else {
 
-			if(name.matches("\\.?[^\\.]+\\..*")) {
+			if (name.matches("\\.?[^\\.]+\\..*")) {
 				tmp = Pattern.compile("\\.?[^\\.]*").matcher(name);
 				tmp.find();
 				String s = tmp.group();
 				name = name.replaceFirst("\\.?[^\\.]*\\.", s + "(1).");
 
 			} else {
-				name = name +"(1)";
+				name = name + "(1)";
 			}
 		}
 		return name;
@@ -329,7 +353,7 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 	 * @throws OperationInterruptedException
 	 *             Błąd wykonania operacji.
 	 */
-        @Override
+	@Override
 	public ImageHolder getImageToEdition(FileID fileId)
 			throws FileNotAvailableException, OperationInterruptedException {
 		try {
@@ -361,7 +385,7 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 	 * @throws OperationInterruptedException
 	 *             Błąd wykonania operacji.
 	 */
-        @Override
+	@Override
 	public void saveEditedImage(ImageHolder image)
 			throws FileNotAvailableException, OperationInterruptedException {
 		try {
@@ -374,7 +398,6 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 				throw new OperationInterruptedException(
 						"Nie można usunać starej wersji pliku");
 			}
-
 
 			// dodanie zedytowanego pliku
 			ImageIO.write(im, type, new File(file.getCanonicalPath()));

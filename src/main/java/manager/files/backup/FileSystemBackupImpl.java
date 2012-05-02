@@ -177,4 +177,15 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 		return null;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Backup [location=");
+		builder.append(location);
+		builder.append("]");
+		return builder.toString();
+	}
+	
+	
+
 }
