@@ -6,19 +6,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
-import com.google.gdata.client.Query;
-import com.google.gdata.data.photos.AlbumFeed;
 import com.google.gdata.data.photos.PhotoEntry;
-import com.google.gdata.data.photos.TagEntry;
-import com.google.gdata.util.ServiceException;
 
-public final class PicasaPhoto {
+public final class PicasaPhoto implements Serializable {
 
-	private PhotoEntry photoEntry;
+	private static final long serialVersionUID = 1L;
+
+	private final String title;
+	private final String description;
+	private final String albumId;
+	private final String photoUrl;
 
 	/**
 	 * Default constructor
@@ -26,28 +26,31 @@ public final class PicasaPhoto {
 	 * @param photoEntry
 	 */
 	public PicasaPhoto(PhotoEntry photoEntry) {
-		this.photoEntry = photoEntry;
+		title = photoEntry.getTitle().getPlainText();
+		description = photoEntry.getDescription().getPlainText();
+		albumId = photoEntry.getAlbumId();
+		photoUrl = photoEntry.getMediaContents().get(0).getUrl();
 	}
 
 	/**
 	 * @return title of this photo
 	 */
 	public String getTitle() {
-		return photoEntry.getTitle().getPlainText();
+		return title;
 	}
 
 	/**
 	 * @return description of this photo
 	 */
 	public String getDescription() {
-		return photoEntry.getDescription().getPlainText();
+		return description;
 	}
 
 	/**
 	 * @return id of album this photo is associated with
 	 */
 	public String getAlbumId() {
-		return photoEntry.getAlbumId();
+		return albumId;
 	}
 
 	/**
@@ -76,8 +79,7 @@ public final class PicasaPhoto {
 	public static File downloadPhoto(File downloadDirectory, PicasaPhoto photo)
 			throws PicasaMediaDownloadException {
 		try {
-			String photoUrl = photo.photoEntry.getMediaContents().get(0)
-					.getUrl();
+			String photoUrl = photo.photoUrl;
 			int index = photoUrl.lastIndexOf('/');
 			photoUrl = photoUrl.substring(0, index + 1) + "s2000"
 					+ photoUrl.substring(index);
@@ -110,52 +112,52 @@ public final class PicasaPhoto {
 
 	}
 
-	/**
-	 * @return tags associated with this photo
-	 * @throws PicasaInformationCollectionException
-	 */
-	public List<String> getListOfTags()
-			throws PicasaInformationCollectionException {
+	// /**
+	// * @return tags associated with this photo
+	// * @throws PicasaInformationCollectionException
+	// */
+	// public List<String> getListOfTags()
+	// throws PicasaInformationCollectionException {
+	//
+	// try {
+	// URL feedUrl = new URL(photoEntry.getFeedLink().getHref()
+	// .replaceFirst("\\?.*", "?kind=tag"));
+	// Query tagsQuery = new Query(feedUrl);
+	//
+	// AlbumFeed searchResultsFeed = photoEntry.getService().query(
+	// tagsQuery, AlbumFeed.class);
+	//
+	// List<String> tags = new ArrayList<>();
+	//
+	// for (TagEntry tag : searchResultsFeed.getTagEntries()) {
+	// tags.add(tag.getTitle().getPlainText());
+	// }
+	//
+	// return tags;
+	//
+	// } catch (IOException | ServiceException e) {
+	// throw new PicasaInformationCollectionException(e);
+	// }
+	//
+	// }
 
-		try {
-			URL feedUrl = new URL(photoEntry.getFeedLink().getHref()
-					.replaceFirst("\\?.*", "?kind=tag"));
-			Query tagsQuery = new Query(feedUrl);
-
-			AlbumFeed searchResultsFeed = photoEntry.getService().query(
-					tagsQuery, AlbumFeed.class);
-
-			List<String> tags = new ArrayList<>();
-
-			for (TagEntry tag : searchResultsFeed.getTagEntries()) {
-				tags.add(tag.getTitle().getPlainText());
-			}
-
-			return tags;
-
-		} catch (IOException | ServiceException e) {
-			throw new PicasaInformationCollectionException(e);
-		}
-
-	}
-
-	/**
-	 * Deletes this photo
-	 * 
-	 * @throws PicasaDataModificationException
-	 */
-	public void delete() throws PicasaDataModificationException {
-		try {
-			photoEntry.delete();
-
-		} catch (IOException | ServiceException e) {
-			throw new PicasaDataModificationException(e);
-		}
-	}
+	// /**
+	// * Deletes this photo
+	// *
+	// * @throws PicasaDataModificationException
+	// */
+	// public void delete() throws PicasaDataModificationException {
+	// try {
+	// photoEntry.delete();
+	//
+	// } catch (IOException | ServiceException e) {
+	// throw new PicasaDataModificationException(e);
+	// }
+	// }
 
 	@Override
 	public String toString() {
-		return "Photo [name=" + photoEntry.getTitle().getPlainText() + "]";
+		return "Photo [name=" + title + "]";
 	}
 
 }

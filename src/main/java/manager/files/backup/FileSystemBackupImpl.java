@@ -29,6 +29,8 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 
 	private Map<FileID, File> filesInBackup = new HashMap<FileID, File>();
 	private final File location;
+	
+
 	private Date dateOfLastModification = new Date();
 
 	/**
@@ -56,6 +58,13 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 		}
 	}
 
+	/**
+	 * @return location of that backup
+	 */
+	public File getLocation() {
+		return location;
+	}
+	
 	/**
 	 * Zwraca dla danego ID plik który go zawiera.
 	 * 

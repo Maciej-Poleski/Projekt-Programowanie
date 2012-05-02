@@ -7,6 +7,8 @@ import manager.files.backup.PrimaryBackup;
 import manager.tags.MasterTag;
 import manager.tags.Tags;
 import manager.tags.TagFilesStore;
+import manager.tags.UserTag;
+import manager.tags.UserTagAutoProvider;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -155,7 +157,13 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 
 				FileID id = new FileID();
 				addPath(id, real);
-				store.addFile(id, tag, null);
+
+				UserTagAutoProvider userTagsProvider = tempTags
+						.getUserTagAutoProvider();
+				Set<UserTag> userTags = userTagsProvider
+						.getUserTagsForFileName(file.getName());
+
+				store.addFile(id, tag, userTags);
 
 				// Zamknięcie kanałów.
 				srcChannel.close();
@@ -238,7 +246,13 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 
 				FileID id = new FileID();
 				addPath(id, real);
-				store.addFile(id, parent, null);
+
+				UserTagAutoProvider userTagsProvider = tempTags
+						.getUserTagAutoProvider();
+				Set<UserTag> userTags = userTagsProvider
+						.getUserTagsForFileName(file.getName());
+
+				store.addFile(id, parent, userTags);
 
 			}
 		}

@@ -365,14 +365,15 @@ public class BackupWindow extends javax.swing.JDialog {
 		try {
 			b = this.backupsmanager
 					.getBackupManagerAssociatedWithMasterTag(this.selectedMasterTag);
-			JOptionPane.showMessageDialog(this, "The backup of "
-					+ this.selectedMasterTag, " was created.",
-					JOptionPane.INFORMATION_MESSAGE);
+			
 			b.registerFileSystemBackup(this.backupLocation);
+			JOptionPane.showMessageDialog(this, "The backup of "
+					+ this.selectedMasterTag + " was created.","backupCreated",
+					JOptionPane.INFORMATION_MESSAGE);
 			// MainWindow.data.save();
 		} catch (OperationInterruptedException exp) // sprawdzic dlaczego
 		{
-			JOptionPane.showMessageDialog(this, "Error OIE", "Error",
+			JOptionPane.showMessageDialog(this, "Error OIE - already exists backup in that location", "Error",
 					JOptionPane.ERROR_MESSAGE);
 		} catch (IllegalArgumentException exp2) // brak wybranego mastertagu
 		{

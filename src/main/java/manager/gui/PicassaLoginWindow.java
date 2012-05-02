@@ -184,7 +184,12 @@ public class PicassaLoginWindow extends javax.swing.JDialog {
         String pass = PasswordField.getText();
         
         //PasswordField.setText(pass+"aaaa");
-        this.backupmanager.registerPicasaBackup(login, pass,null);
+        try {
+			this.backupmanager.registerPicasaBackup(login, pass,null);
+		} catch (OperationInterruptedException e) {
+			// TODO komunikat ze juz istnieje backup w tej lokalizacji
+			e.printStackTrace();
+		}
          try {
             data.save();
         } catch (IOException ex) {
