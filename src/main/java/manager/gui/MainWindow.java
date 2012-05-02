@@ -373,7 +373,7 @@ public class MainWindow extends JFrame{
     private boolean lastSelectedTree; // false - MasterTag , true - UserTag
     private EditWindow editimagewindow;
     private ImportWindow importwindow;
-    private BackupWindow backupwindow;
+   // private BackupWindow backupwindow;
     private EditTagsWindow edittagswindow;
     private FileID imageToEdit; 
     private ImageHolder imageToEditHolder;
@@ -423,9 +423,9 @@ public class MainWindow extends JFrame{
     }//GEN-LAST:event_importButtonActionPerformed
 
     private void backupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backupButtonActionPerformed
-       backupwindow = new BackupWindow(this.tags, this.tagFilesStore, this.backupsmanager, this.data);
-       backupwindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-       backupwindow.setVisible(true);
+       //backupwindow = new BackupWindow(this.tags, this.tagFilesStore, this.backupsmanager, this.data);
+      // backupwindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+       //backupwindow.setVisible(true);
     }//GEN-LAST:event_backupButtonActionPerformed
 
     private void displayFilesOnMainList(Set<FileID> files, Vector<MyFile> tagsVector){
