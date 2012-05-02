@@ -3,7 +3,9 @@ package manager.files.backup;
 import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import manager.files.FileID;
 import manager.files.FileNotAvailableException;
@@ -84,5 +86,27 @@ public class BackupsManager implements Serializable {
 	 */
 	public Map<MasterTag, BackupManager> getAllBackupManagers() {
 		return backupManagers;
+	}
+
+	/**
+	 * Deletes from system files associated with given FileID's
+	 * 
+	 * @param filesToDelete
+	 * @throws OperationInterruptedException
+	 * @throws FileNotAvailableException
+	 */
+	public void removeFiles(Set<FileID> filesToDelete)
+			throws FileNotAvailableException, OperationInterruptedException {
+	
+		for (BackupManager bm : backupManagers.values()) {
+			Set<FileID> filesToDeleteFromThatBackup = new HashSet<>(
+					filesToDelete);
+			filesToDeleteFromThatBackup.retainAll(bm.getPrimaryBackup()
+					.getListOfAvailableFiles());
+
+			for (FileID id : filesToDeleteFromThatBackup) {
+				bm.getPrimaryBackup().removeFile(id);
+			}
+		}
 	}
 }

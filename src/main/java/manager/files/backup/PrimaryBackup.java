@@ -31,7 +31,8 @@ public interface PrimaryBackup extends Backup {
 	 * @param file
 	 *            file to backup
 	 * @param fresh
-	 *            value true means that files have to be added to recently created root MasterTag
+	 *            value true means that files have to be added to recently
+	 *            created root MasterTag
 	 * @throws IOException
 	 */
 	void addFile(MasterTag tag, File file, boolean fresh)
@@ -48,8 +49,24 @@ public interface PrimaryBackup extends Backup {
 	void removeFile(FileID fileId) throws FileNotAvailableException,
 			OperationInterruptedException;
 
-        public ImageHolder getImageToEdition(FileID fileId)
-			throws FileNotAvailableException, OperationInterruptedException; 
-        public void saveEditedImage(ImageHolder image)
-			throws FileNotAvailableException, OperationInterruptedException; 
+	/**
+	 * Returns ImageHolder to edition
+	 * 
+	 * @param fileId
+	 * @return
+	 * @throws FileNotAvailableException
+	 * @throws OperationInterruptedException
+	 */
+	public ImageHolder getImageToEdition(FileID fileId)
+			throws FileNotAvailableException, OperationInterruptedException;
+
+	/**
+	 * Saves edited image.
+	 * 
+	 * @param image
+	 * @throws FileNotAvailableException
+	 * @throws OperationInterruptedException
+	 */
+	public void saveEditedImage(ImageHolder image)
+			throws FileNotAvailableException, OperationInterruptedException;
 }
