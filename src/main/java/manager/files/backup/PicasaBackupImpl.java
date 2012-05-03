@@ -132,6 +132,9 @@ final class PicasaBackupImpl extends SecondaryBackup {
 		return builder.toString();
 	}
 	
+	/**
+	 * @return user name
+	 */
 	public String getUserName() {
 		return userName;
 	}

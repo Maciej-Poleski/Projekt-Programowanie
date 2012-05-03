@@ -22,6 +22,11 @@ public class BackupManager implements Serializable {
 	private final PrimaryBackup primaryBackup;
 	private final Set<SecondaryBackup> backups;
 
+	/**
+	 * Default constructor
+	 * 
+	 * @param primaryBackup
+	 */
 	public BackupManager(PrimaryBackup primaryBackup) {
 		this.primaryBackup = primaryBackup;
 		this.backups = new HashSet<>();

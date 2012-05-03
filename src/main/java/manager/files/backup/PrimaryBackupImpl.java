@@ -31,13 +31,18 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 
 	private static final long serialVersionUID = 1L;
 
-	HashMap<FileID, File> infos = new HashMap<FileID, File>();
+	private HashMap<FileID, File> infos = new HashMap<FileID, File>();
 
 	private final Tags tempTags;
 	private final TagFilesStore store;
 	private final String backupPath;
 	private Date created = new Date();
 
+	/**
+	 * @param path
+	 * @param tags
+	 * @throws IOException
+	 */
 	public PrimaryBackupImpl(String path, Tags tags) throws IOException {
 		backupPath = path;
 		tempTags = tags;

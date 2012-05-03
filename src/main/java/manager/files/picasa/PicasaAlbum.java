@@ -279,7 +279,7 @@ public class PicasaAlbum {
 				sb.append(k).append(",");
 			}
 
-			sb.replace(sb.length() - 1, sb.length() - 1, "");
+			sb.deleteCharAt(sb.length() - 1);
 
 			myTags.addKeyword(sb.toString());
 			photoEntry.setKeywords(myTags);
