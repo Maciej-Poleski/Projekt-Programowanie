@@ -76,7 +76,7 @@ public class PicasaService {
 			for (String tag : tags) {
 				sb.append(tag).append(",");
 			}
-			sb.replace(sb.length() - 1, sb.length(), "");
+			sb.deleteCharAt(sb.length() - 1);
 			myQuery.setStringCustomParameter("tag", sb.toString());
 
 			searchResultsFeed = picasawebService

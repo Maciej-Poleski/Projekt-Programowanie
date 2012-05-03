@@ -31,13 +31,18 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 
 	private static final long serialVersionUID = 1L;
 
-	HashMap<FileID, File> infos = new HashMap<FileID, File>();
+	private HashMap<FileID, File> infos = new HashMap<FileID, File>();
 
 	private final Tags tempTags;
 	private final TagFilesStore store;
 	private final String backupPath;
 	private Date created = new Date();
 
+	/**
+	 * @param path
+	 * @param tags
+	 * @throws IOException
+	 */
 	public PrimaryBackupImpl(String path, Tags tags) throws IOException {
 		backupPath = path;
 		tempTags = tags;
@@ -208,8 +213,12 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 	private void copyFiles(File source, File destination, MasterTag parent,
 			boolean onlyTag) throws IOException, OperationInterruptedException {
 		File[] filesAndDirs = source.listFiles();
+		if (filesAndDirs == null) {
+			return;
+		}
+		
 		for (File file : filesAndDirs) {
-			if (!file.isFile()) {
+			if (file.isDirectory()) {
 
 				File dest = new File(destination.toString() + File.separator
 						+ file.getName());
