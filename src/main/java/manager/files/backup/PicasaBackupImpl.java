@@ -94,15 +94,14 @@ final class PicasaBackupImpl extends SecondaryBackup {
 
 			Set<FileID> files = originalBackup.getListOfAvailableFiles();
 
-			System.out.println(files);
-
 			for (FileID f : files) {
 				File file = originalBackup.getFile(f);
 
-				System.out.println("uploading: " + file);
-				// FIXME other types
-				PicasaPhoto ph = album.getPicasaPhotoUploader(file,
-						PicasaAlbumMediaType.JPEG).upload();
+				PicasaAlbumMediaType type = PicasaAlbumMediaType.getPicasaAlbumMediaTypeByFileName(file.getName());
+
+				PicasaPhoto ph = album.getPicasaPhotoUploader(file, type)
+						.upload();
+
 				backupedFiles.put(f, ph);
 			}
 
@@ -131,13 +130,12 @@ final class PicasaBackupImpl extends SecondaryBackup {
 		builder.append("]");
 		return builder.toString();
 	}
-	
+
 	/**
 	 * @return user name
 	 */
 	public String getUserName() {
 		return userName;
 	}
-
 
 }

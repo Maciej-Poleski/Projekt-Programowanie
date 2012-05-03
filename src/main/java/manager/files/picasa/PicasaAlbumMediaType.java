@@ -53,4 +53,31 @@ public enum PicasaAlbumMediaType {
 			return "image/bmp";
 		}
 	};
+
+	/**
+	 * Returns media type by parsing given file name and getting its extension
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public static PicasaAlbumMediaType getPicasaAlbumMediaTypeByFileName(String name) {
+		int pos = name.lastIndexOf('.');
+		String ext = name.substring(pos + 1);
+
+		switch (ext) {
+
+		case "bmp":
+			return PicasaAlbumMediaType.BMP;
+		case "gif":
+			return PicasaAlbumMediaType.GIF;
+		case "tif":
+		case "tiff":
+			return PicasaAlbumMediaType.TIFF;
+		case "png":
+			return PicasaAlbumMediaType.PNG;
+		default:
+			return PicasaAlbumMediaType.JPEG;
+
+		}
+	}
 }
