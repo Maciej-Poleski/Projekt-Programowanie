@@ -208,8 +208,12 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 	private void copyFiles(File source, File destination, MasterTag parent,
 			boolean onlyTag) throws IOException, OperationInterruptedException {
 		File[] filesAndDirs = source.listFiles();
+		if (filesAndDirs == null) {
+			return;
+		}
+		
 		for (File file : filesAndDirs) {
-			if (!file.isFile()) {
+			if (file.isDirectory()) {
 
 				File dest = new File(destination.toString() + File.separator
 						+ file.getName());
