@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import manager.files.OperationInterruptedException;
+import manager.files.picasa.PicasaAuthenticationException;
+import manager.files.picasa.PicasaService;
 
 /**
  * Class responsible for serializing all informations about backups in the
@@ -59,6 +61,14 @@ public class BackupManager implements Serializable {
 			String picasaPassword, File downloadLocation)
 			throws OperationInterruptedException {
 
+		try {
+			PicasaService ps = new PicasaService(picasaLogin);
+			ps.authenticate(picasaPassword);
+			
+		} catch (PicasaAuthenticationException e) {
+			throw new OperationInterruptedException("Incorrect login or password", e);
+		}
+		
 		for (SecondaryBackup b : backups) {
 			if (b instanceof PicasaBackupImpl) {
 				PicasaBackupImpl tmp = (PicasaBackupImpl) b;
@@ -68,7 +78,7 @@ public class BackupManager implements Serializable {
 				}
 			}
 		}
-
+		
 		SecondaryBackup sb = new PicasaBackupImpl(primaryBackup, picasaLogin,
 				picasaPassword, downloadLocation);
 
