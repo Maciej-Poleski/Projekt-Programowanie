@@ -68,6 +68,11 @@ public class MainWindow extends JFrame{
         setTitle("Kompleksowa Obsługa Zdjęć i Katalogów");
         setName("mainFrame");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         buttonPanel.setBackground(new java.awt.Color(204, 204, 255));
         buttonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -244,6 +249,11 @@ public class MainWindow extends JFrame{
         middlePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         searchTextField.setText("Znajdź");
+        searchTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchTextFieldMouseClicked(evt);
+            }
+        });
 
         tagSearchButton.setText("Wybrany tag");
         tagSearchButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -274,6 +284,11 @@ public class MainWindow extends JFrame{
         });
 
         newTagTextField.setText("Nazwa tagu...");
+        newTagTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                newTagTextFieldMouseClicked(evt);
+            }
+        });
 
         addTagToFiles.setText("Dodaj wybrany tag do plików");
         addTagToFiles.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -529,7 +544,7 @@ public class MainWindow extends JFrame{
         UserTag ut = tags.newUserTag(newTagTextField.getText());
         lastTag = ut;
         lastTagTextField.setText(lastTag.toString());
-        saveData();
+        saveData();  
       }
      else{
          JOptionPane.showMessageDialog(this, "Wybierz pliki które chcesz otagować.");
@@ -573,6 +588,18 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
       tagsList.setListData(selectedTagsVector);
     }
 }//GEN-LAST:event_removeTagFromListButtonMouseClicked
+
+  private void searchTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchTextFieldMouseClicked
+    if(searchTextField.getText().equals("Znajdź")) searchTextField.setText(null);
+  }//GEN-LAST:event_searchTextFieldMouseClicked
+
+  private void newTagTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newTagTextFieldMouseClicked
+    if(newTagTextField.getText().equals("Nazwa tagu...")) newTagTextField.setText(null);
+  }//GEN-LAST:event_newTagTextFieldMouseClicked
+
+  private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+    saveData();
+  }//GEN-LAST:event_formWindowClosed
 
     private void displayTagsOnTagsList(){
         tagsList.setListData(selectedTagsVector);
@@ -714,7 +741,6 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
                     window.newTagTextField.addActionListener(window.new newTagTextFieldActionListener());
                     new MasterTagsTreeSelectionListener(window);
                     new UserTagsTreeSelectionListener(window);  
-                    window.saveData();
             }
         });
 
