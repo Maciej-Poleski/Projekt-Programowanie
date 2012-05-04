@@ -13,13 +13,13 @@ import javax.swing.*;
  */
 
 public class LUTPanel extends JPanel implements MouseListener, MouseMotionListener{
-        private LinkedList<LUTPoint> points;
-        private BufferedImage plotArea;
-        private Graphics2D plot;
-        private Rectangle area = new Rectangle(0, 0, 208, 208);
+        LinkedList<LUTPoint> points;
+        BufferedImage plotArea;
+        Graphics2D plot;
+        Rectangle area = new Rectangle(0, 0, 208, 208);
         private int last_x, last_y;
-        private boolean firstTime = true;
-        private boolean pressOut = false;
+        boolean firstTime = true;
+        boolean pressOut = false;
         private Color usedColor;
         private Color defaultColor = Color.blue;
 
@@ -78,8 +78,11 @@ public class LUTPanel extends JPanel implements MouseListener, MouseMotionListen
             last_x = e.getX();
             last_y = e.getY();
 
+            // Checks whether or not the cursor is inside of the rectangle
+            // while the user is pressing the mouse.
             if ( area.contains(e.getX(), e.getY()) ) {
                 updateLocation(e);
+//         TemporaryLUT.label.setText("contains");
 
             } else {
                 pressOut = true;

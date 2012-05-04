@@ -42,23 +42,19 @@ public class LUTPoint{
     }
     
     /**
-     * Zmienia bądź ustanawia współrzędną X punktu. Po zmianie uaktualnia
-     * położenie pola odpowiadającego za detekcję kliknięcia w ten punkt
+     * Zmienia bądź ustanawia współrzędną X punktu. 
      * @param x - nowa współrzędna X punktu
      */
     public void setX(int x){
         this.x=x;
-        updateLocation();
     }
     
     /**
-     * Zmienia bądź ustanawia współrzędną Y punktu. Po zmianie uaktualnia
-     * położenie pola odpowiadającego za detekcję kliknięcia w ten punkt
+     * Zmienia bądź ustanawia współrzędną Y punktu. 
      * @param y - nowa współrzędna Y punktu
      */
     public void setY(int y){
         this.y=y;
-        updateLocation();
     }
 
     /**
@@ -75,5 +71,17 @@ public class LUTPoint{
      */
     public int getY(){
         return this.y;
+    }
+
+    /**
+     * Sprawdza czy punkt o podanych współrzędnych znajduje się w pobliżu
+     * (wewnąrz prostokąta detekcyjnego) tego punktu.
+     * @param x - współrzędna X sprawdzanego punktu
+     * @param y - współrzędna Y sprawdzanego punktu
+     * @return - true, jeśli sprawdzany punkt znajduje się w pobliżu tego punktu,
+     *           false w przeciwnym wypadku
+     */
+    public boolean contains(int x, int y){
+        return rect.contains(x, y);
     }
 }
