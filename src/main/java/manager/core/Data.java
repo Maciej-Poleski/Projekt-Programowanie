@@ -5,10 +5,14 @@ import manager.tags.TagFilesStore;
 import manager.tags.Tags;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.logging.Logger;
 
 /**
- * Klasa przechowująca wszelkie informacje potrzebne do pracy aplikacji.
+ * Klasa przechowująca wszelkie informacje potrzebne do pracy aplikacji. Umożliwia transakcyjne podejście do zapisu
+ * stanu aplikacji. Podczas wczytywania bazy zakładana jest blokada, która jest zwalniana podczas zapisu tak aby
+ * tylko jedna instancja aplikacji mogła modyfikować bazę. Możliwe jest też usunięcie blokady w sytuacji gdy
+ * poprzednie uruchomienie aplikacji zakończyło się niepowodzeniem.
  *
  * @author Maciej Poleski
  */
@@ -18,7 +22,9 @@ public final class Data {
     private final BackupsManager backupsManager;
 
     private static final File DATABASE_FILE = new File("database");
+    private static final File DATABASE_LOCK = new File(".database_lock");
     private static boolean loaded = false;
+    private boolean destroyed = false;
 
     private Data(Tags tags, TagFilesStore tagFilesStore, BackupsManager backupsManager) {
         this.tags = tags;
@@ -33,6 +39,7 @@ public final class Data {
      * @throws IOException           Jeżeli wystąpi błąd IO
      * @throws IllegalStateException Jeżeli to nie jest pierwsze wywołanie
      */
+    @Deprecated
     public static Data load() throws IOException {
         if (loaded) {
             throw new IllegalStateException("Tą funkcje wolno uruchomić tylko raz");
@@ -54,12 +61,30 @@ public final class Data {
     }
 
     /**
+     * Ładuje bazę danych i zwraca ją. Ta funkcja w pierwszej kolejności zakłada blokadę tak aby wyeliminować
+     * możliwość równoczesnej pracy na bazie dwóch instancji aplikacji.
+     *
+     * @return Baza danych gotowa do użycia
+     * @throws IOException           Jeżeli wystąpi błąd IO
+     * @throws IllegalStateException Jeżeli baza danych jest zablokowana
+     */
+    public static Data lockAndLoad() throws IOException {
+        if (DATABASE_LOCK.createNewFile()) {
+            throw new IllegalStateException("Baza danych jest zablokowana");
+        }
+        loaded = false;
+        return load();
+    }
+
+    /**
      * Tworzy nową czystą bazę danych aplikacji i zwraca ją. Wywołanie tej funkcji uniemożliwia dalsze wywołania do
-     * Data.load()
+     * Data.load(). Tworzy blokadę.
      *
      * @return Baza danych gotowa do użycia.
+     * @throws IOException Jeżeli wystąpi błąd IO
      */
-    public static Data reset() {
+    public static Data reset() throws IOException {
+        DATABASE_LOCK.createNewFile();
         loaded = true;
         Tags tags = new Tags();
         BackupsManager backupsManager = new BackupsManager(tags);
@@ -67,11 +92,23 @@ public final class Data {
     }
 
     /**
+     * Usuwa blokadę z bazy danych. Może być przydatne jeżeli aplikacja nie została poprawnie zamknięta.
+     * Uruchamiać tylko na wyraźne życzenie użytkownika.
+     *
+     * @throws IOException Jeżeli wystąpi błąd IO
+     */
+    public static void breakLock() throws IOException {
+        Files.delete(DATABASE_LOCK.toPath());
+    }
+
+    /**
      * Zapisuje bazę danych.
      *
-     * @throws IOException Jeżeli zapis się nie powiedzie z powodu błędu IO
+     * @throws IOException           Jeżeli zapis się nie powiedzie z powodu błędu IO
+     * @throws IllegalStateException Jeżeli baza danych została zniszczona
      */
     public void save() throws IOException {
+        checkDestroyed();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(DATABASE_FILE));
         objectOutputStream.writeObject(getTagFilesStore());
         objectOutputStream.writeObject(getTags());
@@ -79,20 +116,45 @@ public final class Data {
         objectOutputStream.close();
     }
 
+    /**
+     * Zapisuje bazę danych i zwalnia blokadę. Po wykonaniu tej metody nie można korzystać z tego obiektu.
+     *
+     * @throws IOException Jeżeli wystąpi błąd IO
+     */
+    public void saveAndRelease() throws IOException {
+        save();
+        breakLock();
+        destroyed = true;
+    }
+
+    @Deprecated
     static boolean isLoaded() {
         return loaded;
     }
 
+    @Deprecated
     static void setLoaded(boolean loaded) {
         Data.loaded = loaded;
+    }
+
+    /**
+     * Sprawdza czy baza danych jest zablokowana.
+     *
+     * @return True jeżeli jest zablokowana, false jeżeli nie
+     * @throws IOException Jeżeli wystąpi błąd IO
+     */
+    static boolean isLocked() throws IOException {
+        return DATABASE_LOCK.exists();
     }
 
     /**
      * Zwraca obiekt służący do zarządzania strukturą tagów.
      *
      * @return Obiekt służący do zarządzania strukturą tagów.
+     * @throws IllegalStateException Jeżeli baza danych została zniszczona
      */
     public Tags getTags() {
+        checkDestroyed();
         return tags;
     }
 
@@ -100,8 +162,10 @@ public final class Data {
      * Zwraca obiekt służący do zarządzania otagowanymi plikami.
      *
      * @return Obiekt służący do zarządzania otagowanymi plikami.
+     * @throws IllegalStateException Jeżeli baza danych została zniszczona
      */
     public TagFilesStore getTagFilesStore() {
+        checkDestroyed();
         return tagFilesStore;
     }
 
@@ -109,8 +173,16 @@ public final class Data {
      * Zwraca obiekt służący do zarządzania kopiami zapasowymi
      *
      * @return Obiekt służący do zarządzania kopiami zapasowymi
+     * @throws IllegalStateException Jeżeli baza danych została zniszczona
      */
     public BackupsManager getBackupsManager() {
+        checkDestroyed();
         return backupsManager;
+    }
+
+    private void checkDestroyed() {
+        if (destroyed) {
+            throw new IllegalStateException("Ta baza została zniszczona na życzenie metodą z rodziny \"release\"");
+        }
     }
 }
