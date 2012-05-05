@@ -13,13 +13,13 @@ import javax.swing.*;
  */
 
 public class LUTPanel extends JPanel implements MouseListener, MouseMotionListener{
-        LinkedList<LUTPoint> points;
-        BufferedImage plotArea;
-        Graphics2D plot;
-        Rectangle area = new Rectangle(0, 0, 208, 208);
+        private LinkedList<LUTPoint> points;
+        private BufferedImage plotArea;
+        private Graphics2D plot;
+        private Rectangle area = new Rectangle(0, 0, 208, 208);
         private int last_x, last_y;
-        boolean firstTime = true;
-        boolean pressOut = false;
+        private boolean firstTime = true;
+        private boolean pressOut = false;
         private Color usedColor;
         private Color defaultColor = Color.blue;
 

@@ -300,22 +300,4 @@ public class WindowLUT extends JDialog implements IWindowFilter{
         this.setVisible(true);
         return returnData;
     }
-
-       public static void main(String... args) throws java.io.IOException {
-        java.awt.image.BufferedImage img = null;
-        try {
-            String path =System.getProperty("user.dir")+java.io.File.separatorChar+"Documents"+java.io.File.separatorChar+"aneciak.jpg";
- //          String path= ="file://"+System.getProperty("user.dir")+File.separatorChar+"images"+File.separatorChar+"first.jpg";
-            System.out.println(path);
-            img = javax.imageio.ImageIO.read(new java.io.File(path));
-            final PixelData data = new PixelData(img);
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                    new WindowLUT(data).setVisible(true);
-                }
-            });
-        } catch (java.io.IOException e) {
-            throw e;
-        }
-    }
 }
