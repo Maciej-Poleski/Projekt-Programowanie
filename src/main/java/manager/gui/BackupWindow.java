@@ -74,6 +74,8 @@ public class BackupWindow extends javax.swing.JDialog {
         picassaBackupButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         updateButton = new javax.swing.JButton();
+        refreshButton = new javax.swing.JButton();
+        checkBox = new javax.swing.JCheckBox();
 
         buttonPanel.setBackground(new java.awt.Color(204, 204, 255));
         buttonPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -93,6 +95,11 @@ public class BackupWindow extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Backup");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         buttonPanel1.setBackground(new java.awt.Color(204, 204, 255));
         buttonPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -177,6 +184,17 @@ public class BackupWindow extends javax.swing.JDialog {
             }
         });
 
+        refreshButton.setText("Odśwież listę");
+        refreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshButtonActionPerformed(evt);
+            }
+        });
+
+        checkBox.setBackground(new java.awt.Color(204, 204, 255));
+        checkBox.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        checkBox.setText("Aktualizuj po utworzeniu");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -186,15 +204,13 @@ public class BackupWindow extends javax.swing.JDialog {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(picassaBackupButton, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(newBackupButton, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSeparator1))
-                        .addContainerGap())
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(updateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                    .addComponent(checkBox, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                    .addComponent(picassaBackupButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(newBackupButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator1)
+                    .addComponent(updateButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(refreshButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -202,6 +218,8 @@ public class BackupWindow extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(checkBox)
+                        .addGap(5, 5, 5)
                         .addComponent(newBackupButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(picassaBackupButton)
@@ -209,6 +227,8 @@ public class BackupWindow extends javax.swing.JDialog {
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(updateButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(refreshButton)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE))
                 .addContainerGap())
@@ -223,7 +243,7 @@ public class BackupWindow extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 503, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -249,30 +269,30 @@ public class BackupWindow extends javax.swing.JDialog {
         this.backupLocation = fc.getSelectedFile();
         try
         {
-            if(selectedMasterTag!=null){
-                b=this.backupsmanager.getBackupManagerAssociatedWithMasterTag(this.selectedMasterTag);
-                JOptionPane.showMessageDialog(this,"Backup utworzony"+this.selectedMasterTag,"Info",JOptionPane.INFORMATION_MESSAGE);
-                b.registerFileSystemBackup(this.backupLocation);
+            b=this.backupsmanager.getBackupManagerAssociatedWithMasterTag(this.selectedMasterTag);
+            JOptionPane.showMessageDialog(this,"Backup został utworzony. "+this.selectedMasterTag,"Info",JOptionPane.INFORMATION_MESSAGE);
+            b.registerFileSystemBackup(this.backupLocation);
+            if(checkBox.isSelected()){
                 try {
-                    data.save();
-                } catch (IOException ex) {
+                    this.selectedSecondaryBackup.updateBackup();
+                } catch (OperationInterruptedException ex) {
                     Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }                 
+                } 
             }
-            else{
-                JOptionPane.showMessageDialog(this,"Nie wybrano MasterTagu","Error",JOptionPane.ERROR_MESSAGE);
-            }
-                //MainWindow.data.save();
+       
         }
         catch(OperationInterruptedException exp) //sprawdzic dlaczego
         {
             JOptionPane.showMessageDialog(this,"Error OIE","Error",JOptionPane.ERROR_MESSAGE);
         }
+        catch(IllegalArgumentException exp2) // brak wybranego mastertagu
+        {
+            JOptionPane.showMessageDialog(this,"Nie wybrano MasterTagu.","Error",JOptionPane.ERROR_MESSAGE);
+        }
         catch(NullPointerException exp3) //sprawdzic dlaczego
         {
             JOptionPane.showMessageDialog(this,"Error NPE","Error",JOptionPane.ERROR_MESSAGE);
         }
-
     }//GEN-LAST:event_newBackupButtonActionPerformed
 
     private void picassaBackupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_picassaBackupButtonActionPerformed
@@ -284,7 +304,7 @@ public class BackupWindow extends javax.swing.JDialog {
         }
         catch (IllegalArgumentException exp4)
         {
-            JOptionPane.showMessageDialog(this,"No MasterTag choosen","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,"Nie wybrano MasterTagu.","Error",JOptionPane.ERROR_MESSAGE);
         }
         
         
@@ -294,14 +314,22 @@ public class BackupWindow extends javax.swing.JDialog {
         try {
             this.selectedSecondaryBackup.updateBackup();
         } catch (OperationInterruptedException ex) {
-            Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Musisz wybrać backup.","Error",JOptionPane.ERROR_MESSAGE);
         }
+      
+    }//GEN-LAST:event_updateButtonActionPerformed
+
+    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        backupsList.setListData(secondaryBackupVector);
+    }//GEN-LAST:event_refreshButtonActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         try {
             data.save();
         } catch (IOException ex) {
             Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }        
-    }//GEN-LAST:event_updateButtonActionPerformed
+        }          
+    }//GEN-LAST:event_formWindowClosed
     
     
     private static class backupListener implements ListSelectionListener
@@ -384,6 +412,7 @@ public class BackupWindow extends javax.swing.JDialog {
     private javax.swing.JList backupsList;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JPanel buttonPanel1;
+    private javax.swing.JCheckBox checkBox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -393,6 +422,7 @@ public class BackupWindow extends javax.swing.JDialog {
     private javax.swing.JList mastertagsList;
     private javax.swing.JButton newBackupButton;
     private javax.swing.JButton picassaBackupButton;
+    private javax.swing.JButton refreshButton;
     private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
 }
