@@ -134,6 +134,11 @@ public class EditTagsWindow extends javax.swing.JDialog {
         setMaximumSize(new java.awt.Dimension(400, 700));
         setPreferredSize(new java.awt.Dimension(430, 700));
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         buttonPanel1.setBackground(new java.awt.Color(204, 204, 255));
         buttonPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -197,11 +202,15 @@ public class EditTagsWindow extends javax.swing.JDialog {
             }
         });
 
+        parentField.setBackground(new java.awt.Color(220, 220, 240));
         parentField.setEditable(false);
         parentField.setText("Rodzic");
+        parentField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        childField.setBackground(new java.awt.Color(220, 220, 240));
         childField.setEditable(false);
         childField.setText("Dziecko");
+        childField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         parentLabel.setText("A (Rodzic)");
 
@@ -229,8 +238,18 @@ public class EditTagsWindow extends javax.swing.JDialog {
         });
 
         newNameField.setText("Nowa nazwa...");
+        newNameField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                newNameFieldMouseClicked(evt);
+            }
+        });
 
         newUserTagTextField.setText("Nazwa...");
+        newUserTagTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                newUserTagTextFieldMouseClicked(evt);
+            }
+        });
 
         newUserTagButton.setText("Nowy UserTag");
         newUserTagButton.addActionListener(new java.awt.event.ActionListener() {
@@ -240,6 +259,11 @@ public class EditTagsWindow extends javax.swing.JDialog {
         });
 
         extensionTextField.setText("Nazwa rozszerzenia...");
+        extensionTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                extensionTextFieldMouseClicked(evt);
+            }
+        });
 
         addExtensionButton.setText("Powiąż tag A z rozszerzeniem");
         addExtensionButton.addActionListener(new java.awt.event.ActionListener() {
@@ -363,32 +387,20 @@ public class EditTagsWindow extends javax.swing.JDialog {
     private void removeParentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeParentButtonActionPerformed
         if(parent!=null)tags.removeTag(parent);
         else JOptionPane.showMessageDialog(this, "Musisz wybrać Tag.");
-        try {
-            data.save();
-        } catch (IOException ex) {
-            Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }//GEN-LAST:event_removeParentButtonActionPerformed
 
     private void changeNameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeNameButtonActionPerformed
-        if(parent!=null)tags.setNameOfTag(parent, newNameField.getText());
-        else JOptionPane.showMessageDialog(this, "Musisz wybrać Tag.");
-        try {
-            data.save();
-        } catch (IOException ex) {
-            Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
+        if(parent!=null){
+            tags.setNameOfTag(parent, newNameField.getText());
+            parentField.setText(newNameField.getText());
         }
+        else JOptionPane.showMessageDialog(this, "Musisz wybrać Tag.");
     }//GEN-LAST:event_changeNameButtonActionPerformed
 
     private void setConnectionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setConnectionButtonActionPerformed
         try {
             if(child!=null && parent!=null)tags.addChildToTag(child, parent);
             else JOptionPane.showMessageDialog(this, "Musisz wybrać Tagi.");
-            try {
-                data.save();
-            } catch (IOException ex) {
-                Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
-            }
         } catch (CycleException ex) {
             JOptionPane.showMessageDialog(this, "Te tagi są już w relacji.");
         } catch (IllegalStateException ex){
@@ -407,14 +419,9 @@ public class EditTagsWindow extends javax.swing.JDialog {
     private void addExtensionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addExtensionButtonActionPerformed
         if(extensionTextField.getText().isEmpty()==false){
             if(parent!=null){
-                try {
                     UserTagAutoExtensionsManager extmanager=tags.getUserTagAutoExtensionManager();
                     extmanager.registerUserTagAutoExtension(parent, extensionTextField.getText());
                     displayExtensions();
-                    data.save();
-                } catch (IOException ex) {
-                    Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }
             }else{
                 JOptionPane.showMessageDialog(this, "Musisz wybrać tag.");
             }
@@ -426,12 +433,7 @@ public class EditTagsWindow extends javax.swing.JDialog {
 
     private void newUserTagButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newUserTagButtonActionPerformed
         if(newUserTagTextField.getText().isEmpty()==false){
-            try {
                 UserTag ut = tags.newUserTag(newUserTagTextField.getText());
-                data.save();
-            } catch (IOException ex) {
-                Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
         else{
             JOptionPane.showMessageDialog(this, "Najpierw wpisz nazwę.");
@@ -441,14 +443,9 @@ public class EditTagsWindow extends javax.swing.JDialog {
     private void removeExtensionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeExtensionButtonActionPerformed
         if(extensionTextField.getText().isEmpty()==false){
             if(parent!=null){
-                try {
                     UserTagAutoExtensionsManager extmanager=tags.getUserTagAutoExtensionManager();
                     extmanager.unregisterUserTagAutoExtension(parent, extensionTextField.getText());
                     displayExtensions();
-                    data.save();
-                } catch (IOException ex) {
-                    Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }
             }else{
                 JOptionPane.showMessageDialog(this, "Musisz wybrać tag.");
             }
@@ -458,9 +455,26 @@ public class EditTagsWindow extends javax.swing.JDialog {
         }         
     }//GEN-LAST:event_removeExtensionButtonActionPerformed
 
-  /**
-   * @param args the command line arguments
-   */
+    private void newNameFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newNameFieldMouseClicked
+        if(newNameField.getText().equals("Nowa nazwa...")) newNameField.setText(null);
+    }//GEN-LAST:event_newNameFieldMouseClicked
+
+    private void extensionTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_extensionTextFieldMouseClicked
+       if(extensionTextField.getText().equals("Nazwa rozszerzenia...")) extensionTextField.setText(null);
+    }//GEN-LAST:event_extensionTextFieldMouseClicked
+
+    private void newUserTagTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newUserTagTextFieldMouseClicked
+        if(newUserTagTextField.getText().equals("Nazwa...")) newUserTagTextField.setText(null);
+    }//GEN-LAST:event_newUserTagTextFieldMouseClicked
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        try {
+            data.save();
+        } catch (IOException ex) {
+            Logger.getLogger(EditTagsWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_formWindowClosed
+
   public static void main(String args[]) {
     //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /*

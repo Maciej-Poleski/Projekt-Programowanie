@@ -297,7 +297,9 @@ public class MainWindow extends JFrame{
             }
         });
 
+        lastTagTextField.setBackground(new java.awt.Color(220, 220, 240));
         lastTagTextField.setEditable(false);
+        lastTagTextField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         javax.swing.GroupLayout middlePanelLayout = new javax.swing.GroupLayout(middlePanel);
         middlePanel.setLayout(middlePanelLayout);
