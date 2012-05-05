@@ -3,6 +3,8 @@ package manager.gui;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import manager.tags.*;
 import manager.core.*;
@@ -22,6 +24,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.text.Position;
 import manager.tags.Tags.IUserTagNode;
 
@@ -30,8 +34,7 @@ import manager.tags.Tags.IUserTagNode;
  * @author Jakub Brzeski
  * @author Jakub Czarnowicz
  */
-public class MainWindow extends JFrame{
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+public class MainWindow extends JFrame{        // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         buttonPanel = new javax.swing.JPanel();
@@ -39,6 +42,7 @@ public class MainWindow extends JFrame{
         backupButton = new javax.swing.JButton();
         importButton = new javax.swing.JButton();
         editImageButton = new javax.swing.JButton();
+        resetDataButton = new javax.swing.JButton();
         rightPanel = new javax.swing.JPanel();
         tagsLabel = new javax.swing.JLabel();
         tagsListScrollPane = new javax.swing.JScrollPane();
@@ -68,6 +72,11 @@ public class MainWindow extends JFrame{
         setTitle("Kompleksowa Obsługa Zdjęć i Katalogów");
         setName("mainFrame");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         buttonPanel.setBackground(new java.awt.Color(204, 204, 255));
         buttonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -102,6 +111,13 @@ public class MainWindow extends JFrame{
             }
         });
 
+        resetDataButton.setText("WYCZYŚĆ BAZĘ DANYCH");
+        resetDataButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetDataButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout buttonPanelLayout = new javax.swing.GroupLayout(buttonPanel);
         buttonPanel.setLayout(buttonPanelLayout);
         buttonPanelLayout.setHorizontalGroup(
@@ -115,6 +131,8 @@ public class MainWindow extends JFrame{
                 .addComponent(backupButton)
                 .addGap(18, 18, 18)
                 .addComponent(editImageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(resetDataButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         buttonPanelLayout.setVerticalGroup(
@@ -126,7 +144,8 @@ public class MainWindow extends JFrame{
                     .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(editTagsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(backupButton)
-                        .addComponent(editImageButton)))
+                        .addComponent(editImageButton)
+                        .addComponent(resetDataButton)))
                 .addContainerGap())
         );
 
@@ -160,15 +179,15 @@ public class MainWindow extends JFrame{
             .addGroup(rightPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(removeTagFromListButton, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
                     .addGroup(rightPanelLayout.createSequentialGroup()
                         .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tagsListScrollPane)
-                            .addComponent(removeTagFromListButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rightPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(tagsLabel)
-                        .addGap(39, 39, 39))))
+                            .addGroup(rightPanelLayout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(tagsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         rightPanelLayout.setVerticalGroup(
             rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,9 +195,9 @@ public class MainWindow extends JFrame{
                 .addComponent(tagsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tagsListScrollPane)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(removeTagFromListButton)
-                .addGap(19, 19, 19))
+                .addContainerGap())
         );
 
         leftPanel.setBackground(new java.awt.Color(204, 204, 255));
@@ -186,7 +205,7 @@ public class MainWindow extends JFrame{
 
         jScrollPane1.setViewportView(masterTagsTree);
 
-        lefMenu.addTab("Master Tagi", jScrollPane1);
+        lefMenu.addTab("Tagi macierzyste", jScrollPane1);
 
         jScrollPane2.setViewportView(userTagsTree);
 
@@ -206,7 +225,7 @@ public class MainWindow extends JFrame{
             }
         });
 
-        clearButton.setText("Wyczyść listę plików");
+        clearButton.setText("Wyczyść listy");
         clearButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearButtonActionPerformed(evt);
@@ -233,17 +252,22 @@ public class MainWindow extends JFrame{
                 .addComponent(lefMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 347, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(intersectionButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sumButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(clearButton)
-                .addGap(16, 16, 16))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         middlePanel.setBackground(new java.awt.Color(204, 204, 255));
         middlePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         searchTextField.setText("Znajdź");
+        searchTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchTextFieldMouseClicked(evt);
+            }
+        });
 
         tagSearchButton.setText("Wybrany tag");
         tagSearchButton.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -274,6 +298,11 @@ public class MainWindow extends JFrame{
         });
 
         newTagTextField.setText("Nazwa tagu...");
+        newTagTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                newTagTextFieldMouseClicked(evt);
+            }
+        });
 
         addTagToFiles.setText("Dodaj wybrany tag do plików");
         addTagToFiles.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -282,7 +311,9 @@ public class MainWindow extends JFrame{
             }
         });
 
+        lastTagTextField.setBackground(new java.awt.Color(220, 220, 240));
         lastTagTextField.setEditable(false);
+        lastTagTextField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         javax.swing.GroupLayout middlePanelLayout = new javax.swing.GroupLayout(middlePanel);
         middlePanel.setLayout(middlePanelLayout);
@@ -338,11 +369,12 @@ public class MainWindow extends JFrame{
             .addComponent(buttonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(leftPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(middlePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rightPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(rightPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -350,9 +382,9 @@ public class MainWindow extends JFrame{
                 .addComponent(buttonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(leftPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(rightPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(middlePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(middlePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(leftPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -377,7 +409,7 @@ public class MainWindow extends JFrame{
     private EditTagsWindow edittagswindow;
     private FileID imageToEdit; 
     private ImageHolder imageToEditHolder;
-    private Data data;
+    private static Data data;
     
     private class MyFile implements Comparable<MyFile> {
         private File file;
@@ -396,20 +428,32 @@ public class MainWindow extends JFrame{
         }
     }
     
-    MainWindow(){    
-        try {
-            data = Data.load();
+    MainWindow(){            
             this.tags = data.getTags();
             this.tagFilesStore = data.getTagFilesStore();
             this.backupsmanager = data.getBackupsManager();
+            this.setVisible(true);
+            initComponents();
+            
             masterTagsVector = new Vector<MyFile>();
             userTagsVector = new Vector<MyFile>();
             selectedTagsVector = new Vector<Tag<?>>();
-            selectedTags = new HashSet<Tag<?>>();
-        } catch (IOException ex) { }
-        initComponents();
-    }
+            selectedTags = new HashSet<Tag<?>>();   
+            displayMasterTagsTree(this.tags.getModelOfMasterTags());
+            displayUserTagsTree(this.tags.getModelOfUserTags());
+            masterTagsTree.setRootVisible(false);
+            userTagsTree.setRootVisible(false);
+            mainList.setListData(new Vector());
+            tagsList.setListData(new Vector());  
+            searchTextField.addActionListener(new searchTextFieldActionListener());
+            newTagTextField.addActionListener(new newTagTextFieldActionListener());            
+            new MasterTagsTreeSelectionListener(this);
+            new UserTagsTreeSelectionListener(this); 
+            mainList.addListSelectionListener(new MainListOneImageSelectionListener());
+            editImageButton.setEnabled(false);
 
+    }
+    
     private void editTagsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editTagsButtonActionPerformed
         edittagswindow = new EditTagsWindow(this.tags, this.tagFilesStore, this.backupsmanager, this.data);
         edittagswindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
@@ -477,25 +521,19 @@ public class MainWindow extends JFrame{
     }//GEN-LAST:event_clearButtonActionPerformed
 
     private void editImageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editImageButtonActionPerformed
-        BufferedImage im3; 
-            int [] ind = mainList.getSelectedIndices();
-            if(ind.length==1){
-                int indeks = ind[0];
-                MyFile myf = (MyFile)mainList.getModel().getElementAt(ind[0]);
-                imageToEdit = myf.fileID;
-                MasterTag mtag = tagFilesStore.getMasterTagFrom(imageToEdit);
-                PrimaryBackup primbackup = backupsmanager.getBackupManagerAssociatedWithMasterTag(mtag).getPrimaryBackup();         
-                ImageHolder ih;              
-                try {
-                    ih = primbackup.getImageToEdition(imageToEdit);
-                    editimagewindow  = new EditWindow(ih,new ImageChangedActionListener());
-                    editimagewindow.setVisible(true);                    
-                } catch (FileNotAvailableException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (OperationInterruptedException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }
+
+            MasterTag mtag = tagFilesStore.getMasterTagFrom(imageToEdit);
+            PrimaryBackup primbackup = backupsmanager.getBackupManagerAssociatedWithMasterTag(mtag).getPrimaryBackup();           
+            try {
+                imageToEditHolder = primbackup.getImageToEdition(imageToEdit);
+                editimagewindow  = new EditWindow(imageToEditHolder,new ImageChangedActionListener());
+                editimagewindow.setVisible(true);                      
+            } catch (FileNotAvailableException ex) {
+                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (OperationInterruptedException ex) {
+                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
             }
+
 
     }//GEN-LAST:event_editImageButtonActionPerformed
     private class ImageChangedActionListener implements ActionListener{
@@ -529,7 +567,6 @@ public class MainWindow extends JFrame{
         UserTag ut = tags.newUserTag(newTagTextField.getText());
         lastTag = ut;
         lastTagTextField.setText(lastTag.toString());
-        saveData();
       }
      else{
          JOptionPane.showMessageDialog(this, "Wybierz pliki które chcesz otagować.");
@@ -556,7 +593,6 @@ public class MainWindow extends JFrame{
         tagFilesStore.addUserTagToFile(lastTag, ((MyFile) mainList.getModel().getElementAt(ind[i])).fileID );
       }
       JOptionPane.showMessageDialog(this, "Tag został dodany do plików.");
-      saveData();
     }
     else{
         JOptionPane.showMessageDialog(this, "Wybierz tag.");
@@ -574,6 +610,28 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
     }
 }//GEN-LAST:event_removeTagFromListButtonMouseClicked
 
+  private void searchTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchTextFieldMouseClicked
+    if(searchTextField.getText().equals("Znajdź")) searchTextField.setText(null);
+  }//GEN-LAST:event_searchTextFieldMouseClicked
+
+  private void newTagTextFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newTagTextFieldMouseClicked
+    if(newTagTextField.getText().equals("Nazwa tagu...")) newTagTextField.setText(null);
+  }//GEN-LAST:event_newTagTextFieldMouseClicked
+
+  private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+    saveData();
+  }//GEN-LAST:event_formWindowClosed
+
+    private void resetDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetDataButtonActionPerformed
+        try {
+            JOptionPane.showMessageDialog(this, "Baza danych zostanie wyczyszczona przy zamknięciu aplikacji.\nWszystkie pliki nalezy usunąć z dysku ręcznie.");
+            this.data=data.reset();
+            data.save();
+        } catch (IOException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_resetDataButtonActionPerformed
+
     private void displayTagsOnTagsList(){
         tagsList.setListData(selectedTagsVector);
     }
@@ -583,15 +641,15 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
     private void displayMasterTagsTree(TreeModel mtt){
         this.masterTagsTree.setModel(mtt);
     }
-    private static class MasterTagsTreeSelectionListener implements TreeSelectionListener{
+    private static class MasterTagsTreeSelectionListener implements MouseListener{
         MainWindow window;
         MasterTagsTreeSelectionListener(MainWindow w){
             window=w;
             window.masterTagsTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);;
-            window.masterTagsTree.addTreeSelectionListener(this);      
+            window.masterTagsTree.addMouseListener(this);
         }
         @Override
-        public void valueChanged(TreeSelectionEvent e) {
+        public void mouseClicked(MouseEvent e) {
             MasterTag mtag = (MasterTag)window.masterTagsTree.getLastSelectedPathComponent();
             if(window.lastSelectedTree==true){
                 window.selectedTags.clear();
@@ -610,17 +668,25 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
                 }
             }
             window.displayTagsOnTagsList();
-        }  
+        }
+        @Override
+        public void mousePressed(MouseEvent e) {}
+        @Override
+        public void mouseReleased(MouseEvent e) {}
+        @Override
+        public void mouseEntered(MouseEvent e) {}
+        @Override
+        public void mouseExited(MouseEvent e) {}
     }
-    private static class UserTagsTreeSelectionListener implements TreeSelectionListener{
+    private static class UserTagsTreeSelectionListener implements MouseListener{
         MainWindow window;
         UserTagsTreeSelectionListener(MainWindow w){
             window=w;
             window.userTagsTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);;
-            window.userTagsTree.addTreeSelectionListener(this);      
+            window.userTagsTree.addMouseListener(this);      
         }
         @Override
-        public void valueChanged(TreeSelectionEvent e) {
+        public void mouseClicked(MouseEvent e) {
              IUserTagNode temptag = (IUserTagNode)window.userTagsTree.getLastSelectedPathComponent();
              if(temptag == null) return;
              UserTag utag = temptag.getTag();
@@ -643,9 +709,29 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
             window.lastTag = utag;
             window.lastTagTextField.setText(window.lastTag.toString());
             window.displayTagsOnTagsList();
-        }  
+        }
+        @Override
+        public void mousePressed(MouseEvent e) {}
+        @Override
+        public void mouseReleased(MouseEvent e) {}
+        @Override
+        public void mouseEntered(MouseEvent e) {}
+        @Override
+        public void mouseExited(MouseEvent e) {}
     } 
-
+    private static class ExitDataDialogActionListener implements ActionListener{
+        boolean disposed;
+        DataDialog datadialog;
+        ExitDataDialogActionListener(DataDialog d){
+            disposed=false;
+            this.datadialog=d;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            disposed=true;
+            datadialog.dispose();
+        }  
+    }
     private class searchTextFieldActionListener implements ActionListener{
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -667,15 +753,42 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
                 }
             }
     }
+    private class MainListOneImageSelectionListener implements ListSelectionListener{
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            
+            int[] ind = mainList.getSelectedIndices();
+            if(ind.length==1){
+                MyFile myf = (MyFile)mainList.getModel().getElementAt(ind[0]);
+                imageToEdit = myf.fileID;
+ 		String name = myf.file.getName();
+		StringBuilder temp = new StringBuilder();
+		// pobranie typu pliku
+                for (int i = name.length() - 1; name.charAt(i) != '.'; i--) temp.append(name.charAt(i));
+                temp.reverse();
+                String type = temp.toString();    
+                
+                if (type.equals("JPEG") || type.equals("PNG") 
+                            || type.equals("JPG")
+                            || type.equals("BMP") || type.equals("WBMP")
+                            || type.equals("GIF") || type.equals("jpeg") 
+                            || type.equals("png") || type.equals("jpg")
+                            || type.equals("bmp") || type.equals("wbmp")
+                            || type.equals("gif")){ 
+                    editImageButton.setEnabled(true);
+                }
+                else editImageButton.setEnabled(false);
+             }
+        }    
+    }
     private void saveData(){
         try {
-            data.save();
+            data.saveAndRelease();
         } catch (IOException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }             
     }
     public static void main(String args[]) {
- 
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /*
          * If Nimbus (introduced in Java SE 6) is not available, stay with the
@@ -700,21 +813,28 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
         }
         //</editor-fold>
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                
+            public void run() {    
+                try{
+                    data = Data.lockAndLoad();
                     final MainWindow window = new MainWindow();
-                    window.setVisible(true);       
-                    window.displayMasterTagsTree(window.tags.getModelOfMasterTags());
-                    window.displayUserTagsTree(window.tags.getModelOfUserTags());
-                    window.masterTagsTree.setRootVisible(false);
-                    window.userTagsTree.setRootVisible(false);
-                    window.mainList.setListData(new Vector());
-                    window.tagsList.setListData(new Vector());
-                    window.searchTextField.addActionListener(window.new searchTextFieldActionListener());
-                    window.newTagTextField.addActionListener(window.new newTagTextFieldActionListener());
-                    new MasterTagsTreeSelectionListener(window);
-                    new UserTagsTreeSelectionListener(window);  
-                    window.saveData();
+                } catch (IllegalStateException ex) {                   
+                    DataDialog datadialog=new DataDialog(data);
+                    ExitDataDialogActionListener eddal = new ExitDataDialogActionListener(datadialog);
+                    datadialog.pushListener(eddal);
+                    datadialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+                    datadialog.setVisible(true);
+                    
+                    if(eddal.disposed==false){
+                        try {
+                            data = Data.lockAndLoad();
+                            final MainWindow window = new MainWindow();
+                        } catch (IOException ex1) {
+                            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex1);
+                        }
+                    }
+                } catch (IOException ex){
+                    System.out.println("IOException...");
+                }
             }
         });
 
@@ -741,6 +861,7 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
     private javax.swing.JPanel middlePanel;
     private javax.swing.JTextField newTagTextField;
     private javax.swing.JButton removeTagFromListButton;
+    private javax.swing.JButton resetDataButton;
     private javax.swing.JPanel rightPanel;
     private javax.swing.JTextField searchTextField;
     private javax.swing.JButton sumButton;
@@ -750,4 +871,5 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
     private javax.swing.JScrollPane tagsListScrollPane;
     private javax.swing.JTree userTagsTree;
     // End of variables declaration//GEN-END:variables
+
 }

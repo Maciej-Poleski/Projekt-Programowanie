@@ -6,6 +6,7 @@ package manager.gui;
 
 
 import java.io.IOException;
+import javax.swing.JOptionPane;
 import manager.files.*;
 import manager.tags.*;
 import manager.core.*;
@@ -162,20 +163,18 @@ public class PicassaLoginWindow extends javax.swing.JDialog {
         // TODO add your handling code here:
         String login = LoginField.getText();
         String pass = PasswordField.getText();
-        
-        //PasswordField.setText(pass+"aaaa");
         try {
-			this.backupmanager.registerPicasaBackup(login, pass,null);
-		} catch (OperationInterruptedException e) {
-			// TODO komunikat ze juz istnieje backup w tej lokalizacji
-			e.printStackTrace();
-		}
-         try {
-            data.save();
-        } catch (IOException ex) {
-            System.out.println("Exception");
-        }       
-        this.dispose(); 
+            this.backupmanager.registerPicasaBackup(login, pass,null);
+            JOptionPane.showMessageDialog(this, "Backup został utworzony.");
+            try {
+                data.save();
+            } catch (IOException ex) {
+                System.out.println("Exception");
+            }                   
+	} catch (OperationInterruptedException e) {
+            JOptionPane.showMessageDialog(this, "Nieprawidłowe dane.");
+	}
+        finally { this.dispose(); } 
     }//GEN-LAST:event_loginButtonActionPerformed
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

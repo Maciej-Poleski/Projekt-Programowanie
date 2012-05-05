@@ -216,7 +216,7 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 		if (filesAndDirs == null) {
 			return;
 		}
-		
+
 		for (File file : filesAndDirs) {
 			if (file.isDirectory()) {
 
@@ -382,16 +382,22 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 		try {
 			File file = getFile(fileId);
 			String name = file.getName();
-			BufferedImage im = ImageIO.read(file);
 
 			StringBuilder temp = new StringBuilder();
 
-			// pobranie typy pliku
-			for (int i = name.length() - 1; name.charAt(i) != '.'; i--)
+			// pobranie typu pliku
+			for (int i = name.length() - 1; name.charAt(i) != '.'; i--) {
 				temp.append(name.charAt(i));
+			}
 			temp.reverse();
+			String type = temp.toString();
+                        
+			// sprawdzenie czy plik nadaje sie do edycji
 
-			return new ImageHolder(im, fileId, temp.toString());
+
+			BufferedImage im = ImageIO.read(file);
+
+			return new ImageHolder(im, fileId, type);
 		} catch (IOException e) {
 			throw new OperationInterruptedException(e);
 		}

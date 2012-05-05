@@ -15,6 +15,9 @@
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
   </SyntheticProperties>
+  <Events>
+    <EventHandler event="windowClosed" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosed"/>
+  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -250,14 +253,30 @@
     </Component>
     <Component class="javax.swing.JTextField" name="parentField">
       <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="f0" green="dc" red="dc" type="rgb"/>
+        </Property>
         <Property name="editable" type="boolean" value="false"/>
         <Property name="text" type="java.lang.String" value="Rodzic"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+            <EtchetBorder/>
+          </Border>
+        </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="childField">
       <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="f0" green="dc" red="dc" type="rgb"/>
+        </Property>
         <Property name="editable" type="boolean" value="false"/>
         <Property name="text" type="java.lang.String" value="Dziecko"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+            <EtchetBorder/>
+          </Border>
+        </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="parentLabel">
@@ -298,6 +317,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Nowa nazwa..."/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="newNameFieldMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator2">
     </Component>
@@ -307,6 +329,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Nazwa..."/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="newUserTagTextFieldMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="newUserTagButton">
       <Properties>
@@ -322,6 +347,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Nazwa rozszerzenia..."/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="extensionTextFieldMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="addExtensionButton">
       <Properties>

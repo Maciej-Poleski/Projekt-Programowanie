@@ -81,6 +81,11 @@ public class ImportWindow extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Import");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         buttonPanel.setBackground(new java.awt.Color(204, 204, 255));
         buttonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -136,13 +141,15 @@ public class ImportWindow extends javax.swing.JDialog {
             }
         });
 
-        pathField.setBackground(new java.awt.Color(250, 250, 250));
+        pathField.setBackground(new java.awt.Color(220, 220, 250));
         pathField.setEditable(false);
         pathField.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        pathField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        tagsField.setBackground(new java.awt.Color(250, 250, 250));
+        tagsField.setBackground(new java.awt.Color(220, 220, 250));
         tagsField.setEditable(false);
         tagsField.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        tagsField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel1.setText("lub stwórz nową spójną składową:");
 
@@ -195,7 +202,7 @@ public class ImportWindow extends javax.swing.JDialog {
                 .addComponent(tagsField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(importButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         pathField.getAccessibleContext().setAccessibleName("");
@@ -254,20 +261,10 @@ public class ImportWindow extends javax.swing.JDialog {
                 pb.addFile(masterTagToAdd, fileToAdd,false);
             }
             
-            /*
-             * SERIALIZACJA :
-             * 
-             */
-            data.save();
-            /*
-             * 
-             */
-            
-            
             fileToAdd = null;
             masterTagToAdd = null;
             pathField.setText(null);
-            tagsField.setText("Nie wybrano MasterTagu.");
+            tagsField.setText(null);
 
         } catch (OperationInterruptedException | java.io.FileNotFoundException ex) {
             java.util.logging.Logger.getLogger(ImportWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -276,9 +273,14 @@ public class ImportWindow extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_importButtonActionPerformed
 
-  /**
-   * @param args the command line arguments
-   */
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        try {
+            data.save();
+        } catch (IOException ex) {
+            Logger.getLogger(ImportWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }     
+    }//GEN-LAST:event_formWindowClosed
+
   public static void main(String args[]) {
     /*
      * Set the Nimbus look and feel
