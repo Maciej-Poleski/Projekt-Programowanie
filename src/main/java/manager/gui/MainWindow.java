@@ -394,7 +394,7 @@ public class MainWindow extends JFrame{
     private EditTagsWindow edittagswindow;
     private FileID imageToEdit; 
     private ImageHolder imageToEditHolder;
-    private Data data;
+    private static Data data;
     
     private class MyFile implements Comparable<MyFile> {
         private File file;
@@ -413,18 +413,31 @@ public class MainWindow extends JFrame{
         }
     }
     
-    MainWindow(){    
-        try {
-            data = Data.load();
+    MainWindow(){
+             
             this.tags = data.getTags();
+            if(tags==null)System.out.println("kurde...");
             this.tagFilesStore = data.getTagFilesStore();
             this.backupsmanager = data.getBackupsManager();
+            this.setVisible(true);
+            initComponents();
+            
             masterTagsVector = new Vector<MyFile>();
             userTagsVector = new Vector<MyFile>();
             selectedTagsVector = new Vector<Tag<?>>();
-            selectedTags = new HashSet<Tag<?>>();
-        } catch (IOException ex) { }
-        initComponents();
+            selectedTags = new HashSet<Tag<?>>();   
+            displayMasterTagsTree(this.tags.getModelOfMasterTags());
+            displayUserTagsTree(this.tags.getModelOfUserTags());
+            masterTagsTree.setRootVisible(false);
+            userTagsTree.setRootVisible(false);
+            mainList.setListData(new Vector());
+            tagsList.setListData(new Vector());  
+            searchTextField.addActionListener(new searchTextFieldActionListener());
+            newTagTextField.addActionListener(new newTagTextFieldActionListener());            
+            new MasterTagsTreeSelectionListener(this);
+            new UserTagsTreeSelectionListener(this); 
+            
+
     }
 
     private void editTagsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editTagsButtonActionPerformed
@@ -573,7 +586,6 @@ public class MainWindow extends JFrame{
         tagFilesStore.addUserTagToFile(lastTag, ((MyFile) mainList.getModel().getElementAt(ind[i])).fileID );
       }
       JOptionPane.showMessageDialog(this, "Tag został dodany do plików.");
-      saveData();
     }
     else{
         JOptionPane.showMessageDialog(this, "Wybierz tag.");
@@ -674,7 +686,19 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
             window.displayTagsOnTagsList();
         }  
     } 
-
+    private static class ExitDataDialogActionListener implements ActionListener{
+        boolean disposed;
+        DataDialog datadialog;
+        ExitDataDialogActionListener(DataDialog d){
+            disposed=false;
+            this.datadialog=d;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            disposed=true;
+            datadialog.dispose();
+        }  
+    }
     private class searchTextFieldActionListener implements ActionListener{
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -698,13 +722,12 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
     }
     private void saveData(){
         try {
-            data.save();
+            data.saveAndRelease();
         } catch (IOException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }             
     }
     public static void main(String args[]) {
- 
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /*
          * If Nimbus (introduced in Java SE 6) is not available, stay with the
@@ -729,20 +752,20 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
         }
         //</editor-fold>
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                
+            public void run() {    
+                try{
+                    data = Data.lockAndLoad();
                     final MainWindow window = new MainWindow();
-                    window.setVisible(true);       
-                    window.displayMasterTagsTree(window.tags.getModelOfMasterTags());
-                    window.displayUserTagsTree(window.tags.getModelOfUserTags());
-                    window.masterTagsTree.setRootVisible(false);
-                    window.userTagsTree.setRootVisible(false);
-                    window.mainList.setListData(new Vector());
-                    window.tagsList.setListData(new Vector());
-                    window.searchTextField.addActionListener(window.new searchTextFieldActionListener());
-                    window.newTagTextField.addActionListener(window.new newTagTextFieldActionListener());
-                    new MasterTagsTreeSelectionListener(window);
-                    new UserTagsTreeSelectionListener(window);  
+                } catch (IOException ex) {                   
+                    DataDialog datadialog=new DataDialog(data);
+                    ExitDataDialogActionListener eddal = new ExitDataDialogActionListener(datadialog);
+                    datadialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+                    datadialog.setVisible(true);
+                    datadialog.pushListener(eddal);
+                    if(eddal.disposed==false){
+                        final MainWindow window = new MainWindow();
+                    }
+                }
             }
         });
 
