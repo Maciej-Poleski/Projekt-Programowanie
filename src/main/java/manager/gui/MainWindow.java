@@ -559,7 +559,6 @@ public class MainWindow extends JFrame{
         UserTag ut = tags.newUserTag(newTagTextField.getText());
         lastTag = ut;
         lastTagTextField.setText(lastTag.toString());
-        saveData();  
       }
      else{
          JOptionPane.showMessageDialog(this, "Wybierz pliki które chcesz otagować.");
