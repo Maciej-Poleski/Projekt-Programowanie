@@ -312,7 +312,10 @@ public class BackupWindow extends javax.swing.JDialog {
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         try {
-            this.selectedSecondaryBackup.updateBackup();
+            if(selectedSecondaryBackup!=null){
+                this.selectedSecondaryBackup.updateBackup();
+                JOptionPane.showMessageDialog(this, "Backup został zaktualizowany.");
+            }
         } catch (OperationInterruptedException ex) {
             JOptionPane.showMessageDialog(this,"Musisz wybrać backup.","Error",JOptionPane.ERROR_MESSAGE);
         }

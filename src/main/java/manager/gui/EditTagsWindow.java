@@ -4,6 +4,8 @@
  */
 package manager.gui;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
@@ -65,15 +67,15 @@ public class EditTagsWindow extends javax.swing.JDialog {
         }
     }
 
-    private class UserTagsTreeSelectionListener implements TreeSelectionListener{
+    private class UserTagsTreeSelectionListener implements MouseListener{
 
         UserTagsTreeSelectionListener(){
             userTagsTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);;
-            userTagsTree.addTreeSelectionListener(this);      
+            userTagsTree.addMouseListener(this);      
         }
         @Override
-        public void valueChanged(TreeSelectionEvent e) {
-             Tags.IUserTagNode temptag = (Tags.IUserTagNode)userTagsTree.getLastSelectedPathComponent();
+        public void mouseClicked(MouseEvent e) {
+           Tags.IUserTagNode temptag = (Tags.IUserTagNode)userTagsTree.getLastSelectedPathComponent();
              if(temptag == null) return;
              UserTag utag = temptag.getTag();
              
@@ -84,8 +86,16 @@ public class EditTagsWindow extends javax.swing.JDialog {
             }else if(child==null){
                 child=utag;
                 childField.setText(utag.toString());
-            }
-        }  
+            }          
+        }
+        @Override
+        public void mousePressed(MouseEvent e) {}
+        @Override
+        public void mouseReleased(MouseEvent e) {}
+        @Override
+        public void mouseEntered(MouseEvent e) {}
+        @Override
+        public void mouseExited(MouseEvent e) {}
     } 
      private void displayExtensions(){
         Map<UserTag, Set<String>> mapa = tags.getUserTagAutoExtensionManager().getUserTagToAutoExtensionsMapping(); 

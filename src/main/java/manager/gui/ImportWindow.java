@@ -144,12 +144,12 @@ public class ImportWindow extends javax.swing.JDialog {
         pathField.setBackground(new java.awt.Color(220, 220, 250));
         pathField.setEditable(false);
         pathField.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        pathField.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pathField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         tagsField.setBackground(new java.awt.Color(220, 220, 250));
         tagsField.setEditable(false);
         tagsField.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        tagsField.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        tagsField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel1.setText("lub stwórz nową spójną składową:");
 
