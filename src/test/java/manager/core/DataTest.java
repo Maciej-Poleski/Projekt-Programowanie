@@ -15,35 +15,25 @@ import static junit.framework.Assert.*;
  * Time: 13:50
  */
 public class DataTest {
-    private Data data;
-
-    @After
-    public void tearDown() throws Exception {
-        File database = new File("database");
-        database.deleteOnExit();
-    }
-
-    @Before
-    public void setUp() throws Exception {
+    @Test
+    public void testSaveAndLoad() throws Exception {
+        Data data;
         File database = new File("database");
         database.delete();
-        data = Data.load();
+        Data.breakLock();
+        data = Data.lockAndLoad();
+        assertTrue(Data.isLocked());
         MasterTag masterTag = data.getTags().newMasterTag("masterTag");
         MasterTag child = data.getTags().newMasterTag(masterTag, "child");
         data.getTags().newUserTag("userTag");
-    }
-
-    @Test
-    public void testSaveAndLoad() throws Exception {
-        data.save();
-        assertTrue(Data.isLoaded());
-        Data.setLoaded(false);
-        assertFalse(Data.isLoaded());
-        Data data = Data.load();
+        data.saveAndRelease();
+        data = Data.lockAndLoad();
         assertEquals(data.getTags().getMasterTagHeads().size(), 1);
         assertEquals(data.getTags().getMasterTagHeads().toArray()[0].toString(), "masterTag");
         assertEquals(data.getTags().getUserTagHeads().size(), 1);
         assertEquals(data.getTags().getUserTagHeads().toArray()[0].toString(), "userTag");
         assertEquals(((MasterTag) data.getTags().getMasterTagHeads().toArray()[0]).getChildren().get(0).toString(), "child");
+        data.saveAndRelease();
+        database.delete();
     }
 }

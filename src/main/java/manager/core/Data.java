@@ -6,6 +6,7 @@ import manager.tags.Tags;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.util.logging.Logger;
 
 /**
@@ -23,7 +24,6 @@ public final class Data {
 
     private static final File DATABASE_FILE = new File("database");
     private static final File DATABASE_LOCK = new File(".database_lock");
-    private static boolean loaded = false;
     private boolean destroyed = false;
 
     private Data(Tags tags, TagFilesStore tagFilesStore, BackupsManager backupsManager) {
@@ -36,15 +36,9 @@ public final class Data {
      * Ładuje bazę danych aplikacji i zwraca ją. Tą funkcje wolno wywołać tylko jeden raz.
      *
      * @return Baza danych gotowa do użycia
-     * @throws IOException           Jeżeli wystąpi błąd IO
-     * @throws IllegalStateException Jeżeli to nie jest pierwsze wywołanie
+     * @throws IOException Jeżeli wystąpi błąd IO
      */
-    @Deprecated
-    public static Data load() throws IOException {
-        if (loaded) {
-            throw new IllegalStateException("Tą funkcje wolno uruchomić tylko raz");
-        }
-        loaded = true;
+    private static Data load() throws IOException {
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(DATABASE_FILE));
             TagFilesStore tagFilesStore1 = (TagFilesStore) objectInputStream.readObject();
@@ -69,10 +63,9 @@ public final class Data {
      * @throws IllegalStateException Jeżeli baza danych jest zablokowana
      */
     public static Data lockAndLoad() throws IOException {
-        if (DATABASE_LOCK.createNewFile()) {
+        if (!DATABASE_LOCK.createNewFile()) {
             throw new IllegalStateException("Baza danych jest zablokowana");
         }
-        loaded = false;
         return load();
     }
 
@@ -85,7 +78,6 @@ public final class Data {
      */
     public static Data reset() throws IOException {
         DATABASE_LOCK.createNewFile();
-        loaded = true;
         Tags tags = new Tags();
         BackupsManager backupsManager = new BackupsManager(tags);
         return new Data(tags, tags.getStore(), backupsManager);
@@ -98,7 +90,10 @@ public final class Data {
      * @throws IOException Jeżeli wystąpi błąd IO
      */
     public static void breakLock() throws IOException {
-        Files.delete(DATABASE_LOCK.toPath());
+        try {
+            Files.delete(DATABASE_LOCK.toPath());
+        } catch (NoSuchFileException ignored) {
+        }
     }
 
     /**
@@ -125,16 +120,6 @@ public final class Data {
         save();
         breakLock();
         destroyed = true;
-    }
-
-    @Deprecated
-    static boolean isLoaded() {
-        return loaded;
-    }
-
-    @Deprecated
-    static void setLoaded(boolean loaded) {
-        Data.loaded = loaded;
     }
 
     /**
