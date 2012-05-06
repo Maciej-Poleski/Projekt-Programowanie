@@ -35,6 +35,28 @@ public class BackupManager implements Serializable {
 	}
 
 	/**
+	 * Removes backup given as function parameter. All files at backup location
+	 * are removed.
+	 * 
+	 * @param backup
+	 *            backup to be removed
+	 * @throws OperationInterruptedException
+	 *             when provided backup is not registered with this
+	 *             BackupManager or files at backup location could't have been
+	 *             deleted.
+	 */
+	public void removeBackup(SecondaryBackup backup)
+			throws OperationInterruptedException {
+
+		if (!backups.remove(backup)) {
+			throw new OperationInterruptedException("No such backup exists");
+		}
+
+		backup.delete();
+
+	}
+
+	/**
 	 * Allow registration of additional backup. You can provide any backup
 	 * implementation extending SecondaryBackup abstract class.
 	 * 
@@ -64,11 +86,12 @@ public class BackupManager implements Serializable {
 		try {
 			PicasaService ps = new PicasaService(picasaLogin);
 			ps.authenticate(picasaPassword);
-			
+
 		} catch (PicasaAuthenticationException e) {
-			throw new OperationInterruptedException("Incorrect login or password", e);
+			throw new OperationInterruptedException(
+					"Incorrect login or password", e);
 		}
-		
+
 		for (SecondaryBackup b : backups) {
 			if (b instanceof PicasaBackupImpl) {
 				PicasaBackupImpl tmp = (PicasaBackupImpl) b;
@@ -78,7 +101,7 @@ public class BackupManager implements Serializable {
 				}
 			}
 		}
-		
+
 		SecondaryBackup sb = new PicasaBackupImpl(primaryBackup, picasaLogin,
 				picasaPassword, downloadLocation);
 

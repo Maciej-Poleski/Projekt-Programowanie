@@ -14,6 +14,7 @@ import manager.files.OperationInterruptedException;
 import manager.files.backup.*;
 import manager.editor.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -22,6 +23,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeSelectionModel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.IIOException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -154,11 +156,10 @@ public class MainWindow extends JFrame{
                 .addContainerGap()
                 .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(importButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(editTagsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(backupButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(editImageButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(resetDataButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(backupButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editImageButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(resetDataButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editTagsButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(clearDataButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -538,18 +539,49 @@ public class MainWindow extends JFrame{
     private void editImageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editImageButtonActionPerformed
 
             MasterTag mtag = tagFilesStore.getMasterTagFrom(imageToEdit);
-            PrimaryBackup primbackup = backupsmanager.getBackupManagerAssociatedWithMasterTag(mtag).getPrimaryBackup();           
+            BackupManager bmanager = backupsmanager.getBackupManagerAssociatedWithMasterTag(mtag);
+            PrimaryBackup primbackup = bmanager.getPrimaryBackup();           
             try {
                 imageToEditHolder = primbackup.getImageToEdition(imageToEdit);
                 editimagewindow  = new EditWindow(imageToEditHolder,new ImageChangedActionListener());
-                editimagewindow.setVisible(true);                      
+                editimagewindow.setVisible(true);
             } catch (FileNotAvailableException ex) {
                 Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (OperationInterruptedException ex) {
-                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-
+            catch (OperationInterruptedException ex) {
+                Set<SecondaryBackup> sbackups = bmanager.getSecondaryBackups();
+                boolean retrieved=false;
+                for(SecondaryBackup i : sbackups){
+                    try {
+                        File x = i.getFile(imageToEdit);
+                        primbackup.addFile(mtag, x, false);
+                        retrieved=true;
+                        break;
+                    } catch (FileNotFoundException ex1) {
+                         Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex1);
+                    } catch (FileNotAvailableException ex1) {
+                       // Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex1);
+                    } catch (OperationInterruptedException ex1) {
+                       // Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                }
+                if(!retrieved){
+                    JOptionPane.showMessageDialog(this,"Wybrany plik został usunięty lub jest uszkodzony,a próba "
+                            + "\njego odzyskania przy użyciu kopii zapasowej nie powiodła się."
+                            + "\nNie można kontynuować","Error",JOptionPane.ERROR_MESSAGE);
+                }else{
+                    try {
+                        imageToEditHolder = primbackup.getImageToEdition(imageToEdit);
+                        editimagewindow  = new EditWindow(imageToEditHolder,new ImageChangedActionListener());
+                        editimagewindow.setVisible(true);
+                    } catch (FileNotAvailableException ex1) {
+                        Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex1);
+                    } catch (OperationInterruptedException ex1) {
+                        Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                }
+            }
+            
     }//GEN-LAST:event_editImageButtonActionPerformed
     private class ImageChangedActionListener implements ActionListener{
         @Override
@@ -559,6 +591,7 @@ public class MainWindow extends JFrame{
                 PrimaryBackup primbackup = backupsmanager.getBackupManagerAssociatedWithMasterTag(mtag).getPrimaryBackup();         
                 ImageHolder changedImageHolder = editimagewindow.getImage();  
                 primbackup.saveEditedImage(changedImageHolder);
+                changedImageHolder = null;
             } catch (OperationInterruptedException ex) {
             } catch (FileNotAvailableException ex) { }
         }
