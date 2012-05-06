@@ -21,6 +21,7 @@ import manager.files.OperationInterruptedException;
 
 /**
  * @author Karol Banys
+ * @author Piotr Kolacz
  * 
  */
 final class FileSystemBackupImpl extends SecondaryBackup {

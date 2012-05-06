@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 public class BackupsManagerTest {
 
 	@Test
-	public void getBackupManager() {
+	public void getBackupManager() throws OperationInterruptedException {
 
 		MasterTag tag1 = mock(MasterTag.class);
 		MasterTag tag2 = mock(MasterTag.class);
@@ -68,7 +68,7 @@ public class BackupsManagerTest {
 	}
 	
 	@Test
-	public void getAllBackupManagers(){
+	public void getAllBackupManagers() throws OperationInterruptedException{
 
 		MasterTag tag1 = mock(MasterTag.class);
 		MasterTag tag2 = mock(MasterTag.class);
