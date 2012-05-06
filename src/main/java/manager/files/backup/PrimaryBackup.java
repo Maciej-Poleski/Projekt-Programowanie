@@ -69,4 +69,5 @@ public interface PrimaryBackup extends Backup {
 	 */
 	public void saveEditedImage(ImageHolder image)
 			throws FileNotAvailableException, OperationInterruptedException;
+
 }
