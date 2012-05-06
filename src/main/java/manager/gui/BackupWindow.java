@@ -267,11 +267,12 @@ public class BackupWindow extends javax.swing.JDialog {
         int returnVal = fc.showOpenDialog(this);
         BackupManager b;
         this.backupLocation = fc.getSelectedFile();
+        
         try
         {
             b=this.backupsmanager.getBackupManagerAssociatedWithMasterTag(this.selectedMasterTag);
-            JOptionPane.showMessageDialog(this,"Backup został utworzony. "+this.selectedMasterTag,"Info",JOptionPane.INFORMATION_MESSAGE);
             b.registerFileSystemBackup(this.backupLocation);
+            JOptionPane.showMessageDialog(this,"Backup został utworzony. "+this.selectedMasterTag,"Info",JOptionPane.INFORMATION_MESSAGE);
             if(checkBox.isSelected()){
                 try {
                     this.selectedSecondaryBackup.updateBackup();
@@ -279,7 +280,6 @@ public class BackupWindow extends javax.swing.JDialog {
                     Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
                 } 
             }
-       
         }
         catch(OperationInterruptedException exp) //sprawdzic dlaczego
         {
@@ -291,7 +291,7 @@ public class BackupWindow extends javax.swing.JDialog {
         }
         catch(NullPointerException exp3) //sprawdzic dlaczego
         {
-            JOptionPane.showMessageDialog(this,"Error NPE","Error",JOptionPane.ERROR_MESSAGE);
+           // JOptionPane.showMessageDialog(this,"Musisz wybrać katalog","Error",JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_newBackupButtonActionPerformed
 

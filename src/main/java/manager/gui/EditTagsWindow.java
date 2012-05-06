@@ -395,7 +395,11 @@ public class EditTagsWindow extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void removeParentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeParentButtonActionPerformed
-        if(parent!=null)tags.removeTag(parent);
+        if(parent!=null){
+            tags.removeTag(parent);
+            parentField.setText(null);
+            newNameField.setText(null);
+        }
         else JOptionPane.showMessageDialog(this, "Musisz wybrać Tag.");
     }//GEN-LAST:event_removeParentButtonActionPerformed
 
