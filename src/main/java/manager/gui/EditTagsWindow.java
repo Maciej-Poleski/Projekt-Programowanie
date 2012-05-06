@@ -399,6 +399,7 @@ public class EditTagsWindow extends javax.swing.JDialog {
             tags.removeTag(parent);
             parentField.setText(null);
             newNameField.setText(null);
+            parent=null;
         }
         else JOptionPane.showMessageDialog(this, "Musisz wybrać Tag.");
     }//GEN-LAST:event_removeParentButtonActionPerformed
