@@ -74,8 +74,19 @@ public class BackupsManager implements Serializable {
 	 * 
 	 * @param tag
 	 * @param manager
+	 * @throws OperationInterruptedException when already exists backup at given location
 	 */
-	public void registerBackupManager(MasterTag tag, BackupManager manager) {
+	public void registerBackupManager(MasterTag tag, BackupManager manager)
+			throws OperationInterruptedException {
+
+		String backupLocation = ((PrimaryBackupImpl) manager.getPrimaryBackup()).getBackupLocation();
+		
+		for (BackupManager bc : backupManagers.values()){
+			if (((PrimaryBackupImpl) bc.getPrimaryBackup()).getBackupLocation().equals(backupLocation)){
+				throw new OperationInterruptedException("That directory is already head of other PrimaryBackup");
+			}
+		}
+		
 		backupManagers.put(tag, manager);
 	}
 
@@ -97,7 +108,7 @@ public class BackupsManager implements Serializable {
 	 */
 	public void removeFiles(Set<FileID> filesToDelete)
 			throws FileNotAvailableException, OperationInterruptedException {
-	
+
 		for (BackupManager bm : backupManagers.values()) {
 			Set<FileID> filesToDeleteFromThatBackup = new HashSet<>(
 					filesToDelete);

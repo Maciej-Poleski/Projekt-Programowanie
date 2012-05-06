@@ -34,7 +34,9 @@ import manager.tags.Tags.IUserTagNode;
  * @author Jakub Brzeski
  * @author Jakub Czarnowicz
  */
-public class MainWindow extends JFrame{        // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+public class MainWindow extends JFrame{
+
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         buttonPanel = new javax.swing.JPanel();
@@ -43,6 +45,7 @@ public class MainWindow extends JFrame{        // <editor-fold defaultstate="col
         importButton = new javax.swing.JButton();
         editImageButton = new javax.swing.JButton();
         resetDataButton = new javax.swing.JButton();
+        clearDataButton = new javax.swing.JCheckBox();
         rightPanel = new javax.swing.JPanel();
         tagsLabel = new javax.swing.JLabel();
         tagsListScrollPane = new javax.swing.JScrollPane();
@@ -118,6 +121,14 @@ public class MainWindow extends JFrame{        // <editor-fold defaultstate="col
             }
         });
 
+        clearDataButton.setBackground(new java.awt.Color(204, 204, 255));
+        clearDataButton.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        clearDataButton.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                clearDataButtonStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout buttonPanelLayout = new javax.swing.GroupLayout(buttonPanel);
         buttonPanel.setLayout(buttonPanelLayout);
         buttonPanelLayout.setHorizontalGroup(
@@ -131,21 +142,24 @@ public class MainWindow extends JFrame{        // <editor-fold defaultstate="col
                 .addComponent(backupButton)
                 .addGap(18, 18, 18)
                 .addComponent(editImageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(resetDataButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(clearDataButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(14, 14, 14))
         );
         buttonPanelLayout.setVerticalGroup(
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(buttonPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(importButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(importButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(editTagsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(backupButton)
-                        .addComponent(editImageButton)
-                        .addComponent(resetDataButton)))
+                        .addComponent(backupButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(editImageButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(resetDataButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(clearDataButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -451,6 +465,7 @@ public class MainWindow extends JFrame{        // <editor-fold defaultstate="col
             new UserTagsTreeSelectionListener(this); 
             mainList.addListSelectionListener(new MainListOneImageSelectionListener());
             editImageButton.setEnabled(false);
+            resetDataButton.setEnabled(false);
 
     }
     
@@ -569,7 +584,7 @@ public class MainWindow extends JFrame{        // <editor-fold defaultstate="col
         lastTagTextField.setText(lastTag.toString());
       }
      else{
-         JOptionPane.showMessageDialog(this, "Wybierz pliki które chcesz otagować.");
+         JOptionPane.showMessageDialog(this, "Wpisz nazwę tagu.");
      }
   }//GEN-LAST:event_createNewTagMouseClicked
 
@@ -592,7 +607,8 @@ public class MainWindow extends JFrame{        // <editor-fold defaultstate="col
       for(int i = 0; i < ind.length; i++) {
         tagFilesStore.addUserTagToFile(lastTag, ((MyFile) mainList.getModel().getElementAt(ind[i])).fileID );
       }
-      JOptionPane.showMessageDialog(this, "Tag został dodany do plików.");
+      if(ind.length>0)JOptionPane.showMessageDialog(this, "Tag został dodany do plików.");
+      else JOptionPane.showMessageDialog(this, "Nie zaznaczono plików.");
     }
     else{
         JOptionPane.showMessageDialog(this, "Wybierz tag.");
@@ -631,6 +647,12 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_resetDataButtonActionPerformed
+
+private void clearDataButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_clearDataButtonStateChanged
+    if(clearDataButton.isSelected()==true){
+        resetDataButton.setEnabled(true);
+    } else resetDataButton.setEnabled(false);
+}//GEN-LAST:event_clearDataButtonStateChanged
 
     private void displayTagsOnTagsList(){
         tagsList.setListData(selectedTagsVector);
@@ -844,6 +866,7 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
     private javax.swing.JButton backupButton;
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton clearButton;
+    private javax.swing.JCheckBox clearDataButton;
     private javax.swing.JButton createNewTag;
     private javax.swing.JButton editImageButton;
     private javax.swing.JButton editTagsButton;

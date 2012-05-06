@@ -24,7 +24,7 @@ import javax.imageio.ImageIO;
 /**
  * @author Jakub Cieśla
  * @author Marcin Ziemiński
- * @version
+ * @author Piotr Kolacz 
  * 
  */
 public final class PrimaryBackupImpl implements PrimaryBackup {
@@ -47,6 +47,10 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 		backupPath = path;
 		tempTags = tags;
 		store = tempTags.getStore();
+	}
+	
+	String getBackupLocation(){
+		return backupPath;
 	}
 
 	/**
