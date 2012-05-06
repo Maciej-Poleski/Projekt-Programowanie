@@ -54,4 +54,5 @@ public abstract class SecondaryBackup implements Backup {
 	 */
 	public abstract Map<String, FileID> getListOfAdditionalFiles();
 
+	protected abstract void delete() throws OperationInterruptedException;
 }

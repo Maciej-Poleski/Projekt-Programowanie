@@ -97,7 +97,8 @@ final class PicasaBackupImpl extends SecondaryBackup {
 			for (FileID f : files) {
 				File file = originalBackup.getFile(f);
 
-				PicasaAlbumMediaType type = PicasaAlbumMediaType.getPicasaAlbumMediaTypeByFileName(file.getName());
+				PicasaAlbumMediaType type = PicasaAlbumMediaType
+						.getPicasaAlbumMediaTypeByFileName(file.getName());
 
 				PicasaPhoto ph = album.getPicasaPhotoUploader(file, type)
 						.upload();
@@ -136,6 +137,26 @@ final class PicasaBackupImpl extends SecondaryBackup {
 	 */
 	public String getUserName() {
 		return userName;
+	}
+
+	@Override
+	protected void delete() throws OperationInterruptedException {
+		PicasaService ps = new PicasaService(userName);
+		try {
+
+			ps.authenticate(password);
+			List<PicasaAlbum> albums = ps.getAllAlbumsList();
+			for (PicasaAlbum a : albums) {
+				a.delete();
+			}
+
+		} catch (PicasaAuthenticationException
+				| PicasaInformationCollectionException
+				| PicasaDataModificationException e) {
+
+			throw new OperationInterruptedException("Cannot delete files at backup location", e);
+		}
+
 	}
 
 }

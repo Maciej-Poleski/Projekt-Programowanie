@@ -199,4 +199,11 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 		return builder.toString();
 	}
 
+	@Override
+	protected void delete() throws OperationInterruptedException {
+		if (location.exists()) {
+			deleteInner(location);
+		}
+	}
+
 }
