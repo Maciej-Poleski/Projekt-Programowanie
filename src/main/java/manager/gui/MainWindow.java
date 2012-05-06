@@ -554,11 +554,9 @@ public class MainWindow extends JFrame{
                 for(SecondaryBackup i : sbackups){
                     try {
                         File x = i.getFile(imageToEdit);
-                        primbackup.addFile(mtag, x, false);
+                        primbackup.addDeletedFile(imageToEdit, x); //addFile(mtag, x, false);
                         retrieved=true;
                         break;
-                    } catch (FileNotFoundException ex1) {
-                         Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex1);
                     } catch (FileNotAvailableException ex1) {
                        // Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex1);
                     } catch (OperationInterruptedException ex1) {
@@ -811,7 +809,7 @@ private void clearDataButtonStateChanged(javax.swing.event.ChangeEvent evt) {//G
     private class MainListOneImageSelectionListener implements ListSelectionListener{
         @Override
         public void valueChanged(ListSelectionEvent e) {
-            
+            editImageButton.setEnabled(false);
             int[] ind = mainList.getSelectedIndices();
             if(ind.length==1){
                 MyFile myf = (MyFile)mainList.getModel().getElementAt(ind[0]);
