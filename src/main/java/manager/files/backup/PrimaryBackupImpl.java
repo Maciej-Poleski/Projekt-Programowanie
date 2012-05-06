@@ -24,7 +24,7 @@ import javax.imageio.ImageIO;
 /**
  * @author Jakub Cieśla
  * @author Marcin Ziemiński
- * @author Piotr Kolacz 
+ * @author Piotr Kolacz
  * 
  */
 public final class PrimaryBackupImpl implements PrimaryBackup {
@@ -48,8 +48,8 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 		tempTags = tags;
 		store = tempTags.getStore();
 	}
-	
-	String getBackupLocation(){
+
+	String getBackupLocation() {
 		return backupPath;
 	}
 
@@ -395,9 +395,8 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 			}
 			temp.reverse();
 			String type = temp.toString();
-                        
-			// sprawdzenie czy plik nadaje sie do edycji
 
+			// sprawdzenie czy plik nadaje sie do edycji
 
 			BufferedImage im = ImageIO.read(file);
 
@@ -438,6 +437,26 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 		} catch (IOException e) {
 			throw new OperationInterruptedException(e);
 		}
+	}
+
+	@Override
+	public void addDeletedFile(FileID fileID, File file) throws OperationInterruptedException {
+
+		try {
+			File real = getFile(fileID);
+			FileChannel srcChannel = new FileInputStream(file).getChannel();
+
+			FileChannel dstChannel = new FileOutputStream(real).getChannel();
+
+			dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
+
+			srcChannel.close();
+			dstChannel.close();
+
+		} catch (FileNotAvailableException | IOException e) {
+			throw new OperationInterruptedException(e);
+		}
+
 	}
 
 }
