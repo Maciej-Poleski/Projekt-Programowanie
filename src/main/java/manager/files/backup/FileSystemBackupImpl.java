@@ -29,7 +29,6 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 
 	private Map<FileID, File> filesInBackup = new HashMap<FileID, File>();
 	private final File location;
-	
 
 	private Date dateOfLastModification = new Date();
 
@@ -64,7 +63,7 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 	public File getLocation() {
 		return location;
 	}
-	
+
 	/**
 	 * Zwraca dla danego ID plik który go zawiera.
 	 * 
@@ -159,7 +158,12 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 	public void updateBackup() throws OperationInterruptedException {
 
 		filesInBackup = new HashMap<FileID, File>();
-		deleteInner(location);
+		if (location.exists()) {
+			deleteInner(location);
+		} else {
+			location.mkdir();
+		}
+
 		Set<FileID> listOfFileID = super.originalBackup
 				.getListOfAvailableFiles();
 		for (FileID fileId : listOfFileID) {
@@ -194,7 +198,5 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	
 
 }
