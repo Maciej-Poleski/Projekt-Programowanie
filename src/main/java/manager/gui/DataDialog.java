@@ -88,7 +88,6 @@ public class DataDialog extends JDialog {
     }//GEN-LAST:event_removeLockButtonActionPerformed
 
     void pushListener(ActionListener al){
-        System.out.println("dupa");
         this.exitButton.addActionListener(al);
     }
     public static void main(String args[]) {
