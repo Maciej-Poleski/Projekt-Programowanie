@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import manager.files.FileID;
@@ -74,19 +75,31 @@ public class BackupsManager implements Serializable {
 	 * 
 	 * @param tag
 	 * @param manager
-	 * @throws OperationInterruptedException when already exists backup at given location
+	 * @throws OperationInterruptedException
+	 *             when already exists backup at given location
 	 */
 	public void registerBackupManager(MasterTag tag, BackupManager manager)
 			throws OperationInterruptedException {
 
-		String backupLocation = ((PrimaryBackupImpl) manager.getPrimaryBackup()).getBackupLocation();
-		
-		for (BackupManager bc : backupManagers.values()){
-			if (((PrimaryBackupImpl) bc.getPrimaryBackup()).getBackupLocation().equals(backupLocation)){
-				throw new OperationInterruptedException("That directory is already head of other PrimaryBackup");
+		String backupLocation = ((PrimaryBackupImpl) manager.getPrimaryBackup())
+				.getBackupLocation();
+
+		for (Entry<MasterTag, BackupManager> bc : backupManagers.entrySet()) {
+			if (((PrimaryBackupImpl) bc.getValue().getPrimaryBackup())
+					.getBackupLocation().equals(backupLocation)) {
+				
+//				System.out.println(((PrimaryBackupImpl) bc.getValue()
+//						.getPrimaryBackup()).getBackupLocation());
+//				System.out.println(backupLocation);
+				
+				if (tag.toString().equals(bc.getKey().toString())) {
+					
+					throw new OperationInterruptedException(
+							"That directory is already head of other PrimaryBackup");
+				}
 			}
 		}
-		
+
 		backupManagers.put(tag, manager);
 	}
 

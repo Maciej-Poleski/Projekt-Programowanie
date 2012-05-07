@@ -370,6 +370,7 @@ public class ImportWindow extends javax.swing.JDialog {
                                     primaryBackup.addFile(mTag, fileToAdd, true);
                                 } catch (OperationInterruptedException ex){
                                     tags.removeTag(mTag);    
+                                    ex.printStackTrace();
                                 }
 				
 			} else {
