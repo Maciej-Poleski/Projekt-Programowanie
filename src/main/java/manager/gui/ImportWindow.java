@@ -338,7 +338,7 @@ public class ImportWindow extends javax.swing.JDialog {
 		masterTagToAdd = null;
 		tagsField.setText("<< NOWA SKŁADOWA >>");
 		JOptionPane.showMessageDialog(this,
-				"Teraz kliknij IMPORTUJ. Nowa składowa będzie utworzona.");
+				"Teraz kliknij IMPORTUJ.");
 	}// GEN-LAST:event_newMasterTagButtonActionPerformed
 
 	private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_importButtonActionPerformed
