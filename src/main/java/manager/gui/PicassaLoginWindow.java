@@ -180,7 +180,7 @@ public class PicassaLoginWindow extends javax.swing.JDialog {
                 System.out.println("Exception");
             }                   
 	} catch (OperationInterruptedException e) {
-            JOptionPane.showMessageDialog(this, "Nieprawidłowe dane.");
+            JOptionPane.showMessageDialog(this, "Nieprawidłowe dane lub juz istnieje backup we wskazanej lokalizacji.");
 	}
         finally { this.dispose(); } 
     }//GEN-LAST:event_loginButtonActionPerformed

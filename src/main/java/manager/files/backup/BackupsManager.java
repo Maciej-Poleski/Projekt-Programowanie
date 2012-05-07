@@ -87,13 +87,9 @@ public class BackupsManager implements Serializable {
 		for (Entry<MasterTag, BackupManager> bc : backupManagers.entrySet()) {
 			if (((PrimaryBackupImpl) bc.getValue().getPrimaryBackup())
 					.getBackupLocation().equals(backupLocation)) {
-				
-//				System.out.println(((PrimaryBackupImpl) bc.getValue()
-//						.getPrimaryBackup()).getBackupLocation());
-//				System.out.println(backupLocation);
-				
+
 				if (tag.toString().equals(bc.getKey().toString())) {
-					
+
 					throw new OperationInterruptedException(
 							"That directory is already head of other PrimaryBackup");
 				}
@@ -101,6 +97,7 @@ public class BackupsManager implements Serializable {
 		}
 
 		backupManagers.put(tag, manager);
+		manager.setAllBackupManagersReference(backupManagers);
 	}
 
 	/**

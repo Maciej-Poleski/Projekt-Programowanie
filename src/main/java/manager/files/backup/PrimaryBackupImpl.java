@@ -13,6 +13,8 @@ import manager.tags.UserTagAutoProvider;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.HashMap;
@@ -135,6 +137,11 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 			throw new FileNotFoundException(file.getPath());
 		}
 
+		Path path = FileSystems.getDefault().getPath(file.getPath());
+		if (Files.isSymbolicLink(path)){
+			return;
+		}
+		
 		if (file.isFile()) { // Kopiuje zwykły plik
 			try {
 				Path end = tempTags.getPathFromMasterTag(tag);
@@ -222,6 +229,12 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 		}
 
 		for (File file : filesAndDirs) {
+			
+			Path path = FileSystems.getDefault().getPath(file.getPath());
+			if (Files.isSymbolicLink(path)){
+				continue;
+			}
+			
 			if (file.isDirectory()) {
 
 				File dest = new File(destination.toString() + File.separator
@@ -402,6 +415,7 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 
 			return new ImageHolder(im, fileId, type);
 		} catch (IOException e) {
+
 			throw new OperationInterruptedException(e);
 		}
 	}
@@ -440,10 +454,13 @@ public final class PrimaryBackupImpl implements PrimaryBackup {
 	}
 
 	@Override
-	public void addDeletedFile(FileID fileID, File file) throws OperationInterruptedException {
+	public void addDeletedFile(FileID fileID, File file)
+			throws OperationInterruptedException {
 
 		try {
 			File real = getFile(fileID);
+			System.out.println(real.getPath());
+			System.out.println(file.getPath());
 			FileChannel srcChannel = new FileInputStream(file).getChannel();
 
 			FileChannel dstChannel = new FileOutputStream(real).getChannel();
