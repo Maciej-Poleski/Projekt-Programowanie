@@ -278,7 +278,7 @@ public class BackupWindow extends javax.swing.JDialog {
                 try {
                     sbackup.updateBackup();
                 } catch (OperationInterruptedException ex) {
-                    Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this,"Nie udało się zaktualizować backupu.","Error",JOptionPane.ERROR_MESSAGE);
                 } 
             }
         }
@@ -331,7 +331,7 @@ public class BackupWindow extends javax.swing.JDialog {
         try {
             data.save();
         } catch (IOException ex) {
-            Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Nie udało się zapisać danych.","Error",JOptionPane.ERROR_MESSAGE);
         }          
     }//GEN-LAST:event_formWindowClosed
 
@@ -347,7 +347,7 @@ public class BackupWindow extends javax.swing.JDialog {
                     selectedSecondaryBackup=null;
                     backupsList.setListData(secondaryBackupVector);       
                 } catch (OperationInterruptedException ex) {
-                    Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
+                   JOptionPane.showMessageDialog(this,"Nie udało się usunąć backupu.","Error",JOptionPane.ERROR_MESSAGE);
                 }
                 JOptionPane.showMessageDialog(this, "Backup został usunięty");
             }
