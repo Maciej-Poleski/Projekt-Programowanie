@@ -300,11 +300,11 @@ public class BackupWindow extends javax.swing.JDialog {
     private void picassaBackupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_picassaBackupButtonActionPerformed
         try
         {
-        PicassaLoginWindow picasawindow = new PicassaLoginWindow(this.backupsmanager.getBackupManagerAssociatedWithMasterTag(this.selectedMasterTag),data,secondaryBackupVector);
-        picasawindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-        picasawindow.setVisible(true);
-        secondaryBackupVector=(picasawindow.giveNewPicasaBackup());
-        backupsList.setListData(secondaryBackupVector);
+            PicassaLoginWindow picasawindow = new PicassaLoginWindow(this.backupsmanager.getBackupManagerAssociatedWithMasterTag(this.selectedMasterTag),data,secondaryBackupVector,checkBox.isSelected());
+            picasawindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+            picasawindow.setVisible(true);
+            secondaryBackupVector=(picasawindow.giveNewPicasaBackup());
+            backupsList.setListData(secondaryBackupVector);
         }
         catch (IllegalArgumentException exp4)
         {
