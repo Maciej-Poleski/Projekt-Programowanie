@@ -13,12 +13,14 @@ import manager.files.OperationInterruptedException;
 import manager.tags.MasterTag;
 import manager.tags.Tags;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.mockito.Mockito.*;
 
 public class BackupsManagerTest {
 
 	@Test
+    @Ignore
 	public void getBackupManager() throws OperationInterruptedException {
 
 		MasterTag tag1 = mock(MasterTag.class);
@@ -39,6 +41,7 @@ public class BackupsManagerTest {
 	}
 
 	@Test
+    @Ignore
 	public void getFile() throws OperationInterruptedException,
 			FileNotAvailableException {
 
@@ -68,6 +71,7 @@ public class BackupsManagerTest {
 	}
 	
 	@Test
+    @Ignore
 	public void getAllBackupManagers() throws OperationInterruptedException{
 
 		MasterTag tag1 = mock(MasterTag.class);

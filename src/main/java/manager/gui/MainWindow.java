@@ -490,12 +490,16 @@ public class MainWindow extends JFrame{
 
     private void displayFilesOnMainList(Set<FileID> files, Vector<MyFile> tagsVector){
         for(FileID fID: files){
-            if(tagsVector.contains(fID)==false){
+            boolean b=false;
+            for(MyFile f: tagsVector){
+                if(f.fileID==fID)b=true;
+            }
+            if(b==false){
                 try {
                     File file = this.backupsmanager.getFile(fID);
                     tagsVector.add(new MyFile(file,fID));
-                } catch (OperationInterruptedException ex) {
-                } catch (FileNotAvailableException ex) {
+                } catch (        OperationInterruptedException | FileNotAvailableException ex) {
+                    JOptionPane.showMessageDialog(this,"Nie udało się uzyskać pliku.","Error",JOptionPane.ERROR_MESSAGE);
                 }
             }    
         }
@@ -543,10 +547,15 @@ public class MainWindow extends JFrame{
             PrimaryBackup primbackup = bmanager.getPrimaryBackup();           
             try {
                 imageToEditHolder = primbackup.getImageToEdition(imageToEdit);
-                editimagewindow  = new EditWindow(imageToEditHolder,new ImageChangedActionListener());
-                editimagewindow.setVisible(true);
+                BufferedImage bi = imageToEditHolder.getBufferedImage();
+                if(bi!=null){
+                    editimagewindow  = new EditWindow(imageToEditHolder,new ImageChangedActionListener());
+                    editimagewindow.setVisible(true);
+                } else{
+                    JOptionPane.showMessageDialog(this,"Ten plik nie jest poprawnym plikiem graficznym.","Error",JOptionPane.ERROR_MESSAGE);
+                }
             } catch (FileNotAvailableException ex) {
-                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this,"Nie udało się uzyskać obrazu do edycji.","Error",JOptionPane.ERROR_MESSAGE);
             }
             catch (OperationInterruptedException ex) {
                 Set<SecondaryBackup> sbackups = bmanager.getSecondaryBackups();
@@ -557,10 +566,10 @@ public class MainWindow extends JFrame{
                         primbackup.addDeletedFile(imageToEdit, x); //addFile(mtag, x, false);
                         retrieved=true;
                         break;
-                    } catch (FileNotAvailableException ex1) {
-                       // Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex1);
-                    } catch (OperationInterruptedException ex1) {
-                       // Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex1);
+                    } catch (        FileNotAvailableException | OperationInterruptedException ex1) {
+                        JOptionPane.showMessageDialog(this,"Wybrany plik został usunięty lub jest uszkodzony,a próba "
+                            + "\njego odzyskania przy użyciu kopii zapasowej nie powiodła się."
+                            + "\nNie można kontynuować","Error",JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 if(!retrieved){
@@ -570,12 +579,17 @@ public class MainWindow extends JFrame{
                 }else{
                     try {
                         imageToEditHolder = primbackup.getImageToEdition(imageToEdit);
-                        editimagewindow  = new EditWindow(imageToEditHolder,new ImageChangedActionListener());
-                        editimagewindow.setVisible(true);
-                    } catch (FileNotAvailableException ex1) {
-                        Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex1);
-                    } catch (OperationInterruptedException ex1) {
-                        Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex1);
+                        
+                        BufferedImage bi = imageToEditHolder.getBufferedImage();
+                        if(bi!=null){
+                            editimagewindow  = new EditWindow(imageToEditHolder,new ImageChangedActionListener());
+                            editimagewindow.setVisible(true);
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(this,"Ten plik nie jest poprawnym plikiem graficznym.","Error",JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (        FileNotAvailableException | OperationInterruptedException ex1) {
+                        JOptionPane.showMessageDialog(this,"Nie udało się uzyskać obrazu do edycji.","Error",JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -589,9 +603,10 @@ public class MainWindow extends JFrame{
                 PrimaryBackup primbackup = backupsmanager.getBackupManagerAssociatedWithMasterTag(mtag).getPrimaryBackup();         
                 ImageHolder changedImageHolder = editimagewindow.getImage();  
                 primbackup.saveEditedImage(changedImageHolder);
-                changedImageHolder = null;
-            } catch (OperationInterruptedException ex) {
-            } catch (FileNotAvailableException ex) { }
+                //changedImageHolder = null;
+            } catch (    OperationInterruptedException | FileNotAvailableException ex) {
+                JOptionPane.showMessageDialog(MainWindow.this,"Nie udało się zapisać obrazu.","Error",JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
   private void fileSearchButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fileSearchButtonMouseClicked
@@ -675,7 +690,7 @@ private void removeTagFromListButtonMouseClicked(java.awt.event.MouseEvent evt) 
             this.data=data.reset();
             data.save();
         } catch (IOException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(MainWindow.this,"Wystąpił błąd wejścia/wyjścia.","Error",JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_resetDataButtonActionPerformed
 
@@ -838,7 +853,7 @@ private void clearDataButtonStateChanged(javax.swing.event.ChangeEvent evt) {//G
         try {
             data.saveAndRelease();
         } catch (IOException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,"Wystąpił błąd wejścia/wyjścia. \n Możliwe, że dane nie zostały zapisane.","Error",JOptionPane.ERROR_MESSAGE);
         }             
     }
     public static void main(String args[]) {
@@ -882,11 +897,11 @@ private void clearDataButtonStateChanged(javax.swing.event.ChangeEvent evt) {//G
                             data = Data.lockAndLoad();
                             final MainWindow window = new MainWindow();
                         } catch (IOException ex1) {
-                            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex1);
+                            JOptionPane.showMessageDialog(null,"Wystąpił błąd wejścia.wyjścia","Error",JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 } catch (IOException ex){
-                    System.out.println("IOException...");
+                    JOptionPane.showMessageDialog(null,"Wystąpił błąd wejścia.wyjścia","Error",JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

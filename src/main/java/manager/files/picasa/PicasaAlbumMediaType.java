@@ -62,7 +62,7 @@ public enum PicasaAlbumMediaType {
 	 */
 	public static PicasaAlbumMediaType getPicasaAlbumMediaTypeByFileName(String name) {
 		int pos = name.lastIndexOf('.');
-		String ext = name.substring(pos + 1);
+		String ext = name.substring(pos + 1).toLowerCase();
 
 		switch (ext) {
 
@@ -75,8 +75,11 @@ public enum PicasaAlbumMediaType {
 			return PicasaAlbumMediaType.TIFF;
 		case "png":
 			return PicasaAlbumMediaType.PNG;
-		default:
+		case "jpg":
+		case "jpeg":
 			return PicasaAlbumMediaType.JPEG;
+		default:
+			return null;
 
 		}
 	}
