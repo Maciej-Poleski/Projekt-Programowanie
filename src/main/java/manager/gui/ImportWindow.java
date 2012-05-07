@@ -338,7 +338,7 @@ public class ImportWindow extends javax.swing.JDialog {
 		masterTagToAdd = null;
 		tagsField.setText("<< NOWA SKŁADOWA >>");
 		JOptionPane.showMessageDialog(this,
-				"Teraz kliknij IMPORTUJ. Nowa składowa będzie utworzona.");
+				"Teraz kliknij IMPORTUJ.");
 	}// GEN-LAST:event_newMasterTagButtonActionPerformed
 
 	private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_importButtonActionPerformed
@@ -370,6 +370,8 @@ public class ImportWindow extends javax.swing.JDialog {
                                     primaryBackup.addFile(mTag, fileToAdd, true);
                                 } catch (OperationInterruptedException ex){
                                     tags.removeTag(mTag);    
+                                    		JOptionPane.showMessageDialog(this,
+				"Ta sama składowa została zaimportowana wcześniej.");
                                 }
 				
 			} else {
@@ -385,41 +387,23 @@ public class ImportWindow extends javax.swing.JDialog {
 			pathField.setText(null);
 			tagsField.setText(null);
 
-		} catch (OperationInterruptedException | java.io.FileNotFoundException ex) {
-			java.util.logging.Logger.getLogger(ImportWindow.class.getName())
-					.log(java.util.logging.Level.SEVERE, null, ex);
-			
-			JOptionPane
-			.showMessageDialog(this,
-					ex.getMessage());
-			
-		} catch (IOException ex) {
-			Logger.getLogger(ImportWindow.class.getName()).log(Level.SEVERE,
-					null, ex);
-		}
+		} catch (OperationInterruptedException | java.io.FileNotFoundException ex) { 
+                        JOptionPane.showMessageDialog(this,"Nie udało się dodać pliku/katalogu.","Error",JOptionPane.ERROR_MESSAGE);
+                } catch (IOException ex) {
+			JOptionPane.showMessageDialog(this,"Wystąbił błąd wejścia/wyjścia.","Error",JOptionPane.ERROR_MESSAGE);
+		
+                }
 	}// GEN-LAST:event_importButtonActionPerformed
 
 	private void formWindowClosed(java.awt.event.WindowEvent evt) {// GEN-FIRST:event_formWindowClosed
 		try {
 			data.save();
 		} catch (IOException ex) {
-			Logger.getLogger(ImportWindow.class.getName()).log(Level.SEVERE,
-					null, ex);
+			JOptionPane.showMessageDialog(this,"Nie udało się zapisać danych.","Error",JOptionPane.ERROR_MESSAGE);
 		}
 	}// GEN-LAST:event_formWindowClosed
 
 	public static void main(String args[]) {
-		/*
-		 * Set the Nimbus look and feel
-		 */
-		// <editor-fold defaultstate="collapsed"
-		// desc=" Look and feel setting code (optional) ">
-		/*
-		 * If Nimbus (introduced in Java SE 6) is not available, stay with the
-		 * default look and feel. For details see
-		 * http://download.oracle.com/javase
-		 * /tutorial/uiswing/lookandfeel/plaf.html
-		 */
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
 					.getInstalledLookAndFeels()) {

@@ -37,8 +37,7 @@ public class BackupWindow extends javax.swing.JDialog {
     private MasterTag selectedMasterTag;
     private SecondaryBackup selectedSecondaryBackup;// wybrany mastertag
     private File backupLocation; // miejsce docelowe backupu na dysku
-    private String picassaLogin;
-    private String picassaPassword;
+
     
     public BackupWindow(Tags t, TagFilesStore tfs, BackupsManager bm, Data d) {
 
@@ -279,13 +278,14 @@ public class BackupWindow extends javax.swing.JDialog {
                 try {
                     sbackup.updateBackup();
                 } catch (OperationInterruptedException ex) {
-                    Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this,"Nie udało się zaktualizować backupu.","Error",JOptionPane.ERROR_MESSAGE);
                 } 
             }
         }
         catch(OperationInterruptedException exp) //sprawdzic dlaczego
         {
-            JOptionPane.showMessageDialog(this,"Error OIE","Error",JOptionPane.ERROR_MESSAGE);
+        //	exp.printStackTrace();
+            JOptionPane.showMessageDialog(this,"Nie mozna utworzyc backupu. We wskazanej lokalizacji juz istnieje jakis backup.","Error",JOptionPane.ERROR_MESSAGE);
         }
         catch(IllegalArgumentException exp2) // brak wybranego mastertagu
         {
@@ -293,18 +293,19 @@ public class BackupWindow extends javax.swing.JDialog {
         }
         catch(NullPointerException exp3) //sprawdzic dlaczego
         {
-           // JOptionPane.showMessageDialog(this,"Musisz wybrać katalog","Error",JOptionPane.ERROR_MESSAGE);
+        	//exp3.printStackTrace();
+            JOptionPane.showMessageDialog(this,"Musisz wybrać katalog","Error",JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_newBackupButtonActionPerformed
 
     private void picassaBackupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_picassaBackupButtonActionPerformed
         try
         {
-        PicassaLoginWindow picasawindow = new PicassaLoginWindow(this.backupsmanager.getBackupManagerAssociatedWithMasterTag(this.selectedMasterTag),data,secondaryBackupVector);
-        picasawindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-        picasawindow.setVisible(true);
-        secondaryBackupVector=(picasawindow.giveNewPicasaBackup());
-        backupsList.setListData(secondaryBackupVector);
+            PicassaLoginWindow picasawindow = new PicassaLoginWindow(this.backupsmanager.getBackupManagerAssociatedWithMasterTag(this.selectedMasterTag),data,secondaryBackupVector,checkBox.isSelected());
+            picasawindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+            picasawindow.setVisible(true);
+            secondaryBackupVector=(picasawindow.giveNewPicasaBackup());
+            backupsList.setListData(secondaryBackupVector);
         }
         catch (IllegalArgumentException exp4)
         {
@@ -330,7 +331,7 @@ public class BackupWindow extends javax.swing.JDialog {
         try {
             data.save();
         } catch (IOException ex) {
-            Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this,"Nie udało się zapisać danych.","Error",JOptionPane.ERROR_MESSAGE);
         }          
     }//GEN-LAST:event_formWindowClosed
 
@@ -346,7 +347,7 @@ public class BackupWindow extends javax.swing.JDialog {
                     selectedSecondaryBackup=null;
                     backupsList.setListData(secondaryBackupVector);       
                 } catch (OperationInterruptedException ex) {
-                    Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
+                   JOptionPane.showMessageDialog(this,"Nie udało się usunąć backupu.","Error",JOptionPane.ERROR_MESSAGE);
                 }
                 JOptionPane.showMessageDialog(this, "Backup został usunięty");
             }
