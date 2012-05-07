@@ -4,11 +4,13 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import manager.files.OperationInterruptedException;
 import manager.files.picasa.PicasaAuthenticationException;
 import manager.files.picasa.PicasaService;
+import manager.tags.MasterTag;
 
 /**
  * Class responsible for serializing all informations about backups in the
@@ -21,6 +23,7 @@ public class BackupManager implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private Map<MasterTag, BackupManager> allBackupManagersReference;
 	private final PrimaryBackup primaryBackup;
 	private final Set<SecondaryBackup> backups;
 
@@ -32,6 +35,10 @@ public class BackupManager implements Serializable {
 	public BackupManager(PrimaryBackup primaryBackup) {
 		this.primaryBackup = primaryBackup;
 		this.backups = new HashSet<>();
+	}
+
+	void setAllBackupManagersReference(Map<MasterTag, BackupManager> backupManagers) {
+		this.allBackupManagersReference = backupManagers;
 	}
 
 	/**
@@ -83,6 +90,18 @@ public class BackupManager implements Serializable {
 			String picasaPassword, File downloadLocation)
 			throws OperationInterruptedException {
 
+		for (BackupManager bm : allBackupManagersReference.values()) {
+			for (SecondaryBackup b : bm.backups) {
+				if (b instanceof PicasaBackupImpl) {
+					PicasaBackupImpl tmp = (PicasaBackupImpl) b;
+					if (tmp.getUserName().equals(picasaLogin)) {
+						throw new OperationInterruptedException(
+								"In that location already exists backup");
+					}
+				}
+			}
+		}
+
 		try {
 			PicasaService ps = new PicasaService(picasaLogin);
 			ps.authenticate(picasaPassword);
@@ -90,16 +109,6 @@ public class BackupManager implements Serializable {
 		} catch (PicasaAuthenticationException e) {
 			throw new OperationInterruptedException(
 					"Incorrect login or password", e);
-		}
-
-		for (SecondaryBackup b : backups) {
-			if (b instanceof PicasaBackupImpl) {
-				PicasaBackupImpl tmp = (PicasaBackupImpl) b;
-				if (tmp.getUserName().equals(picasaLogin)) {
-					throw new OperationInterruptedException(
-							"In that location already exists backup");
-				}
-			}
 		}
 
 		SecondaryBackup sb = new PicasaBackupImpl(primaryBackup, picasaLogin,
@@ -124,16 +133,18 @@ public class BackupManager implements Serializable {
 	public SecondaryBackup registerFileSystemBackup(File backupLocation)
 			throws OperationInterruptedException {
 
-		for (SecondaryBackup b : backups) {
-			if (b instanceof FileSystemBackupImpl) {
-				FileSystemBackupImpl tmp = (FileSystemBackupImpl) b;
-				if (tmp.getLocation().equals(backupLocation)) {
-					throw new OperationInterruptedException(
-							"In that location already exists backup");
+		for (BackupManager bm : allBackupManagersReference.values()) {
+			for (SecondaryBackup b : bm.backups) {
+				if (b instanceof FileSystemBackupImpl) {
+					FileSystemBackupImpl tmp = (FileSystemBackupImpl) b;
+					if (tmp.getLocation().equals(backupLocation)) {
+						throw new OperationInterruptedException(
+								"In that location already exists backup");
+					}
 				}
 			}
 		}
-
+		
 		SecondaryBackup sb = new FileSystemBackupImpl(primaryBackup,
 				backupLocation);
 

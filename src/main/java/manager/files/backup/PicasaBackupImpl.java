@@ -97,9 +97,18 @@ final class PicasaBackupImpl extends SecondaryBackup {
 			for (FileID f : files) {
 				File file = originalBackup.getFile(f);
 
+				if (!file.exists()){
+					continue;
+				}
+				
 				PicasaAlbumMediaType type = PicasaAlbumMediaType
 						.getPicasaAlbumMediaTypeByFileName(file.getName());
 
+				if (type == null){
+					// not known file type - ignoring
+					continue;
+				}
+				
 				PicasaPhoto ph = album.getPicasaPhotoUploader(file, type)
 						.upload();
 

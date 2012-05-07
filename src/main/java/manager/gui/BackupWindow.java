@@ -37,8 +37,7 @@ public class BackupWindow extends javax.swing.JDialog {
     private MasterTag selectedMasterTag;
     private SecondaryBackup selectedSecondaryBackup;// wybrany mastertag
     private File backupLocation; // miejsce docelowe backupu na dysku
-    private String picassaLogin;
-    private String picassaPassword;
+
     
     public BackupWindow(Tags t, TagFilesStore tfs, BackupsManager bm, Data d) {
 
@@ -285,7 +284,8 @@ public class BackupWindow extends javax.swing.JDialog {
         }
         catch(OperationInterruptedException exp) //sprawdzic dlaczego
         {
-            JOptionPane.showMessageDialog(this,"Error OIE","Error",JOptionPane.ERROR_MESSAGE);
+        //	exp.printStackTrace();
+            JOptionPane.showMessageDialog(this,"Nie mozna utworzyc backupu. We wskazanej lokalizacji juz istnieje jakis backup.","Error",JOptionPane.ERROR_MESSAGE);
         }
         catch(IllegalArgumentException exp2) // brak wybranego mastertagu
         {
@@ -293,7 +293,8 @@ public class BackupWindow extends javax.swing.JDialog {
         }
         catch(NullPointerException exp3) //sprawdzic dlaczego
         {
-           // JOptionPane.showMessageDialog(this,"Musisz wybrać katalog","Error",JOptionPane.ERROR_MESSAGE);
+        	//exp3.printStackTrace();
+            JOptionPane.showMessageDialog(this,"Musisz wybrać katalog","Error",JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_newBackupButtonActionPerformed
 
