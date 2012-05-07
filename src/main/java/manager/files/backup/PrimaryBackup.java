@@ -20,6 +20,14 @@ import manager.tags.MasterTag;
 public interface PrimaryBackup extends Backup {
 
 	/**
+	 * Copy file at location connected with provided FileID. 
+	 * @param fileID
+	 * @param file
+	 * @throws OperationInterruptedException 
+	 */
+	void addDeletedFile(FileID fileID, File file) throws OperationInterruptedException;
+	
+	/**
 	 * Adds file to backup resources. Depending on implementation it can just
 	 * copy file to suitable directory or upload it to server.
 	 * 

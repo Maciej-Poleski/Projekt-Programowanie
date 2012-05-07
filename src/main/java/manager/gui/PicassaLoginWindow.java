@@ -6,6 +6,7 @@ package manager.gui;
 
 
 import java.io.IOException;
+import java.util.Vector;
 import javax.swing.JOptionPane;
 import manager.files.*;
 import manager.tags.*;
@@ -25,8 +26,10 @@ public class PicassaLoginWindow extends javax.swing.JDialog {
      */
     private Data data;
     BackupManager backupmanager;
-    public PicassaLoginWindow(BackupManager bm, Data d) 
+    Vector<SecondaryBackup> V;
+    public PicassaLoginWindow(BackupManager bm, Data d, Vector<SecondaryBackup> v) 
     {
+        this.V=v;
         this.data=d;
         this.backupmanager=bm;
         initComponents();
@@ -158,13 +161,18 @@ public class PicassaLoginWindow extends javax.swing.JDialog {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_CancelButtonActionPerformed
-
+    
+    Vector<SecondaryBackup> giveNewPicasaBackup(){
+       return this.V; 
+    }
+    
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         // TODO add your handling code here:
         String login = LoginField.getText();
         String pass = PasswordField.getText();
         try {
-            this.backupmanager.registerPicasaBackup(login, pass,null);
+            SecondaryBackup sb = this.backupmanager.registerPicasaBackup(login, pass,null);
+            V.add(sb);
             JOptionPane.showMessageDialog(this, "Backup został utworzony.");
             try {
                 data.save();
