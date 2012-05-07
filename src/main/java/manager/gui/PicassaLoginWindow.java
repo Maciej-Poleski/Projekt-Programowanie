@@ -7,6 +7,8 @@ package manager.gui;
 
 import java.io.IOException;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import manager.files.*;
 import manager.tags.*;
@@ -27,8 +29,10 @@ public class PicassaLoginWindow extends javax.swing.JDialog {
     private Data data;
     BackupManager backupmanager;
     Vector<SecondaryBackup> V;
-    public PicassaLoginWindow(BackupManager bm, Data d, Vector<SecondaryBackup> v) 
+    boolean updateornot;
+    public PicassaLoginWindow(BackupManager bm, Data d, Vector<SecondaryBackup> v, boolean uon) 
     {
+        updateornot = uon;
         this.V=v;
         this.data=d;
         this.backupmanager=bm;
@@ -171,8 +175,15 @@ public class PicassaLoginWindow extends javax.swing.JDialog {
         String login = LoginField.getText();
         String pass = PasswordField.getText();
         try {
-            SecondaryBackup sb = this.backupmanager.registerPicasaBackup(login, pass,null);
-            V.add(sb);
+            SecondaryBackup sbackup = this.backupmanager.registerPicasaBackup(login, pass,null);
+            if(updateornot){
+                try {
+                    sbackup.updateBackup();
+                } catch (OperationInterruptedException ex) {
+                    Logger.getLogger(BackupWindow.class.getName()).log(Level.SEVERE, null, ex);
+                } 
+            }
+            V.add(sbackup);
             JOptionPane.showMessageDialog(this, "Backup został utworzony.");
             try {
                 data.save();
