@@ -101,8 +101,6 @@ final class PicasaBackupImpl extends SecondaryBackup {
 					continue;
 				}
 				
-				System.out.println(file.getPath());
-				
 				PicasaAlbumMediaType type = PicasaAlbumMediaType
 						.getPicasaAlbumMediaTypeByFileName(file.getName());
 

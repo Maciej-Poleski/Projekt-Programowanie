@@ -116,6 +116,7 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 	 * @param File
 	 *            Katalog którego zawartość chcemy usunąć.
 	 */
+	@SuppressWarnings("unused")
 	private void deleteInner(File toDelete) {
 		String[] files = toDelete.list();
 		for (int i = 0; i < files.length; i++) {
@@ -160,7 +161,10 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 
 		filesInBackup = new HashMap<FileID, File>();
 		if (location.exists()) {
-			deleteInner(location);
+			for (File f : filesInBackup.values()) {
+				f.delete();
+			}
+			filesInBackup.clear();
 		} else {
 			location.mkdir();
 		}
@@ -203,7 +207,9 @@ final class FileSystemBackupImpl extends SecondaryBackup {
 	@Override
 	protected void delete() throws OperationInterruptedException {
 		if (location.exists()) {
-			deleteInner(location);
+			for (File f : filesInBackup.values()) {
+				f.delete();
+			}
 		}
 	}
 
