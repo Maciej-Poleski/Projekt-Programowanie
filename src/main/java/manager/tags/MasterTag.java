@@ -31,19 +31,27 @@ public class MasterTag extends Tag<MasterTag> {
     		predecessorsList.add(tempParent);
     		tempParent = tempParent.parent;
     	}
+    	List<MasterTag> predecessorsListCopy = new ArrayList<>(predecessorsList);
+    	predecessorsList.clear();
         return predecessorsList;
     }
 
     @Override
     void addParent(MasterTag parent2) {
-    	this.parent = parent2;
-    	parent2.childrenList.add(this);
+    	if(this.parent!=null) throw new IllegalStateException("juz istnieje rodzic");
+    	else{
+	    	this.parent = parent2;
+	    	parent2.childrenList.add(this);
+    	}
     }
 
     @Override
     void removeParent(MasterTag parent2) {
-    	this.parent = null;
-    	parent2.childrenList.remove(this);
+    	if(parent2!=this.parent) throw new IllegalStateException("usuwanie nieistniejacego elementu");
+    	else{
+	    	this.parent = null;
+	    	parent2.childrenList.remove(this);
+    	}
     }
 
     /**
@@ -69,12 +77,14 @@ public class MasterTag extends Tag<MasterTag> {
     }
 
 	@Override
-	void addChild(MasterTag child) {
-		child.addParent(this);
+	void addChild(MasterTag child){
+		if(childrenList.indexOf(child)!= -1) throw new IllegalStateException("Istnieje już taki tag");
+		else child.addParent(this);
 	}
 
 	@Override
 	void removeChild(MasterTag child) {
-		child.removeParent(this);
+		if(childrenList.indexOf(child) == -1) throw new IllegalStateException("Nie ma takiego tagu");
+		else child.removeParent(this);
 	}
 }

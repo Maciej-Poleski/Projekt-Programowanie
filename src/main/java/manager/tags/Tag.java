@@ -31,7 +31,8 @@ public abstract class Tag<T extends Tag<T>> implements Serializable {
      * @return Lista dzieci (może być pusta)
      */
     public List<T> getChildren() {
-        return childrenList;
+    	List<T> childrenListCopy = new ArrayList<>(childrenList);
+        return childrenListCopy;
     }
 
     /**
@@ -56,7 +57,9 @@ public abstract class Tag<T extends Tag<T>> implements Serializable {
     			kolejkaDoWczytania.add(child);
     		kolejkaDoWczytania.remove(0);
     	}
-        return descendantsList;
+    	List<T> descendantsListCopy = new ArrayList<>(descendantsList);
+    	descendantsList.clear();
+        return descendantsListCopy;
     }
 
     /**

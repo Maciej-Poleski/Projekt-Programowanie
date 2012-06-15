@@ -16,7 +16,8 @@ public class UserTag extends Tag<UserTag> {
 
     @Override
     public List<UserTag> getParents() {
-        return parentsList;
+    	List<UserTag> parentsListCopy = new ArrayList<>(parentsList);
+        return parentsListCopy;
     }
 
     @Override
@@ -30,30 +31,43 @@ public class UserTag extends Tag<UserTag> {
     			kolejkaDoWczytania.add(parent);
     		kolejkaDoWczytania.remove(0);
     	}
-        return predecessorsList;
+    	List<UserTag> predecessorsListCopy = new ArrayList<>(predecessorsList);
+    	predecessorsList.clear();
+        return predecessorsListCopy;
     }
 
     @Override
     void addParent(UserTag parent) {
-    	parentsList.add(parent);
-    	parent.childrenList.add(this);
+    	if(parentsList.indexOf(parent)!=-1) throw new IllegalStateException("juz istnieje taki tag");
+    	else{
+	    	parentsList.add(parent);
+	    	parent.childrenList.add(this);
+    	}
     }
 
     @Override
     void removeParent(UserTag parent) {
-    	parentsList.remove(parent);
-    	parent.childrenList.remove(this);
+    	if(parentsList.indexOf(parent)==-1) throw new IllegalStateException("usuwanie nieistniejacego tagu");
+    	else{
+	    	parentsList.remove(parent);
+	    	parent.childrenList.remove(this);
+    	}
     }
 
 	@Override
 	void addChild(UserTag child) {
-		childrenList.add(child);
-		child.parentsList.add(this);
+		if(childrenList.indexOf(child) == -1){
+			child.addParent(this);
+		}
+		else throw new IllegalStateException("juz istnieje taki tag");
 	}
 
 	@Override
 	void removeChild(UserTag child) {
-		childrenList.remove(child);
-		child.parentsList.remove(this);
+		if(childrenList.indexOf(child) != -1){
+			child.removeParent(this);
+		}
+		else throw new IllegalStateException("usuwanie nieistniejącego elementu");
 	}
+	
 }
