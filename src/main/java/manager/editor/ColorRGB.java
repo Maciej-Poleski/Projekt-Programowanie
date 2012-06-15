@@ -8,79 +8,79 @@ public class ColorRGB {
 	private float mRed, mGreen, mBlue;
 	
 	/**
-	 * @param R - kanał czerwony [0,255]
-	 * @param G - kanał zielony [0,255]
-	 * @param B - kanał niebieski [0,255]
+	 * @param mR - kanał czerwony [0,255]
+	 * @param mG - kanał zielony [0,255]
+	 * @param mB - kanał niebieski [0,255]
 	 */
-	public ColorRGB(int R, int G, int B){
-		setR(R);
-		setG(G);
-		setB(B);
+	public ColorRGB(int mR, int mG, int mB){
+		setR(mR);
+		setG(mG);
+		setB(mB);
 	}
 	/**
-	 * @param R - kanał czerwony [0,1]
-	 * @param G - kanał zielony [0,1]
-	 * @param B - kanał niebieski [0,1]
+	 * @param mR - kanał czerwony [0,1]
+	 * @param mG - kanał zielony [0,1]
+	 * @param mB - kanał niebieski [0,1]
 	 */
-	public ColorRGB(float R, float G, float B){
-		setR(R); 
-		setG(G); 
-		setB(B);
+	public ColorRGB(float mR, float mG, float mB){
+		setR(mR); 
+		setG(mG); 
+		setB(mB);
 	}
 	
 	/**
 	 * @return kanał czerwony [0,1]
 	 */
-	public float getR(){return mRed;}
+	public final float getR(){return mRed;}
 	/**
 	 * @return kanał zielony [0,1]
 	 */
-	public float getG(){return mGreen;}
+	public final float getG(){return mGreen;}
 	/**
 	 * @return kanał niebieski [0,1]
 	 */
-	public float getB(){return mBlue;}
+	public final float getB(){return mBlue;}
 	
 	/**
 	 * Ustawia wartość kanału czerwonego
-	 * @param R - kanał czerwony [0,1]
+	 * @param mR - kanał czerwony [0,1]
 	 */
-	public void setR(float R){
-		mRed = Math.max(0.0f, Math.min(1.0f, R));
+	public final void setR(float mR){
+		mRed = Math.max(0.0f, Math.min(1.0f, mR));
 	}
 	/**
 	 * Ustawia wartość kanału zielonego
-	 * @param G - kanał zielony [0,1]
+	 * @param mG - kanał zielony [0,1]
 	 */
-	public void setG(float G){
-		mGreen = Math.max(0.0f, Math.min(1.0f, G));
+	public final void setG(float mG){
+		mGreen = Math.max(0.0f, Math.min(1.0f, mG));
 	}
 	/**
 	 * Ustawia wartość kanału niebieskiego
-	 * @param B - kanał niebieski [0,1]
+	 * @param mB - kanał niebieski [0,1]
 	 */
-	public void setB(float B){
-		mBlue = Math.max(0.0f, Math.min(1.0f, B));
+	public final void setB(float mB){
+		mBlue = Math.max(0.0f, Math.min(1.0f, mB));
 	}
 	/**
 	 * Ustawia wartość kanału czerwonego
-	 * @param R - kanał czerwony [0,255]
+	 * @param mR - kanał czerwony [0,255]
 	 */
-	public void setR(int R){
-		mRed = Math.max(0.0f, Math.min(255.0f, (float)R/255.0f));
+	public final void setR(int mR){
+		mRed = Math.max(0.0f, Math.min(255.0f, (float)mR/255.0f));
 	}
 	/**
 	 * Ustawia wartość kanału zielonego
-	 * @param G - kanał zielony [0,255]
+	 * @param mG - kanał zielony [0,255]
 	 */
-	public void setG(int G){
-		mGreen = Math.max(0.0f, Math.min(255.0f, (float)G/255.0f));
+	public final void setG(int mG){
+		mGreen = Math.max(0.0f, Math.min(255.0f, (float)mG/255.0f));
 	}
 	/**
 	 * Ustawia wartość kanału niebieskiego
-	 * @param B - kanał niebieski [0,255]
+	 * @param mB - kanał niebieski [0,255]
 	 */
-	public void setB(int B){
-		mBlue = Math.max(0.0f, Math.min(255.0f, (float)B/255.0f));
+	public final void setB(int mB){
+		mBlue = Math.max(0.0f, Math.min(255.0f, (float)mB/255.0f));
 	}
 }

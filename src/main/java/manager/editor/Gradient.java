@@ -10,6 +10,10 @@ import java.util.List;
  * @author Patryk
  */
 public class Gradient {
+	/**
+	 * Klasa opisująca kolor wraz z jego relatywnym położeniem w gradiencie
+	 * @author Patryk
+	 */
 	public static class ColorPos implements Comparable<ColorPos>{
 		private ColorRGB mColor = new ColorRGB(0,0,0);
 		private float mPos;
@@ -36,26 +40,30 @@ public class Gradient {
 		 * gdy pos > 1 przypisane zostanie 1
 		 * @param pos - pozycja w gradiencie [0,1]
 		 */
-		public void setPos(float pos){
+		public final void setPos(float pos){
 			mPos = Math.max(0.0f, Math.min(1.0f, pos));
 		}
 		/**
 		 * Ustawia kolor, jesli argument jest <b>null</b> kolor nie zostanie zmieniony
 		 * @param rgb - kolor z przestrzeni barw RGB
 		 */
-		public void setColor(ColorRGB rgb){
-			if(rgb != null) mColor = rgb;
+		public final void setColor(ColorRGB rgb){
+			if(rgb != null) {
+				mColor = rgb;
+			}
 		}
 		@Override
 		public int compareTo(ColorPos arg0) {
-			if(mPos < arg0.mPos) return -1;
-			if(mPos > arg0.mPos) return 1;
-			return 0;
+			return Float.valueOf(mPos).compareTo(arg0.mPos);
 		}
 		@Override
 		public boolean equals(Object obj){
-			if(obj == null || !(obj instanceof ColorPos)) return false;
-			return ((ColorPos)obj).mPos == mPos;
+			if(!(obj instanceof ColorPos)) {return false;}
+			return Float.valueOf((((ColorPos)obj).mPos)).equals(mPos);
+		}
+		@Override
+		public int hashCode(){
+			return Float.valueOf(mPos).hashCode();
 		}
 	}
 	
@@ -83,7 +91,6 @@ public class Gradient {
 	 * @param ref - referencja do wyniku
 	 */
 	public void interpolate(float pos, ColorRGB ref){
-		if(ref == null) throw new NullPointerException();
 		if(lista.size() == 0){
 			ref.setR(0);
 			ref.setG(0);
@@ -96,7 +103,8 @@ public class Gradient {
 		} else {
 			ColorPos prev, last;
 			Iterator<ColorPos> iter = lista.iterator();
-			prev = last = iter.next();
+			prev = iter.next(); 
+			last = prev;
 			while(iter.hasNext() && last.getPos() <= pos){
 				prev = last;
 				last = iter.next();

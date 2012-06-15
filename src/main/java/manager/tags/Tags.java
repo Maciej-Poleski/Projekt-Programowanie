@@ -5,6 +5,9 @@ import manager.files.FileID;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,7 +27,7 @@ public class Tags implements Serializable {
     private final Map<Tag<?>, Set<Object>> tagMetadata = new HashMap<>();
     private static Tags defaultInstance = new Tags();
     private static final long serialVersionUID = 1;
-    private static final Map<Tag<?>, Tags> TAGS_CREATOR = new HashMap<>();
+    private static Map<Tag<?>, Tags> tagsCreator = new HashMap<>();
 
     /**
      * Konstruuje nowy obiekt z pustą rodziną tagów.
@@ -40,7 +43,7 @@ public class Tags implements Serializable {
     public MasterTag newMasterTag() {
         MasterTag tag = new MasterTag();
         tags.add(tag);
-        TAGS_CREATOR.put(tag, this);
+        tagsCreator.put(tag, this);
         return tag;
     }
 
@@ -52,7 +55,7 @@ public class Tags implements Serializable {
     public UserTag newUserTag() {
         UserTag tag = new UserTag();
         tags.add(tag);
-        TAGS_CREATOR.put(tag, this);
+        tagsCreator.put(tag, this);
         return tag;
     }
 
@@ -506,7 +509,7 @@ public class Tags implements Serializable {
         if (tag == null) {
             throw new IllegalArgumentException("Pytanie o twórce null-a nie ma sensu");
         }
-        return TAGS_CREATOR.get(tag);
+        return tagsCreator.get(tag);
     }
 
     /**
@@ -525,6 +528,34 @@ public class Tags implements Serializable {
             result = result.getParent();
         }
         return result;
+    }
+
+    /**
+     * Serializuje statyczne pola klasy.
+     *
+     * @param stream Strumień do którego będą serializowane statyczne pola klasy
+     * @throws IOException Jeżeli wystąpi wyjątek podczas serializacji
+     */
+    public static void serializeStatic(ObjectOutputStream stream) throws IOException {
+        stream.writeObject(defaultInstance);
+        stream.writeObject((Serializable) tagsCreator);
+    }
+
+    /**
+     * Deserializuje statyczne pola klasy.
+     *
+     * @param stream Strumień z któego będą deserializowane statyczne pola klasy
+     * @throws IOException Jeżeli wystąpi wyjątek podczas deserializacji
+     */
+    public static void deserializeStatic(ObjectInputStream stream) throws IOException {
+        try {
+            defaultInstance = (Tags) stream.readObject();
+        } catch (ClassNotFoundException ignored) {
+        }
+        try {
+            tagsCreator = (Map<Tag<?>, Tags>) stream.readObject();
+        } catch (ClassNotFoundException ignored) {
+        }
     }
 
     private void checkStore() {
@@ -554,7 +585,7 @@ public class Tags implements Serializable {
             tag.removeChild(child);
         }
         tags.remove(tag);
-        TAGS_CREATOR.remove(tag);
+        tagsCreator.remove(tag);
     }
 
     private void removeUserTagFromStructure(UserTag tag) {
@@ -565,7 +596,7 @@ public class Tags implements Serializable {
             tag.removeChild(child);
         }
         tags.remove(tag);
-        TAGS_CREATOR.remove(tag);
+        tagsCreator.remove(tag);
     }
 
     private static class CycleParentFinder {
@@ -621,7 +652,7 @@ public class Tags implements Serializable {
     private class UserTagsTreeModel implements TreeModel {
         private final List<UserTag> heads = new ArrayList<>(getUserTagHeads());
 
-        class Node {
+        private class Node {
             private final UserTag tag;
 
             Node(UserTag tag) {
@@ -632,11 +663,11 @@ public class Tags implements Serializable {
                 tag = null;
             }
 
-            public final UserTag getTag() {
+            final UserTag getTag() {
                 return tag;
             }
 
-            public Node getChild(int index) {
+            Node getChild(int index) {
                 if (tag == null) {
                     if (index == 0) {
                         return new Children();
@@ -654,7 +685,7 @@ public class Tags implements Serializable {
                 }
             }
 
-            public int getChildCount() {
+            int getChildCount() {
                 if (tag == null) {
                     return 1;
                 } else {
@@ -662,7 +693,7 @@ public class Tags implements Serializable {
                 }
             }
 
-            public int getIndexOfChild(Object child) {
+            int getIndexOfChild(Object child) {
                 if (tag == null) {
                     if (child instanceof Children) {
                         return 0;
@@ -685,12 +716,12 @@ public class Tags implements Serializable {
             }
         }
 
-        class Children extends Node {
-            public Children(UserTag tag) {
+        private class Children extends Node {
+            Children(UserTag tag) {
                 super(tag);
             }
 
-            public Children() {
+            Children() {
             }
 
             @Override
@@ -699,7 +730,7 @@ public class Tags implements Serializable {
             }
 
             @Override
-            public Node getChild(int index) {
+            Node getChild(int index) {
                 if (getTag() == null) {
                     return new Node(heads.get(index));
                 } else {
@@ -708,19 +739,19 @@ public class Tags implements Serializable {
             }
 
             @Override
-            public int getIndexOfChild(Object child) {
+            int getIndexOfChild(Object child) {
                 //noinspection SuspiciousMethodCalls
                 return getTag().getChildren().indexOf(child);
             }
 
             @Override
-            public int getChildCount() {
+            int getChildCount() {
                 return getTag().getChildren().size();
             }
         }
 
-        class Parents extends Node {
-            public Parents(UserTag tag) {
+        private class Parents extends Node {
+            Parents(UserTag tag) {
                 super(tag);
                 assert tag != null;
             }
@@ -731,18 +762,18 @@ public class Tags implements Serializable {
             }
 
             @Override
-            public Node getChild(int index) {
+            Node getChild(int index) {
                 return new Node(getTag().getParents().get(index));
             }
 
             @Override
-            public int getIndexOfChild(Object child) {
+            int getIndexOfChild(Object child) {
                 //noinspection SuspiciousMethodCalls
                 return getTag().getParents().indexOf(child);
             }
 
             @Override
-            public int getChildCount() {
+            int getChildCount() {
                 return getTag().getParents().size();
             }
         }
