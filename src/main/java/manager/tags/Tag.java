@@ -13,8 +13,8 @@ import java.util.List;
  * @author Zygmunt Łenyk
  */
 public abstract class Tag<T extends Tag<T>> implements Serializable {
-    List<T> childrenList;
-    List<T> descendantsList;
+    List<T> childrenList = new ArrayList<>();
+    List<T> descendantsList = new ArrayList<>();
     protected Tag() {
     }
 
@@ -64,18 +64,14 @@ public abstract class Tag<T extends Tag<T>> implements Serializable {
      *
      * @param child Tag który zostanie dzieckiem tego tagu
      */
-    void addChild(T child) {
-    	childrenList.add(child);
-    }
+    abstract void addChild(T child);
 
     /**
      * Usuwa wskazany tag z listy dzieci tego tagu.
      *
      * @param child Tag do usunięcia
      */
-    void removeChild(T child) {
-    	childrenList.remove(child);
-    }
+    abstract void removeChild(T child);
 
     /**
      * Ustawia ten tag jako dziecko wskazanego tagu.
